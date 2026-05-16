@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Benefits – Business Process Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0f2040;
+    --navy-mid: #1a3460;
+    --blue: #1e5fa8;
+    --blue-light: #2e7dd1;
+    --gold: #e8a922;
+    --gold-light: #f5c84a;
+    --teal: #0e8a7a;
+    --red: #c0392b;
+    --green: #1a7a4a;
+    --slate: #4a5568;
+    --light: #f4f7fb;
+    --white: #ffffff;
+    --border: #dde4ef;
+    --card-shadow: 0 4px 24px rgba(15,32,64,0.10);
+    --role-hr: #2e7dd1;
+    --role-budget: #e8a922;
+    --role-payroll: #0e8a7a;
+    --role-manager: #7c3aed;
+    --role-admin: #64748b;
+    --role-employee: #d97706;
+    --role-benefits-admin: #0f766e;
+    --role-benefits-partner: #1e5fa8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--light);
+    color: var(--navy);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, var(--blue) 100%);
+    color: white;
+    padding: 36px 48px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute; top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(232,169,34,0.18) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .header::after {
+    content: '';
+    position: absolute; bottom: -40px; left: 30%;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(46,125,209,0.2) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .header-inner { position: relative; z-index: 1; }
+  .header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.2rem;
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+  }
+  .header p { color: rgba(255,255,255,0.72); font-size: 0.95rem; font-weight: 400; }
+  .header-badge {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--navy);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+
+  /* NAV TABS */
+  .tabs-bar {
+    background: var(--white);
+    border-bottom: 2px solid var(--border);
+    padding: 0 48px;
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(15,32,64,0.07);
+  }
+  .tab-btn {
+    padding: 16px 18px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.83rem;
+    font-weight: 600;
+    color: var(--slate);
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    position: relative;
+    top: 2px;
+  }
+  .tab-btn:hover { color: var(--blue); }
+  .tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+  /* CONTENT */
+  .content { max-width: 1200px; margin: 0 auto; padding: 36px 48px 60px; }
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* CARDS */
+  .card {
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+    padding: 32px;
+    margin-bottom: 28px;
+    border: 1px solid var(--border);
+  }
+  .card-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.35rem;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+  .card-subtitle {
+    font-size: 0.82rem;
+    color: var(--slate);
+    margin-bottom: 22px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  /* OVERVIEW GRID */
+  .overview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+    margin-bottom: 32px;
+  }
+  .overview-tile {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+    color: white;
+    border-radius: 14px;
+    padding: 22px 20px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+  }
+  .overview-tile::after {
+    content: '';
+    position: absolute; bottom: -20px; right: -20px;
+    width: 80px; height: 80px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 50%;
+  }
+  .overview-tile:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(15,32,64,0.18); }
+  .overview-tile:nth-child(2) { background: linear-gradient(135deg, #1a4a2e 0%, var(--teal) 100%); }
+  .overview-tile:nth-child(3) { background: linear-gradient(135deg, #5b2a00 0%, #c06a10 100%); }
+  .overview-tile:nth-child(4) { background: linear-gradient(135deg, #2d1060 0%, var(--role-manager) 100%); }
+  .overview-tile:nth-child(5) { background: linear-gradient(135deg, #0a3030 0%, #0e6060 100%); }
+  .tile-icon { font-size: 1.8rem; margin-bottom: 10px; }
+  .tile-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
+  .tile-desc { font-size: 0.78rem; opacity: 0.8; line-height: 1.5; }
+
+  /* FLOWCHART */
+  .flowchart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    padding: 10px 0;
+  }
+  .flow-node {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+  }
+  .flow-box {
+    border-radius: 10px;
+    padding: 14px 22px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    text-align: center;
+    position: relative;
+    border: 2px solid transparent;
+    transition: transform 0.15s;
+  }
+  .flow-box:hover { transform: scale(1.02); }
+  .flow-start {
+    background: var(--navy);
+    color: white;
+    border-radius: 30px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 12px 32px;
+  }
+  .flow-end {
+    background: var(--teal);
+    color: white;
+    border-radius: 30px;
+    font-weight: 700;
+    padding: 12px 32px;
+  }
+  .flow-action {
+    background: #eef3fb;
+    border-color: var(--role-hr);
+    color: var(--navy);
+  }
+  .flow-action.benefits-partner { background: #eef3fb; border-color: var(--role-benefits-partner); }
+  .flow-action.benefits-admin { background: #e6faf8; border-color: var(--role-benefits-admin); }
+  .flow-action.employee { background: #fef8ec; border-color: var(--role-employee); }
+  .flow-action.hr { background: #eef3fb; border-color: var(--role-hr); }
+  .flow-decision {
+    background: #fff8e1;
+    border: 2px dashed var(--gold);
+    border-radius: 8px;
+    color: var(--navy);
+    font-style: italic;
+    font-size: 0.84rem;
+    padding: 12px 20px;
+  }
+  .flow-connector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 36px;
+    justify-content: center;
+    color: var(--slate);
+    font-size: 1.3rem;
+    position: relative;
+  }
+  .flow-connector::before {
+    content: '';
+    width: 2px;
+    height: 100%;
+    background: var(--border);
+    position: absolute;
+  }
+  .flow-connector span {
+    background: white;
+    padding: 0 4px;
+    position: relative;
+    z-index: 1;
+    font-size: 1.1rem;
+    color: var(--slate);
+  }
+  .flow-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+    font-size: 0.75rem;
+    color: var(--slate);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    justify-content: center;
+  }
+  .role-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  .role-dot.hr { background: var(--role-hr); }
+  .role-dot.benefits-admin { background: var(--role-benefits-admin); }
+  .role-dot.benefits-partner { background: var(--role-benefits-partner); }
+  .role-dot.employee { background: var(--role-employee); }
+  .role-dot.hr-partner { background: var(--role-hr); }
+
+  /* DECISION BRANCH */
+  .decision-branch {
+    display: flex;
+    gap: 18px;
+    width: 100%;
+    max-width: 700px;
+    justify-content: center;
+  }
+  .branch-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+  .branch-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--slate);
+    margin-bottom: 6px;
+    background: var(--light);
+    padding: 2px 10px;
+    border-radius: 20px;
+  }
+
+  /* ROLES TABLE */
+  .roles-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  .roles-table th {
+    background: var(--navy);
+    color: white;
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+  .roles-table th:first-child { border-radius: 8px 0 0 0; }
+  .roles-table th:last-child { border-radius: 0 8px 0 0; }
+  .roles-table td {
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .roles-table tr:hover td { background: #f8faff; }
+  .roles-table tr:last-child td { border-bottom: none; }
+  .check { color: var(--green); font-size: 1rem; }
+  .dash { color: #ccc; font-size: 1rem; }
+
+  .role-tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 2px 9px;
+    border-radius: 20px;
+    margin: 2px;
+    white-space: nowrap;
+  }
+  .role-tag.hr { background: #ddeeff; color: var(--blue); }
+  .role-tag.benefits-admin { background: #d9f5f0; color: #0f766e; }
+  .role-tag.benefits-partner { background: #ddeeff; color: var(--blue); }
+  .role-tag.employee { background: #fef3c7; color: #92400e; }
+  .role-tag.hr-partner { background: #ddeeff; color: var(--blue); }
+
+  /* FLAGS */
+  .flag {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    font-size: 0.87rem;
+    line-height: 1.6;
+  }
+  .flag.decision { background: #fff8e1; border-left: 4px solid var(--gold); }
+  .flag.condition { background: #edfaf7; border-left: 4px solid var(--teal); }
+  .flag.warning { background: #fef2f2; border-left: 4px solid #ef4444; }
+  .flag-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+  .flag strong { color: var(--navy); display: block; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+
+  /* PROCESS HEADER */
+  .process-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--border);
+  }
+  .process-icon-big {
+    width: 56px; height: 56px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem;
+    flex-shrink: 0;
+  }
+  .process-icon-big.blue { background: linear-gradient(135deg, var(--navy), var(--blue)); }
+  .process-icon-big.green { background: linear-gradient(135deg, #1a4a2e, var(--teal)); }
+  .process-icon-big.gold { background: linear-gradient(135deg, #5b2a00, #c06a10); }
+  .process-icon-big.purple { background: linear-gradient(135deg, #2d1060, var(--role-manager)); }
+  .process-icon-big.red { background: linear-gradient(135deg, #7a0a0a, var(--red)); }
+  .process-meta { flex: 1; }
+  .process-meta h2 { font-family: 'DM Serif Display', serif; font-size: 1.6rem; color: var(--navy); }
+  .process-meta p { color: var(--slate); font-size: 0.88rem; margin-top: 4px; }
+  .completion-badge {
+    background: var(--light);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 0.78rem;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .completion-badge strong { color: var(--navy); display: block; font-size: 0.95rem; margin-top: 4px; }
+
+  /* TWO-COL */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 28px; }
+  @media (max-width: 800px) {
+    .two-col { grid-template-columns: 1fr; }
+    .content { padding: 24px 20px; }
+    .tabs-bar { padding: 0 16px; }
+    .header { padding: 28px 20px; }
+    .process-header { flex-direction: column; align-items: flex-start; }
+    .decision-branch { flex-direction: column; }
+  }
+
+  .section-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--slate);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .who-list { list-style: none; }
+  .who-list li {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.87rem;
+  }
+  .who-list li:last-child { border-bottom: none; }
+
+  /* Print-ready */
+  @media print {
+    .tabs-bar { display: none !important; }
+    .section { display: block !important; page-break-before: always; }
+    .section:first-of-type { page-break-before: auto; }
+  }
+
+  /* Download button */
+  .download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--navy);
+    color: white;
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    transition: background 0.2s;
+    margin-top: 8px;
+  }
+  .download-btn:hover { background: var(--blue); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-badge">Benefits Administration · Excluding Federal Work Study &amp; State</div>
+    <h1>Benefits Business Process Dashboard</h1>
+    <p>Interactive guide to all 5 benefits workflows — roles, steps, decisions, and approvals · City positions only</p>
+  </div>
+</div>
+
+<div class="tabs-bar">
+  <button class="tab-btn active" onclick="showTab('overview')">📋 Overview</button>
+  <button class="tab-btn" onclick="showTab('bp1')">🔄 Change Benefits</button>
+  <button class="tab-btn" onclick="showTab('bp2')">💛 Change Benefits for Life</button>
+  <button class="tab-btn" onclick="showTab('bp3')">👨‍👩‍👧 Dependent Event</button>
+  <button class="tab-btn" onclick="showTab('bp4')">🐍 COBRA Eligibility</button>
+  <button class="tab-btn" onclick="showTab('bp5')">📅 Open Enrollment</button>
+  <button class="tab-btn" onclick="showTab('roles')">👥 Roles &amp; Permissions</button>
+</div>
+
+<div class="content">
+
+<!-- ══════════════════════ OVERVIEW ══════════════════════ -->
+<div id="overview" class="section active">
+  <div class="card">
+    <div class="card-title">Benefits Administration at a Glance</div>
+    <div class="card-subtitle">5 Business Processes · Excluding Federal Work Study &amp; State-Specific Steps</div>
+    <div class="overview-grid">
+      <div class="overview-tile" onclick="showTab('bp1')">
+        <div class="tile-icon">🔄</div>
+        <div class="tile-name">Change Benefits</div>
+        <div class="tile-desc">Employee-initiated benefit election changes through the self-service worklet. Triggers Change Benefits for Life sub-process.</div>
+      </div>
+      <div class="overview-tile" onclick="showTab('bp2')">
+        <div class="tile-icon">💛</div>
+        <div class="tile-name">Change Benefits for Life</div>
+        <div class="tile-desc">Sub-process triggered by qualifying life events. Includes election updates, domestic partner affidavit, and COBRA notices.</div>
+      </div>
+      <div class="overview-tile" onclick="showTab('bp3')">
+        <div class="tile-icon">👨‍👩‍👧</div>
+        <div class="tile-name">Dependent Event</div>
+        <div class="tile-desc">Update dependent information. Can trigger COBRA eligibility review if benefits are affected.</div>
+      </div>
+      <div class="overview-tile" onclick="showTab('bp4')">
+        <div class="tile-icon">🐍</div>
+        <div class="tile-name">COBRA Eligibility Review</div>
+        <div class="tile-desc">Triggered by termination or loss of coverage. Benefits Partner reviews and completes COBRA notice process.</div>
+      </div>
+      <div class="overview-tile" onclick="showTab('bp5')">
+        <div class="tile-icon">📅</div>
+        <div class="tile-name">Open Enrollment</div>
+        <div class="tile-desc">Central Benefits Administrator initiates, closes, and finalizes. Benefits Partner assists employees at each campus.</div>
+      </div>
+    </div>
+
+    <div class="flag condition">
+      <span class="flag-icon">🏛️</span>
+      <div><strong>Scope: City Positions Only</strong>All processes on this dashboard apply to City employee positions. Federal Work Study and State-specific steps have been excluded per configuration requirements.</div>
+    </div>
+    <div class="flag decision">
+      <span class="flag-icon">👥</span>
+      <div><strong>Core Roles Across All Benefits Processes</strong>
+        <span class="role-tag benefits-admin">Benefits Administrator</span> (Central team — initiates &amp; controls events)
+        <span class="role-tag benefits-partner">Benefits Partner</span> (Campus — reviews, approves, assists employees)
+        <span class="role-tag employee">Employee (Self)</span> (Makes elections and submits enrollment)
+        <span class="role-tag hr-partner">HR Partner</span> (Can initiate on behalf of employee; updates worker data)
+      </div>
+    </div>
+    <div class="flag condition">
+      <span class="flag-icon">🔄</span>
+      <div><strong>Future State: Paper → Workday</strong>Previously employees enrolled on paper and Benefits Officers entered data manually into NYCAPS/PMS. In Workday, eligible employees enroll directly in the system. Benefits Partners review and approve events, and enrollment is sent to vendors via integration files.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ BP1: CHANGE BENEFITS ══════════════════════ -->
+<div id="bp1" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big blue">🔄</div>
+      <div class="process-meta">
+        <h2>Change Benefits</h2>
+        <p>Employee-initiated benefit election changes via the Benefits worklet or related actions</p>
+      </div>
+      <div class="completion-badge">
+        Completes When<br>
+        <strong>Employee Submits Enrollment</strong>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot benefits-admin"></span><span class="role-tag benefits-admin">Benefits Administrator</span> Can initiate on behalf of employee</li>
+          <li><span class="role-dot benefits-partner"></span><span class="role-tag benefits-partner">Benefits Partner</span> Can initiate; reviews &amp; approves enrollment</li>
+          <li><span class="role-dot employee"></span><span class="role-tag employee">Employee (Self)</span> Primary initiator; makes and submits elections</li>
+          <li><span class="role-dot hr-partner"></span><span class="role-tag hr-partner">HR Partner</span> Can initiate on behalf of employee</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Key Notes</div>
+        <div class="flag decision">
+          <span class="flag-icon">💡</span>
+          <div><strong>30-Day Window</strong>Employees have 30 days from a qualifying life event to complete their benefit elections and submit documentation.</div>
+        </div>
+        <div class="flag condition">
+          <span class="flag-icon">🔀</span>
+          <div><strong>Triggers Sub-Process</strong>This process leads directly into the Change Benefits for Life business process when a qualifying life event is involved.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Process Flowchart</div>
+    <div class="flowchart">
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee / Benefits Admin / Benefits Partner / HR Partner</div>
+        <div class="flow-box flow-start">🚀 INITIATION — Select Benefits Change via Worklet or Related Actions</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee</div>
+        <div class="flow-box flow-action employee">Make Benefit Elections &amp; Update Enrollment Choices</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Is a dependent being added?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ YES — Dependent Added</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot employee"></span> Employee</div>
+            <div class="flow-box flow-action employee">Add Dependent Information</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">⏭ NO — No Dependent Change</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action" style="opacity:0.35;">Dependent Step — SKIPPED</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee</div>
+        <div class="flow-box flow-action employee">Review &amp; Submit Elections</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot benefits-partner"></span> Benefits Partner / Benefits Administrator</div>
+        <div class="flow-box flow-action benefits-partner">Review Benefit Event &amp; Approve / Send Back</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-end">✅ COMPLETE — Enrollment Approved &amp; Sent to Vendors via Integration</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ BP2: CHANGE BENEFITS FOR LIFE ══════════════════════ -->
+<div id="bp2" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big green">💛</div>
+      <div class="process-meta">
+        <h2>Change Benefits for Life</h2>
+        <p>Sub-process triggered by qualifying life events — marriage, divorce, birth, adoption, etc.</p>
+      </div>
+      <div class="completion-badge">
+        Completes When<br>
+        <strong>Benefits Partner Approves Event &amp; Documentation</strong>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot benefits-admin"></span><span class="role-tag benefits-admin">Benefits Administrator</span> Can initiate; reviews documents</li>
+          <li><span class="role-dot benefits-partner"></span><span class="role-tag benefits-partner">Benefits Partner</span> Can initiate; final approval &amp; document review</li>
+          <li><span class="role-dot employee"></span><span class="role-tag employee">Employee (Self)</span> Makes elections, uploads documentation</li>
+          <li><span class="role-dot hr-partner"></span><span class="role-tag hr-partner">HR Partner</span> Can initiate; updates worker demographic data</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Key Notes</div>
+        <div class="flag decision">
+          <span class="flag-icon">💡</span>
+          <div><strong>Domestic Partner Affidavit Required</strong>If employee is adding a domestic partner, a Domestic Partner Affidavit must be completed as part of this process.</div>
+        </div>
+        <div class="flag condition">
+          <span class="flag-icon">🐍</span>
+          <div><strong>May Trigger COBRA</strong>If the life event reduces coverage eligibility (e.g., divorce removes a dependent), a COBRA eligibility event is automatically generated.</div>
+        </div>
+        <div class="flag warning">
+          <span class="flag-icon">⚠️</span>
+          <div><strong>Benefits Partner Cannot Update Worker Demographics</strong>Changes to employee name, gender, or date of birth must be done by the HR Partner — not the Benefits Partner.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Process Flowchart</div>
+    <div class="flowchart">
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee / Benefits Admin / Benefits Partner / HR Partner</div>
+        <div class="flow-box flow-start">🚀 INITIATION — Qualifying Life Event Occurs</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee</div>
+        <div class="flow-box flow-action employee">Make Benefit Election Changes (New Eligible Elections Generated)</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Is a Domestic Partner being added?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ YES — Domestic Partner</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot employee"></span> Employee</div>
+            <div class="flow-box flow-action employee">Complete Domestic Partner Affidavit</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">⏭ NO — Other Life Event</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action" style="opacity:0.35;">Affidavit Step — SKIPPED</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee</div>
+        <div class="flow-box flow-action employee">Submit Enrollment &amp; Upload Supporting Documentation</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot benefits-partner"></span> Benefits Partner / Benefits Administrator</div>
+        <div class="flow-box flow-action benefits-partner">Review Documentation &amp; Benefit Event — Approve or Send Back</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Does this life event reduce COBRA-eligible coverage?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ YES — COBRA Triggered</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot benefits-admin"></span> System (Auto)</div>
+            <div class="flow-box flow-action benefits-admin">Send COBRA Notice Letter / Email to Affected Individual</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">⏭ NO — No COBRA Impact</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action" style="opacity:0.35;">COBRA Step — SKIPPED</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-end">✅ COMPLETE — Event Approved &amp; Enrollment Sent to Vendors</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ BP3: DEPENDENT EVENT ══════════════════════ -->
+<div id="bp3" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big gold">👨‍👩‍👧</div>
+      <div class="process-meta">
+        <h2>Dependent Event</h2>
+        <p>Update dependent information — may trigger COBRA eligibility review if benefits are affected</p>
+      </div>
+      <div class="completion-badge">
+        Completes When<br>
+        <strong>Benefits Partner Approves Event</strong>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot benefits-admin"></span><span class="role-tag benefits-admin">Benefits Administrator</span> Can initiate; reviews COBRA to-do</li>
+          <li><span class="role-dot benefits-partner"></span><span class="role-tag benefits-partner">Benefits Partner</span> Can initiate; approves event &amp; COBRA step</li>
+          <li><span class="role-dot employee"></span><span class="role-tag employee">Employee (Self)</span> Can initiate; updates dependent data</li>
+          <li><span class="role-dot hr-partner"></span><span class="role-tag hr-partner">HR Partner</span> Can initiate; handles worker data corrections</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Key Notes</div>
+        <div class="flag condition">
+          <span class="flag-icon">🐍</span>
+          <div><strong>May Trigger COBRA Review</strong>If the dependent event (e.g., divorce, removal) affects benefit eligibility, the COBRA Review business process is automatically kicked off.</div>
+        </div>
+        <div class="flag decision">
+          <span class="flag-icon">📧</span>
+          <div><strong>COBRA Notice Delivery</strong>The Benefits Partner receives a to-do task to send the COBRA packet to the affected individual — via email or physical mail depending on campus practice.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Process Flowchart</div>
+    <div class="flowchart">
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee / Benefits Admin / Benefits Partner / HR Partner</div>
+        <div class="flow-box flow-start">🚀 INITIATION — Dependent Change Needed</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee (or Initiator)</div>
+        <div class="flow-box flow-action employee">Update Dependent Information (Add / Edit / Remove Dependent)</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Does the change affect benefit eligibility (e.g., divorce, removal)?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ YES — Benefits Affected</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot employee"></span> Employee</div>
+            <div class="flow-box flow-action employee">Change Benefit Elections (COBRA Eligibility Review Kicks Off)</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">⏭ NO — No Benefits Impact</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action" style="opacity:0.35;">Elections Step — SKIPPED</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot benefits-partner"></span> Benefits Partner / Benefits Administrator</div>
+        <div class="flow-box flow-action benefits-partner">Review &amp; Approve Dependent Event (Review Documentation if Submitted)</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Is a dependent COBRA-eligible (e.g., ex-spouse removed from healthcare)?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ YES — COBRA Eligible Dependent</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot benefits-partner"></span> Benefits Partner</div>
+            <div class="flow-box flow-action benefits-partner">Review COBRA Eligibility Details (Auto-Populated)</div>
+          </div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot employee"></span> Employee</div>
+            <div class="flow-box flow-action employee">Review &amp; Acknowledge COBRA Document (Download &amp; Agree)</div>
+          </div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot benefits-partner"></span> Benefits Partner / Benefits Administrator</div>
+            <div class="flow-box flow-action benefits-partner">Complete To-Do: Send COBRA Packet to Individual (email or mail)</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">⏭ NO — No COBRA Applicable</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action" style="opacity:0.35;">COBRA Steps — SKIPPED</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-end">✅ COMPLETE — Dependent Event Finalized</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ BP4: COBRA ELIGIBILITY ══════════════════════ -->
+<div id="bp4" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big purple">🐍</div>
+      <div class="process-meta">
+        <h2>Review COBRA Eligibility</h2>
+        <p>Triggered by termination or loss of coverage in benefits eligibility — processes COBRA notice</p>
+      </div>
+      <div class="completion-badge">
+        Completes When<br>
+        <strong>Benefits Partner Completes To-Do</strong>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot benefits-admin"></span><span class="role-tag benefits-admin">Benefits Administrator</span> Can initiate; completes COBRA to-do step</li>
+          <li><span class="role-dot benefits-partner"></span><span class="role-tag benefits-partner">Benefits Partner</span> Can initiate; reviews eligibility; sends COBRA packet</li>
+          <li><span class="role-dot employee"></span><span class="role-tag employee">Employee (Self)</span> Can initiate; reviews &amp; acknowledges COBRA document</li>
+          <li><span class="role-dot hr-partner"></span><span class="role-tag hr-partner">HR Partner</span> Can initiate; handles separation/termination side</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Key Notes</div>
+        <div class="flag decision">
+          <span class="flag-icon">⚡</span>
+          <div><strong>When It Triggers</strong>COBRA eligibility is processed when there is either a termination event or a loss of coverage in benefits eligibility (e.g., divorce, dependent aging out).</div>
+        </div>
+        <div class="flag condition">
+          <span class="flag-icon">📋</span>
+          <div><strong>COBRA Packet = Review Document Step</strong>The employee receives a "Review Documents" task — not just a notification. They must download, acknowledge, and submit to confirm they received the COBRA notice.</div>
+        </div>
+        <div class="flag condition">
+          <span class="flag-icon">💡</span>
+          <div><strong>Auto-Population</strong>The COBRA eligibility reason, coverage dates, and duration are automatically populated by the system based on the benefit plan and event type.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Process Flowchart</div>
+    <div class="flowchart">
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot benefits-admin"></span> System / Benefits Administrator / Benefits Partner / HR Partner</div>
+        <div class="flow-box flow-start">🚀 INITIATION — Termination or Loss of Coverage Occurs</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot benefits-admin"></span> System (Auto)</div>
+        <div class="flow-box flow-action benefits-admin">COBRA Eligibility Auto-Populated (Reason, Eligibility Date, Coverage Duration)</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot benefits-partner"></span> Benefits Partner / Benefits Administrator</div>
+        <div class="flow-box flow-action benefits-partner">Review COBRA Eligibility Details — Approve</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee (or Former Employee)</div>
+        <div class="flow-box flow-action employee">Review Documents Step — Download COBRA Notice, Acknowledge &amp; Submit</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot benefits-partner"></span> Benefits Partner / Benefits Administrator</div>
+        <div class="flow-box flow-action benefits-partner">Complete To-Do: Send COBRA Packet to Individual (via Email or Mail)</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-end">✅ COMPLETE — COBRA Process Finalized</div>
+      </div>
+    </div>
+
+    <div class="flag decision" style="margin-top:20px;">
+      <span class="flag-icon">📌</span>
+      <div><strong>Step Types in This BP</strong>This process contains all three step types: an <strong>Approval</strong> step (Benefits Partner reviews eligibility), a <strong>Review Document</strong> step (Employee acknowledges COBRA notice), and a <strong>To-Do</strong> step (Benefits Partner sends the packet).</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ BP5: OPEN ENROLLMENT ══════════════════════ -->
+<div id="bp5" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big red">📅</div>
+      <div class="process-meta">
+        <h2>Change Benefits for Open Enrollment</h2>
+        <p>Annual open enrollment initiated and finalized by the central Benefits Administrator team</p>
+      </div>
+      <div class="completion-badge">
+        Completes When<br>
+        <strong>Benefits Admin Closes &amp; Finalizes</strong>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot benefits-admin"></span><span class="role-tag benefits-admin">Benefits Administrator</span> ONLY initiator, closer &amp; finalizer of Open Enrollment</li>
+          <li><span class="role-dot benefits-partner"></span><span class="role-tag benefits-partner">Benefits Partner</span> Assists employees; reviews docs; approves events at campus</li>
+          <li><span class="role-dot hr-partner"></span><span class="role-tag hr-partner">HR Partner</span> Not directly involved in open enrollment steps</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Key Notes</div>
+        <div class="flag warning">
+          <span class="flag-icon">🏛️</span>
+          <div><strong>Central Team Controls Initiation</strong>Only the Benefits Administrator (central team) can launch, close, and finalize the Open Enrollment event. Benefits Partners at campuses cannot initiate enrollment periods.</div>
+        </div>
+        <div class="flag decision">
+          <span class="flag-icon">🔀</span>
+          <div><strong>Passive vs. Active Enrollment</strong><strong>Passive:</strong> Carries over current elections — employees only need to act for FSA/dependent care. <strong>Active:</strong> Wipes all elections — every employee must re-enroll.</div>
+        </div>
+        <div class="flag condition">
+          <span class="flag-icon">📄</span>
+          <div><strong>New Dependent During Open Enrollment</strong>If an employee adds a new dependent during enrollment, they must upload dependent verification documentation. Benefits Partner reviews eligibility before approving.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Process Flowchart</div>
+    <div class="flowchart">
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot benefits-admin"></span> Benefits Administrator (Central Team Only)</div>
+        <div class="flow-box flow-start">🚀 INITIATION — Benefits Administrator Launches Open Enrollment Event</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot benefits-admin"></span> Benefits Administrator</div>
+        <div class="flow-box flow-action benefits-admin">Configure Event: Eligibility Rules, Enrollment Type, Dates, Campus Scope</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Passive or Active Open Enrollment?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">⏸ PASSIVE — Carry Forward</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action employee">Employees Only Need to Act for FSA / Dependent Care Changes</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">✅ ACTIVE — Full Re-Enrollment</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action employee">All Employees Must Re-Enroll in All Benefit Elections</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee (Self-Service)</div>
+        <div class="flow-box flow-action employee">Employee Makes Elections &amp; Submits Enrollment During Open Period</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Is a new dependent being added?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ YES — New Dependent</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot employee"></span> Employee</div>
+            <div class="flow-box flow-action employee">Upload Dependent Verification Documentation</div>
+          </div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot benefits-partner"></span> Benefits Partner</div>
+            <div class="flow-box flow-action benefits-partner">Review &amp; Verify Dependent Eligibility Documentation</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">⏭ NO — No New Dependent</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action" style="opacity:0.35;">Dependent Doc Review — SKIPPED</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot benefits-partner"></span> Benefits Partner</div>
+        <div class="flow-box flow-action benefits-partner">Review &amp; Approve Benefit Events &amp; Documentation at Campus Level</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot benefits-admin"></span> Benefits Administrator (Central Team)</div>
+        <div class="flow-box flow-action benefits-admin">Close &amp; Finalize Open Enrollment Event</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-end">✅ COMPLETE — Elections Finalized &amp; Sent to Vendors via Integration Files</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ ROLES TABLE ══════════════════════ -->
+<div id="roles" class="section">
+  <div class="card">
+    <div class="card-title">Master Roles &amp; Permissions Table</div>
+    <div class="card-subtitle">All 5 Benefits business processes · City positions only · FWS and State excluded</div>
+    <div style="overflow-x:auto;">
+    <table class="roles-table">
+      <thead>
+        <tr>
+          <th>Business Process</th>
+          <th><span class="role-tag benefits-admin">Benefits Administrator</span></th>
+          <th><span class="role-tag benefits-partner">Benefits Partner</span></th>
+          <th><span class="role-tag employee">Employee (Self)</span></th>
+          <th><span class="role-tag hr-partner">HR Partner</span></th>
+          <th>Completes When</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Change Benefits</strong><br><span style="font-size:0.78rem;color:#666;">🔄 Election changes via worklet</span></td>
+          <td>Can initiate on behalf of employee</td>
+          <td>Can initiate; reviews &amp; approves enrollment</td>
+          <td>Primary initiator; makes &amp; submits elections</td>
+          <td>Can initiate on behalf of employee</td>
+          <td>Employee submits enrollment for approval</td>
+        </tr>
+        <tr>
+          <td><strong>Change Benefits for Life</strong><br><span style="font-size:0.78rem;color:#666;">💛 Qualifying life event sub-process</span></td>
+          <td>Can initiate; reviews documentation</td>
+          <td>Can initiate; final approval &amp; document review</td>
+          <td>Makes elections; uploads docs; completes affidavit if needed</td>
+          <td>Can initiate; handles demographic data changes</td>
+          <td>Benefits Partner approves event &amp; documentation</td>
+        </tr>
+        <tr>
+          <td><strong>Dependent Event</strong><br><span style="font-size:0.78rem;color:#666;">👨‍👩‍👧 Add / update / remove dependent</span></td>
+          <td>Can initiate; completes COBRA to-do</td>
+          <td>Can initiate; approves event; sends COBRA packet</td>
+          <td>Can initiate; updates dependent data; reviews COBRA docs</td>
+          <td>Can initiate; handles worker-level data corrections</td>
+          <td>Benefits Partner approves; COBRA to-do completed if applicable</td>
+        </tr>
+        <tr>
+          <td><strong>Review COBRA Eligibility</strong><br><span style="font-size:0.78rem;color:#666;">🐍 Termination / loss of coverage</span></td>
+          <td>Can initiate; completes to-do step (send COBRA packet)</td>
+          <td>Can initiate; reviews eligibility; sends packet</td>
+          <td>Receives COBRA notice task; acknowledges document</td>
+          <td>Can initiate (usually linked to termination BP)</td>
+          <td>Benefits Partner/Admin completes to-do step</td>
+        </tr>
+        <tr>
+          <td><strong>Open Enrollment</strong><br><span style="font-size:0.78rem;color:#666;">📅 Annual enrollment period</span></td>
+          <td><strong>ONLY role</strong> that initiates, closes &amp; finalizes enrollment</td>
+          <td>Assists employees at campus; reviews &amp; approves events &amp; docs</td>
+          <td>Makes elections during open period; uploads dependent docs if needed</td>
+          <td><span class="dash">— Not directly involved in OE steps —</span></td>
+          <td>Benefits Administrator closes &amp; finalizes event</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Key Decision Points &amp; Conditions</div>
+    <div class="card-subtitle">Flags to know before configuring or using these processes</div>
+
+    <div class="flag decision">
+      <span class="flag-icon">⏱️</span>
+      <div><strong>30-Day Rule for Life Events</strong>Employees have 30 days from a qualifying life event to complete elections and submit any required documentation. Benefits Partners can correct events after approval if needed.</div>
+    </div>
+    <div class="flag condition">
+      <span class="flag-icon">🔀</span>
+      <div><strong>Change Benefits → Change Benefits for Life</strong>The Change Benefits BP serves as the entry point or "request" that leads into the Change Benefits for Life sub-process when a specific qualifying life event triggers benefit eligibility changes.</div>
+    </div>
+    <div class="flag condition">
+      <span class="flag-icon">🐍</span>
+      <div><strong>COBRA is Triggered Automatically</strong>When a Dependent Event or Change Benefits for Life reduces coverage eligibility, the system auto-populates COBRA eligibility reason, start date, and coverage duration. Benefits Partners do NOT manually create COBRA records.</div>
+    </div>
+    <div class="flag decision">
+      <span class="flag-icon">📋</span>
+      <div><strong>Three Step Types in Benefits BPs</strong><strong>Approval:</strong> Benefits Partner reviews and approves. <strong>Review Document:</strong> Employee downloads and acknowledges COBRA notice. <strong>To-Do:</strong> Benefits Partner reminder to send COBRA packet (email or mail).</div>
+    </div>
+    <div class="flag condition">
+      <span class="flag-icon">⏸</span>
+      <div><strong>Passive vs Active Open Enrollment</strong>Passive enrollment carries forward current elections (employees only act for FSA). Active enrollment wipes all elections and requires every employee to re-enroll. Central team chooses the type when initiating.</div>
+    </div>
+    <div class="flag condition">
+      <span class="flag-icon">🔗</span>
+      <div><strong>Integration File Timing — Vendor Updates</strong>Once enrollment is approved, data is sent to vendors via integration files on a vendor-specific schedule (weekly, bi-weekly, or monthly). In emergencies, Benefits Partners can manually update vendor portals while awaiting the next file run.</div>
+    </div>
+    <div class="flag warning">
+      <span class="flag-icon">⚠️</span>
+      <div><strong>Benefits Partner Cannot Change Worker Demographics</strong>Name, date of birth, and gender on the worker record are owned by HR, not Benefits. Changes must be made by the HR Partner via HCM processes. Benefits Partner can only correct benefit enrollment data.</div>
+    </div>
+    <div class="flag warning">
+      <span class="flag-icon">🚫</span>
+      <div><strong>Excluded: Federal Work Study &amp; State-Specific Steps</strong>FWS Coordinator roles and all State employee-specific benefit steps have been removed from this dashboard per configuration requirements. Contact the appropriate team for those workflows.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Download Summary Document</div>
+    <div class="card-subtitle">Print or save this dashboard as a PDF for offline reference</div>
+    <p style="font-size:0.88rem;color:var(--slate);margin-bottom:12px;">Use your browser's print function (Ctrl+P / Cmd+P) to save as PDF. All sections and flowcharts will be included across separate pages.</p>
+    <button class="download-btn" onclick="window.print()">🖨️ Print / Save as PDF</button>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const tabs = ['overview','bp1','bp2','bp3','bp4','bp5','roles'];
+  const idx = tabs.indexOf(id);
+  if (idx >= 0) document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
