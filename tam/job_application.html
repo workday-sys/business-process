@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TAM – Job Application Process Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0f2040;
+    --navy-mid: #1a3460;
+    --blue: #1e5fa8;
+    --blue-light: #2e7dd1;
+    --gold: #e8a922;
+    --gold-light: #f5c84a;
+    --teal: #0e8a7a;
+    --red: #c0392b;
+    --green: #1a7a4a;
+    --slate: #4a5568;
+    --light: #f4f7fb;
+    --white: #ffffff;
+    --border: #dde4ef;
+    --card-shadow: 0 4px 24px rgba(15,32,64,0.10);
+    --role-hr: #2e7dd1;
+    --role-budget: #e8a922;
+    --role-recruiter: #0e8a7a;
+    --role-candidate: #7c3aed;
+    --role-admin: #64748b;
+    --role-hiring: #c0392b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--light);
+    color: var(--navy);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, var(--blue) 100%);
+    color: white;
+    padding: 36px 48px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute; top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(232,169,34,0.18) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .header::after {
+    content: '';
+    position: absolute; bottom: -40px; left: 30%;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(46,125,209,0.2) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .header-inner { position: relative; z-index: 1; }
+  .header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.2rem;
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+  }
+  .header p { color: rgba(255,255,255,0.72); font-size: 0.95rem; font-weight: 400; }
+  .header-badge {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--navy);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+
+  /* NAV TABS */
+  .tabs-bar {
+    background: var(--white);
+    border-bottom: 2px solid var(--border);
+    padding: 0 48px;
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(15,32,64,0.07);
+  }
+  .tab-btn {
+    padding: 16px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--slate);
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    position: relative;
+    top: 2px;
+  }
+  .tab-btn:hover { color: var(--blue); }
+  .tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+  /* CONTENT */
+  .content { max-width: 1200px; margin: 0 auto; padding: 36px 48px 60px; }
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* CARDS */
+  .card {
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+    padding: 32px;
+    margin-bottom: 28px;
+    border: 1px solid var(--border);
+  }
+  .card-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.35rem;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+  .card-subtitle {
+    font-size: 0.82rem;
+    color: var(--slate);
+    margin-bottom: 22px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  /* OVERVIEW GRID */
+  .overview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 18px;
+    margin-bottom: 32px;
+  }
+  .overview-tile {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+    color: white;
+    border-radius: 14px;
+    padding: 22px 20px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+  }
+  .overview-tile::after {
+    content: '';
+    position: absolute; bottom: -20px; right: -20px;
+    width: 80px; height: 80px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 50%;
+  }
+  .overview-tile:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(15,32,64,0.18); }
+  .overview-tile:nth-child(2) { background: linear-gradient(135deg, #1a4a2e 0%, var(--teal) 100%); }
+  .overview-tile:nth-child(3) { background: linear-gradient(135deg, #5b2a00 0%, #c06a10 100%); }
+  .overview-tile:nth-child(4) { background: linear-gradient(135deg, #2d1060 0%, var(--role-candidate) 100%); }
+  .overview-tile:nth-child(5) { background: linear-gradient(135deg, #5a0a0a 0%, var(--role-hiring) 100%); }
+  .overview-tile:nth-child(6) { background: linear-gradient(135deg, #0a3030 0%, #0e6060 100%); }
+  .overview-tile:nth-child(7) { background: linear-gradient(135deg, #2a3040 0%, var(--slate) 100%); }
+  .tile-icon { font-size: 1.8rem; margin-bottom: 10px; }
+  .tile-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
+  .tile-desc { font-size: 0.78rem; opacity: 0.8; line-height: 1.5; }
+
+  /* FLOWCHART */
+  .flowchart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    padding: 10px 0;
+  }
+  .flow-node {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+  }
+  .flow-box {
+    border-radius: 10px;
+    padding: 14px 22px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    text-align: center;
+    position: relative;
+    border: 2px solid transparent;
+    transition: transform 0.15s;
+  }
+  .flow-box:hover { transform: scale(1.02); }
+  .flow-start {
+    background: var(--navy);
+    color: white;
+    border-radius: 30px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 12px 32px;
+  }
+  .flow-end {
+    background: var(--teal);
+    color: white;
+    border-radius: 30px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 12px 32px;
+  }
+  .flow-end-red {
+    background: var(--red);
+    color: white;
+    border-radius: 30px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 12px 32px;
+  }
+  .flow-action {
+    background: #eef3fb;
+    border-color: var(--role-hr);
+    color: var(--navy);
+  }
+  .flow-action.recruiter { background: #edfaf7; border-color: var(--teal); }
+  .flow-action.candidate { background: #f5f0ff; border-color: var(--role-candidate); }
+  .flow-action.hiring { background: #fef2f2; border-color: var(--role-hiring); }
+  .flow-action.budget { background: #fef8ec; border-color: var(--gold); }
+  .flow-action.admin { background: #f1f5f9; border-color: var(--slate); }
+  .flow-decision {
+    background: #fff8e1;
+    border: 2px dashed var(--gold);
+    border-radius: 8px;
+    color: var(--navy);
+    font-style: italic;
+    font-size: 0.84rem;
+    padding: 12px 20px;
+  }
+  .flow-connector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 36px;
+    justify-content: center;
+    color: var(--slate);
+    font-size: 1.3rem;
+    position: relative;
+  }
+  .flow-connector::before {
+    content: '';
+    width: 2px;
+    height: 100%;
+    background: var(--border);
+    position: absolute;
+  }
+  .flow-connector span {
+    background: white;
+    padding: 0 4px;
+    position: relative;
+    z-index: 1;
+    font-size: 1.1rem;
+    color: var(--slate);
+  }
+  .flow-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+    font-size: 0.75rem;
+    color: var(--slate);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    justify-content: center;
+  }
+  .role-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  .role-dot.hr { background: var(--role-hr); }
+  .role-dot.budget { background: var(--role-budget); }
+  .role-dot.recruiter { background: var(--role-recruiter); }
+  .role-dot.candidate { background: var(--role-candidate); }
+  .role-dot.admin { background: var(--role-admin); }
+  .role-dot.hiring { background: var(--role-hiring); }
+
+  /* DECISION BRANCH */
+  .decision-branch {
+    display: flex;
+    gap: 18px;
+    width: 100%;
+    max-width: 700px;
+    justify-content: center;
+  }
+  .branch-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+  .branch-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--slate);
+    margin-bottom: 6px;
+    background: var(--light);
+    padding: 2px 10px;
+    border-radius: 20px;
+  }
+
+  /* ROLES TABLE */
+  .roles-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  .roles-table th {
+    background: var(--navy);
+    color: white;
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+  .roles-table th:first-child { border-radius: 8px 0 0 0; }
+  .roles-table th:last-child { border-radius: 0 8px 0 0; }
+  .roles-table td {
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .roles-table tr:hover td { background: #f8faff; }
+  .roles-table tr:last-child td { border-bottom: none; }
+  .check { color: var(--green); font-size: 1rem; }
+  .dash { color: #ccc; font-size: 1rem; }
+
+  .role-tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 2px 9px;
+    border-radius: 20px;
+    margin: 2px;
+    white-space: nowrap;
+  }
+  .role-tag.hr { background: #ddeeff; color: var(--blue); }
+  .role-tag.budget { background: #fff3cc; color: #7a5800; }
+  .role-tag.recruiter { background: #d9f5ef; color: var(--teal); }
+  .role-tag.candidate { background: #ede9ff; color: #5b21b6; }
+  .role-tag.admin { background: #f1f5f9; color: var(--slate); }
+  .role-tag.hiring { background: #fce7e7; color: var(--red); }
+
+  /* FLAGS */
+  .flag {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    font-size: 0.87rem;
+    line-height: 1.6;
+  }
+  .flag.decision { background: #fff8e1; border-left: 4px solid var(--gold); }
+  .flag.condition { background: #edfaf7; border-left: 4px solid var(--teal); }
+  .flag.warning { background: #fef2f2; border-left: 4px solid #ef4444; }
+  .flag.info { background: #eef3fb; border-left: 4px solid var(--blue); }
+  .flag-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+  .flag strong { color: var(--navy); display: block; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+
+  /* PROCESS HEADER */
+  .process-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--border);
+  }
+  .process-icon-big {
+    width: 56px; height: 56px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem;
+    flex-shrink: 0;
+  }
+  .process-icon-big.blue { background: linear-gradient(135deg, var(--navy), var(--blue)); }
+  .process-icon-big.green { background: linear-gradient(135deg, #1a4a2e, var(--teal)); }
+  .process-icon-big.gold { background: linear-gradient(135deg, #5b2a00, #c06a10); }
+  .process-icon-big.purple { background: linear-gradient(135deg, #2d1060, var(--role-candidate)); }
+  .process-icon-big.red { background: linear-gradient(135deg, #7a0a0a, var(--red)); }
+  .process-icon-big.slate { background: linear-gradient(135deg, #2a3040, var(--slate)); }
+  .process-meta { flex: 1; }
+  .process-meta h2 { font-family: 'DM Serif Display', serif; font-size: 1.6rem; color: var(--navy); }
+  .process-meta p { color: var(--slate); font-size: 0.88rem; margin-top: 4px; }
+  .completion-badge {
+    background: var(--light);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 0.78rem;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .completion-badge strong { color: var(--navy); display: block; font-size: 0.95rem; margin-top: 4px; }
+
+  /* TWO-COL */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 28px; }
+  @media (max-width: 800px) {
+    .two-col { grid-template-columns: 1fr; }
+    .content { padding: 24px 20px; }
+    .tabs-bar { padding: 0 16px; }
+    .header { padding: 28px 20px; }
+    .decision-branch { flex-direction: column; }
+  }
+
+  .section-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--slate);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .who-list { list-style: none; }
+  .who-list li {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.87rem;
+  }
+  .who-list li:last-child { border-bottom: none; }
+
+  /* STAGE PILL */
+  .stage-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin: 2px;
+  }
+  .stage-pill.optional { background: #fff3cc; color: #7a5800; border: 1px dashed #e8a922; }
+  .stage-pill.always { background: #ddeeff; color: var(--blue); }
+  .stage-pill.skipped { background: #f1f5f9; color: var(--slate); text-decoration: line-through; }
+
+  /* Print */
+  @media print {
+    .tabs-bar { display: none !important; }
+    .section { display: block !important; page-break-before: always; }
+    .section:first-of-type { page-break-before: auto; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-badge">TAM · Talent Acquisition Module · City Positions Only</div>
+    <h1>Job Application Process Dashboard</h1>
+    <p>Interactive guide to all 7 recruitment stages — roles, steps, decisions, and approvals · Excluding Federal Work Study &amp; State positions</p>
+  </div>
+</div>
+
+<div class="tabs-bar">
+  <button class="tab-btn active" onclick="showTab('overview')">📋 Overview</button>
+  <button class="tab-btn" onclick="showTab('bp1')">📥 Apply</button>
+  <button class="tab-btn" onclick="showTab('bp2')">🔍 Review</button>
+  <button class="tab-btn" onclick="showTab('bp3')">📞 Screen</button>
+  <button class="tab-btn" onclick="showTab('bp4')">🎤 Interview</button>
+  <button class="tab-btn" onclick="showTab('bp5')">📋 Reference Check</button>
+  <button class="tab-btn" onclick="showTab('bp6')">📄 Offer</button>
+  <button class="tab-btn" onclick="showTab('bp7')">🔒 Background Check</button>
+  <button class="tab-btn" onclick="showTab('bp8')">✅ Ready for Hire</button>
+  <button class="tab-btn" onclick="showTab('roles')">👥 Roles &amp; Permissions</button>
+</div>
+
+<div class="content">
+
+<!-- ══════════════════════ OVERVIEW ══════════════════════ -->
+<div id="overview" class="section active">
+  <div class="card">
+    <div class="card-title">Job Application Process at a Glance</div>
+    <div class="card-subtitle">7 Active Recruitment Stages · City Positions · Excluding Federal Work Study &amp; State Positions</div>
+    <div class="overview-grid">
+      <div class="overview-tile" onclick="showTab('bp1')">
+        <div class="tile-icon">📥</div>
+        <div class="tile-name">Apply</div>
+        <div class="tile-desc">Internal &amp; external candidates submit applications via career sites. Always the first step.</div>
+      </div>
+      <div class="overview-tile" onclick="showTab('bp2')">
+        <div class="tile-icon">🔍</div>
+        <div class="tile-name">Review</div>
+        <div class="tile-desc">All candidates land here first. Recruiter reviews qualifications, resumes, and questionnaire responses.</div>
+      </div>
+      <div class="overview-tile" onclick="showTab('bp3')">
+        <div class="tile-icon">📞</div>
+        <div class="tile-name">Screen</div>
+        <div class="tile-desc">Optional phone or screening interview stage. Primary Recruiter manages questionnaire and decision.</div>
+      </div>
+      <div class="overview-tile" onclick="showTab('bp4')">
+        <div class="tile-icon">🎤</div>
+        <div class="tile-name">Interview</div>
+        <div class="tile-desc">Formal interview stage. Multiple rounds possible. Search Committee and Hiring Manager involved.</div>
+      </div>
+      <div class="overview-tile" onclick="showTab('bp5')">
+        <div class="tile-icon">📋</div>
+        <div class="tile-name">Reference Check</div>
+        <div class="tile-desc">Candidate adds references. Primary Recruiter manages follow-up and makes the decision.</div>
+      </div>
+      <div class="overview-tile" onclick="showTab('bp6')">
+        <div class="tile-icon">📄</div>
+        <div class="tile-name">Offer</div>
+        <div class="tile-desc">Formal offer lifecycle: initiation, HR Partner review, Budget Manager approval, candidate acknowledgment.</div>
+      </div>
+      <div class="overview-tile" onclick="showTab('bp7')">
+        <div class="tile-icon">🔒</div>
+        <div class="tile-name">Background Check</div>
+        <div class="tile-desc">Primary Recruiter selects background check status and makes the final background check decision.</div>
+      </div>
+    </div>
+    <div class="overview-tile" onclick="showTab('bp8')" style="background:linear-gradient(135deg,#1a4a2e,#0e8a7a);margin-bottom:0;">
+      <div class="tile-icon">✅</div>
+      <div class="tile-name">Ready for Hire</div>
+      <div class="tile-desc">Final stage. Primary Recruiter moves candidate; HR Partner initiates the applicable hiring process.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Security Roles Legend</div>
+    <div class="card-subtitle">Who participates across all recruitment stages</div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px;">
+      <span class="role-tag recruiter">🟢 Primary Recruiter</span>
+      <span class="role-tag hr">🔵 HR Partner</span>
+      <span class="role-tag budget">🟡 Budget Manager</span>
+      <span class="role-tag hiring">🔴 Hiring Manager</span>
+      <span class="role-tag candidate">🟣 Candidate (Internal / External)</span>
+      <span class="role-tag admin">⚫ Recruiting Administrator</span>
+    </div>
+
+    <div class="flag info">
+      <span class="flag-icon">📌</span>
+      <div><strong>Stages Are Not Always Sequential</strong>The recruitment flow in Workday is dynamic. Candidates can move between stages in different orders. Screen, Interview, Reference Check, and Background Check are all conditional — not every candidate goes through every stage.</div>
+    </div>
+    <div class="flag decision">
+      <span class="flag-icon">⚠️</span>
+      <div><strong>Review Stage Behaves Differently</strong>Unlike other stages, Review tasks do NOT appear in user inboxes because so many candidates may apply at once. Recruiters must actively navigate to the candidate pipeline to see candidates in Review status.</div>
+    </div>
+    <div class="flag condition">
+      <span class="flag-icon">🔀</span>
+      <div><strong>Knockout Questions Can Auto-Disposition</strong>If a candidate answers a knockout question in a way that disqualifies them (e.g., indicating they live internationally), they are automatically "dispositioned" (declined) in the system without manual review.</div>
+    </div>
+    <div class="flag condition">
+      <span class="flag-icon">🎤</span>
+      <div><strong>Interview Scheduling — Shared Task</strong>When multiple roles can schedule an interview (Primary Recruiter, Search Committee Member/Chair, Hiring Manager), the task goes to all their inboxes simultaneously. The first person to act on it removes it from everyone else's inbox.</div>
+    </div>
+    <div class="flag warning">
+      <span class="flag-icon">🚫</span>
+      <div><strong>Excluded from this Dashboard</strong>Federal Work Study positions and State-specific steps have been excluded per your request. Assessment stage is also excluded as it is NOT being used. All flows shown apply to City positions only.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">End-to-End Candidate Journey</div>
+    <div class="card-subtitle">Visual overview of all stages in typical flow order</div>
+    <div class="flowchart">
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot candidate"></span> Internal / External Candidate</div>
+        <div class="flow-box flow-start">📥 APPLY — Submit Application</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot admin"></span> Primary Recruiter / Recruiter / Recruiting Admin / Manager</div>
+        <div class="flow-box flow-action"><span class="stage-pill always">ALWAYS</span> 🔍 REVIEW — All Candidates Land Here</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Decision: Move Forward or Decline?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ Move Forward</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action recruiter"><span class="stage-pill optional">OPTIONAL</span> 📞 Screen</div>
+          </div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action hiring"><span class="stage-pill optional">OPTIONAL</span> 🎤 Interview (1 or more rounds)</div>
+          </div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action"><span class="stage-pill optional">OPTIONAL</span> 📋 Reference Check</div>
+          </div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action budget">📄 Offer (HR Review → Budget Approval → Candidate Acknowledges)</div>
+          </div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action admin"><span class="stage-pill optional">OPTIONAL</span> 🔒 Background Check</div>
+          </div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-end">✅ READY FOR HIRE → HR Partner Initiates Hiring Process</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">❌ Decline (Disposition)</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-end-red">❌ DISPOSITIONED — Candidate Declined</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ BP1: APPLY ══════════════════════ -->
+<div id="bp1" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big purple">📥</div>
+      <div class="process-meta">
+        <h2>Apply — Job Application Submission</h2>
+        <p>Internal and external candidates submit applications · Anytime the requisition is open</p>
+      </div>
+      <div class="completion-badge">Completes When<strong>Application Submitted</strong></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot candidate"></span><span class="role-tag candidate">External Candidate</span> Applies via External Career Site</li>
+          <li><span class="role-dot candidate"></span><span class="role-tag candidate">Internal Candidate</span> Applies via Internal Career Site (Jobs Hub)</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Decision Flags</div>
+        <div class="flag info">
+          <span class="flag-icon">📌</span>
+          <div><strong>Always Goes to Review</strong>Regardless of how or when a candidate applies, all applications automatically enter the Review stage immediately upon submission.</div>
+        </div>
+        <div class="flag condition">
+          <span class="flag-icon">⚠️</span>
+          <div><strong>Knockout Questions</strong>Applications with knockout question responses that indicate disqualification may be auto-dispositioned before reaching manual review.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Process Flowchart</div>
+    <div class="flowchart">
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot candidate"></span> Internal or External Candidate</div>
+        <div class="flow-box flow-start">📥 START — Candidate Applies to Requisition</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">🌐 External Candidate</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot candidate"></span> External Candidate</div>
+            <div class="flow-box flow-action candidate">Apply via External Career Site</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">🏢 Internal Candidate</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot candidate"></span> Internal Candidate</div>
+            <div class="flow-box flow-action candidate">Apply via Jobs Hub (Internal Career Site)</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Knockout Questions — Does candidate meet minimum criteria?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ Qualified</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-end">✅ → Enters REVIEW Stage Automatically</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">❌ Disqualified by Knockout</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-end-red">❌ Auto-Dispositioned (Declined)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ BP2: REVIEW ══════════════════════ -->
+<div id="bp2" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big blue">🔍</div>
+      <div class="process-meta">
+        <h2>Review — Candidate Review Stage</h2>
+        <p>First stage after application · All candidates enter here · Recruiter evaluates minimum qualifications</p>
+      </div>
+      <div class="completion-badge">Completes When<strong>Review Decision Made</strong></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot recruiter"></span><span class="role-tag recruiter">Primary Recruiter</span> Reviews &amp; makes decision</li>
+          <li><span class="role-dot recruiter"></span><span class="role-tag recruiter">Recruiter</span> Can review candidates</li>
+          <li><span class="role-dot admin"></span><span class="role-tag admin">Recruiting Administrator</span> Can review candidates</li>
+          <li><span class="role-dot hiring"></span><span class="role-tag hiring">Hiring Manager</span> Can review candidates</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Decision Flags</div>
+        <div class="flag decision">
+          <span class="flag-icon">⚠️</span>
+          <div><strong>No Inbox Task — Active Navigation Required</strong>Review tasks do NOT appear in user inboxes due to the high volume of applicants. Recruiters must navigate to the requisition pipeline directly to see candidates in this stage.</div>
+        </div>
+        <div class="flag condition">
+          <span class="flag-icon">🔀</span>
+          <div><strong>Move Forward or Decline</strong>Only two outcomes: move the candidate to the next stage, or decline (disposition) them. The recruiter reviews resume, questionnaire answers, and any supporting documentation.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Process Flowchart</div>
+    <div class="flowchart">
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot candidate"></span> All Candidates — Automatically</div>
+        <div class="flow-box flow-start">🔍 START — Candidate Enters Review Stage</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot recruiter"></span> Primary Recruiter / Recruiter / Recruiting Admin / Hiring Manager</div>
+        <div class="flow-box flow-action recruiter">Review Candidate — Resume, Questionnaire, Supporting Docs</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot recruiter"></span> Primary Recruiter / Recruiter / Recruiting Admin / Hiring Manager</div>
+        <div class="flow-box flow-action recruiter">Make Review Decision</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ Move Forward</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-end">✅ → Advances to Next Stage (Screen, Interview, etc.)</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">❌ Decline</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-end-red">❌ Dispositioned — Candidate Declined</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ BP3: SCREEN ══════════════════════ -->
+<div id="bp3" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big green">📞</div>
+      <div class="process-meta">
+        <h2>Screen — Candidate Screening</h2>
+        <p>Optional stage · Primary Recruiter only · Phone screen or preliminary qualification check</p>
+      </div>
+      <div class="completion-badge">Completes When<strong>Screen Decision Made</strong></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot recruiter"></span><span class="role-tag recruiter">Primary Recruiter</span> Completes questionnaire &amp; makes screen decision</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Decision Flags</div>
+        <div class="flag condition">
+          <span class="flag-icon">🔀</span>
+          <div><strong>Not Required for Every Candidate</strong>Screen is an optional stage. Not all candidates are routed here — only those the recruiter chooses to screen further before an interview.</div>
+        </div>
+        <div class="flag info">
+          <span class="flag-icon">📌</span>
+          <div><strong>Questionnaire Sent to Recruiter</strong>When a candidate enters Screen, a questionnaire is sent to the Primary Recruiter, who uses it to record screening notes (e.g., phone screen results).</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Process Flowchart</div>
+    <div class="flowchart">
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot recruiter"></span> Primary Recruiter (if candidate moved to Screen)</div>
+        <div class="flow-box flow-start">📞 START — Candidate Moved to Screen Stage</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot recruiter"></span> Primary Recruiter</div>
+        <div class="flow-box flow-action recruiter">Complete Screening Questionnaire (Phone Screen Notes)</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot recruiter"></span> Primary Recruiter</div>
+        <div class="flow-box flow-action recruiter">Screen Candidate — Make Decision</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ Move Forward</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-end">✅ → Advances to Interview or Next Stage</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">❌ Decline</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-end-red">❌ Dispositioned — Candidate Declined</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ BP4: INTERVIEW ══════════════════════ -->
+<div id="bp4" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big red">🎤</div>
+      <div class="process-meta">
+        <h2>Interview — Candidate Interview Stage</h2>
+        <p>Optional stage · Multiple rounds available · Primary Recruiter, Search Committee, or Hiring Manager can schedule</p>
+      </div>
+      <div class="completion-badge">Completes When<strong>Interview Decision Made</strong></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot recruiter"></span><span class="role-tag recruiter">Primary Recruiter</span> Schedules interview &amp; manages feedback</li>
+          <li><span class="role-dot hiring"></span><span class="role-tag hiring">Search Committee Member / Chair</span> Schedules interview; submits feedback</li>
+          <li><span class="role-dot hiring"></span><span class="role-tag hiring">Hiring Manager</span> Schedules interview; submits feedback</li>
+          <li><span class="role-dot recruiter"></span><span class="role-tag recruiter">Interviewers (assigned)</span> Submit interview feedback (1–5 rating)</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Decision Flags</div>
+        <div class="flag decision">
+          <span class="flag-icon">⚠️</span>
+          <div><strong>Shared Scheduling Task</strong>When multiple roles can schedule (Primary Recruiter, Search Committee Member/Chair, Hiring Manager), the task goes to all inboxes simultaneously. First person to act removes it from all others.</div>
+        </div>
+        <div class="flag condition">
+          <span class="flag-icon">🔀</span>
+          <div><strong>Multiple Interview Rounds</strong>The system supports multiple rounds of interviews. Each round follows the same flow: schedule → feedback → decision.</div>
+        </div>
+        <div class="flag info">
+          <span class="flag-icon">💡</span>
+          <div><strong>Administrative Support for Scheduling</strong>If an admin staff member needs to schedule on behalf of the committee, they should be assigned as a Search Committee Member in the system to access the scheduling task.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Process Flowchart</div>
+    <div class="flowchart">
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot recruiter"></span> Primary Recruiter / Search Committee / Hiring Manager</div>
+        <div class="flow-box flow-start">🎤 START — Candidate Moved to Interview Stage</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot recruiter"></span> Primary Recruiter OR <span class="role-dot hiring"></span> Search Committee Chair/Member OR <span class="role-dot hiring"></span> Hiring Manager</div>
+        <div class="flow-box flow-action hiring">Schedule Interview — Assign Interviewers, Time, Format (In-Person / Zoom / Phone)</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot hiring"></span> Interviewers (all assigned)</div>
+        <div class="flow-box flow-action hiring">Submit Interview Feedback (Rating 1–5 + Comments)</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot recruiter"></span> Person Who Scheduled (Primary Recruiter / Search Committee / Hiring Manager)</div>
+        <div class="flow-box flow-action recruiter">Manage Interview Feedback — Review All Submitted Feedback</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Decision: Additional Interview Round Needed?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">🔄 Another Round</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action hiring">Schedule Next Interview Round (Repeat)</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">✅ Move Forward</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-end">✅ → Advances to Reference Check or Offer</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">❌ Decline</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-end-red">❌ Dispositioned — Candidate Declined</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ BP5: REFERENCE CHECK ══════════════════════ -->
+<div id="bp5" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big gold">📋</div>
+      <div class="process-meta">
+        <h2>Reference Check</h2>
+        <p>Optional stage · Candidate adds references · Primary Recruiter manages and decides</p>
+      </div>
+      <div class="completion-badge">Completes When<strong>Reference Check Decision Made</strong></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot candidate"></span><span class="role-tag candidate">Candidate</span> Adds reference contact information</li>
+          <li><span class="role-dot recruiter"></span><span class="role-tag recruiter">Primary Recruiter</span> Manages references; makes decision</li>
+          <li><span class="role-dot hiring"></span><span class="role-tag hiring">Hiring Manager</span> May be involved in outreach (pending config)</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Decision Flags</div>
+        <div class="flag decision">
+          <span class="flag-icon">⚠️</span>
+          <div><strong>Task Assignment Under Review</strong>Current config routes the reference task to the Primary Recruiter. Based on session feedback, this may be updated to route to the Hiring Manager, who typically conducts reference checks after interviews are concluded.</div>
+        </div>
+        <div class="flag condition">
+          <span class="flag-icon">🔀</span>
+          <div><strong>Recruiter Can Submit on Behalf of Reference</strong>If a referee is unreachable, the Primary Recruiter can call them directly and submit responses on their behalf, then mark the reference check as complete.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Process Flowchart</div>
+    <div class="flowchart">
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot recruiter"></span> Primary Recruiter (if candidate moved to this stage)</div>
+        <div class="flow-box flow-start">📋 START — Candidate Moved to Reference Check Stage</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot candidate"></span> Candidate</div>
+        <div class="flow-box flow-action candidate">Add References (Name, Email, Phone)</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot recruiter"></span> Primary Recruiter</div>
+        <div class="flow-box flow-action recruiter">Manage References — Follow Up / Update Contact Info / Submit on Behalf</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot recruiter"></span> Primary Recruiter</div>
+        <div class="flow-box flow-action recruiter">Reference Check Decision</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ Positive Reference</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-end">✅ → Advances to Offer or Background Check</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">❌ Negative Reference</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-end-red">❌ Dispositioned — Candidate Declined</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ BP6: OFFER ══════════════════════ -->
+<div id="bp6" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big blue">📄</div>
+      <div class="process-meta">
+        <h2>Offer — Formal Job Offer</h2>
+        <p>Primary Recruiter initiates · HR Partner reviews &amp; approves · Budget Manager may approve · Candidate acknowledges</p>
+      </div>
+      <div class="completion-badge">Completes When<strong>Offer Decision Made</strong></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot recruiter"></span><span class="role-tag recruiter">Primary Recruiter</span> Initiates offer; generates document; makes offer decision</li>
+          <li><span class="role-dot hr"></span><span class="role-tag hr">HR Partner</span> Reviews offer; approves</li>
+          <li><span class="role-dot budget"></span><span class="role-tag budget">Budget Manager</span> Potential additional approval step</li>
+          <li><span class="role-dot candidate"></span><span class="role-tag candidate">Candidate</span> Receives &amp; acknowledges offer document</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Decision Flags</div>
+        <div class="flag decision">
+          <span class="flag-icon">⚠️</span>
+          <div><strong>Offer Accepted vs Declined</strong>If candidate accepts, Primary Recruiter receives a "Make Offer Decision" task. If candidate declines, recruiter receives a "Send Back" task and can re-route to any prior offer step to make adjustments.</div>
+        </div>
+        <div class="flag condition">
+          <span class="flag-icon">🔀</span>
+          <div><strong>Budget Manager Approval — Conditional</strong>Budget Manager approval is a potential step — not always required. Confirm with your configuration team whether this is triggered for all offers or conditionally.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Process Flowchart</div>
+    <div class="flowchart">
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot recruiter"></span> Primary Recruiter</div>
+        <div class="flow-box flow-start">📄 START — Primary Recruiter Initiates Offer</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot recruiter"></span> Primary Recruiter</div>
+        <div class="flow-box flow-action recruiter">Enter Offer Details (Target Hire Date, Compensation, etc.)</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot hr"></span> HR Partner</div>
+        <div class="flow-box flow-action">HR Partner — Review Offer</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot hr"></span> HR Partner</div>
+        <div class="flow-box flow-action">HR Partner — Approve Offer</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Decision: Is Budget Manager Approval Required?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ Yes — Budget Approval Required</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot budget"></span> Budget Manager</div>
+            <div class="flow-box flow-action budget">Budget Manager — Approve Offer</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">⏭ No — Proceed to Document</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action" style="opacity:0.4;">Budget Approval — SKIPPED</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot recruiter"></span> Primary Recruiter</div>
+        <div class="flow-box flow-action recruiter">Generate Offer Document (Offer Letter)</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot candidate"></span> Candidate (as Self)</div>
+        <div class="flow-box flow-action candidate">Candidate Reviews &amp; Acknowledges Offer Document</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Decision: Did Candidate Accept the Offer?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ Accepted</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot recruiter"></span> Primary Recruiter</div>
+            <div class="flow-box flow-action recruiter">Make Offer Decision (Accept)</div>
+          </div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-end">✅ → Advances to Background Check or Ready for Hire</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">❌ Declined by Candidate</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot recruiter"></span> Primary Recruiter</div>
+            <div class="flow-box flow-action budget">Receive "Send Back" Task — Re-Route to Prior Step</div>
+          </div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-decision">Can send back to: Initiation, HR Approval, Budget Approval, or Generate Document</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ BP7: BACKGROUND CHECK ══════════════════════ -->
+<div id="bp7" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big slate">🔒</div>
+      <div class="process-meta">
+        <h2>Background Check</h2>
+        <p>Optional stage · Primary Recruiter manages status and makes decision</p>
+      </div>
+      <div class="completion-badge">Completes When<strong>Background Check Decision Made</strong></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot recruiter"></span><span class="role-tag recruiter">Primary Recruiter</span> Selects background check overall status &amp; makes decision</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Decision Flags</div>
+        <div class="flag condition">
+          <span class="flag-icon">🔀</span>
+          <div><strong>Optional Stage</strong>Not every candidate goes through a Background Check stage. If this stage is used, it typically occurs after offer acceptance and before Ready for Hire.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Process Flowchart</div>
+    <div class="flowchart">
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot recruiter"></span> Primary Recruiter (if candidate moved to this stage)</div>
+        <div class="flow-box flow-start">🔒 START — Candidate Moved to Background Check Stage</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot recruiter"></span> Primary Recruiter</div>
+        <div class="flow-box flow-action recruiter">Select Background Check Overall Status</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot recruiter"></span> Primary Recruiter</div>
+        <div class="flow-box flow-action recruiter">Make Background Check Decision</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ Clear — Move Forward</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-end">✅ → Moves to Ready for Hire</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">❌ Failed Background Check</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-end-red">❌ Dispositioned — Candidate Declined</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ BP8: READY FOR HIRE ══════════════════════ -->
+<div id="bp8" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big green">✅</div>
+      <div class="process-meta">
+        <h2>Ready for Hire</h2>
+        <p>Final recruitment stage · Primary Recruiter moves candidate · HR Partner initiates applicable hiring process</p>
+      </div>
+      <div class="completion-badge">Completes When<strong>Hiring Process Initiated</strong></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot recruiter"></span><span class="role-tag recruiter">Primary Recruiter</span> Moves candidate to Ready for Hire</li>
+          <li><span class="role-dot hr"></span><span class="role-tag hr">HR Partner</span> Initiates the applicable hiring process</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Decision Flags</div>
+        <div class="flag info">
+          <span class="flag-icon">📌</span>
+          <div><strong>This is the Final TAM Stage</strong>Ready for Hire is the destination at the end of the recruitment process. Once a candidate reaches this stage, the HR Partner takes action to formally begin the onboarding / hire process in the system.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Process Flowchart</div>
+    <div class="flowchart">
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot recruiter"></span> Primary Recruiter</div>
+        <div class="flow-box flow-start">✅ START — Primary Recruiter Moves Candidate to Ready for Hire</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot hr"></span> HR Partner</div>
+        <div class="flow-box flow-action">HR Partner — Initiates Applicable Hiring Process</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-end">✅ COMPLETE — Candidate is Ready for Hire · Hiring Process Begins</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ ROLES TABLE ══════════════════════ -->
+<div id="roles" class="section">
+  <div class="card">
+    <div class="card-title">Master Roles &amp; Permissions Table</div>
+    <div class="card-subtitle">All recruitment stages · City positions only · FWS, State, and Assessment stage excluded</div>
+    <div style="overflow-x:auto;">
+    <table class="roles-table">
+      <thead>
+        <tr>
+          <th>Stage / Process</th>
+          <th><span class="role-tag recruiter">Primary Recruiter</span></th>
+          <th><span class="role-tag hr">HR Partner</span></th>
+          <th><span class="role-tag budget">Budget Manager</span></th>
+          <th><span class="role-tag hiring">Hiring Manager / Search Committee</span></th>
+          <th><span class="role-tag candidate">Candidate</span></th>
+          <th><span class="role-tag admin">Recruiting Admin</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Apply</strong><br><span style="font-size:0.78rem;color:#666;">📥 Application Submission</span></td>
+          <td><span class="dash">—</span></td>
+          <td><span class="dash">—</span></td>
+          <td><span class="dash">—</span></td>
+          <td><span class="dash">—</span></td>
+          <td>Submits via External or Internal Career Site</td>
+          <td><span class="dash">—</span></td>
+        </tr>
+        <tr>
+          <td><strong>Review</strong><br><span style="font-size:0.78rem;color:#666;">🔍 All candidates enter here</span></td>
+          <td>Reviews candidate; makes decision</td>
+          <td><span class="dash">—</span></td>
+          <td><span class="dash">—</span></td>
+          <td>Can review candidates</td>
+          <td><span class="dash">—</span></td>
+          <td>Can review candidates</td>
+        </tr>
+        <tr>
+          <td><strong>Screen</strong><br><span style="font-size:0.78rem;color:#666;">📞 Optional · Phone screen</span></td>
+          <td>Completes questionnaire; makes screen decision</td>
+          <td><span class="dash">—</span></td>
+          <td><span class="dash">—</span></td>
+          <td><span class="dash">—</span></td>
+          <td><span class="dash">—</span></td>
+          <td><span class="dash">—</span></td>
+        </tr>
+        <tr>
+          <td><strong>Interview</strong><br><span style="font-size:0.78rem;color:#666;">🎤 Optional · Multiple rounds</span></td>
+          <td>Schedules interview; manages feedback; decision</td>
+          <td><span class="dash">—</span></td>
+          <td><span class="dash">—</span></td>
+          <td>Schedules interview; submits interview feedback</td>
+          <td><span class="dash">—</span></td>
+          <td><span class="dash">—</span></td>
+        </tr>
+        <tr>
+          <td><strong>Reference Check</strong><br><span style="font-size:0.78rem;color:#666;">📋 Optional</span></td>
+          <td>Manages references; submits on behalf; makes decision</td>
+          <td><span class="dash">—</span></td>
+          <td><span class="dash">—</span></td>
+          <td>May be assigned (pending config update)</td>
+          <td>Adds reference contacts</td>
+          <td><span class="dash">—</span></td>
+        </tr>
+        <tr>
+          <td><strong>Offer</strong><br><span style="font-size:0.78rem;color:#666;">📄 Formal offer lifecycle</span></td>
+          <td>Initiates; enters details; generates document; makes offer decision</td>
+          <td>Reviews offer; approves offer</td>
+          <td>Potential approval step</td>
+          <td><span class="dash">—</span></td>
+          <td>Reviews &amp; acknowledges offer document</td>
+          <td><span class="dash">—</span></td>
+        </tr>
+        <tr>
+          <td><strong>Background Check</strong><br><span style="font-size:0.78rem;color:#666;">🔒 Optional</span></td>
+          <td>Selects status; makes decision</td>
+          <td><span class="dash">—</span></td>
+          <td><span class="dash">—</span></td>
+          <td><span class="dash">—</span></td>
+          <td><span class="dash">—</span></td>
+          <td><span class="dash">—</span></td>
+        </tr>
+        <tr>
+          <td><strong>Ready for Hire</strong><br><span style="font-size:0.78rem;color:#666;">✅ Final stage</span></td>
+          <td>Moves candidate to Ready for Hire</td>
+          <td>Initiates applicable hiring process</td>
+          <td><span class="dash">—</span></td>
+          <td><span class="dash">—</span></td>
+          <td><span class="dash">—</span></td>
+          <td><span class="dash">—</span></td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Key Decision Points &amp; Conditions</div>
+    <div class="card-subtitle">Flags to know before testing or using these processes</div>
+
+    <div class="flag decision">
+      <span class="flag-icon">⚠️</span>
+      <div><strong>Review Does Not Use the Inbox</strong>Review is the only stage where tasks do NOT appear in user inboxes. Because so many candidates can apply at once, recruiters must navigate directly to the requisition pipeline to see and act on Review-stage candidates.</div>
+    </div>
+    <div class="flag decision">
+      <span class="flag-icon">⚠️</span>
+      <div><strong>Offer — Candidate Decline Sends Task Back</strong>If a candidate declines the offer, the Primary Recruiter receives a "Send Back" task. They can re-route the process to any prior offer step: initiation, HR approval, Budget approval, or document generation.</div>
+    </div>
+    <div class="flag condition">
+      <span class="flag-icon">🔀</span>
+      <div><strong>Stage Flow is Dynamic</strong>Candidates do not need to visit every stage. Screen, Interview, Reference Check, and Background Check are all optional. The order can also be adjusted based on institutional practice. The only mandatory transitions are: Apply → Review, and successful offer → Ready for Hire.</div>
+    </div>
+    <div class="flag condition">
+      <span class="flag-icon">🔀</span>
+      <div><strong>Interview Scheduling — Shared Task, First-Come Removes It</strong>When multiple roles (Primary Recruiter, Search Committee Chair/Member, Hiring Manager) can all schedule an interview, the task appears in all their inboxes simultaneously. Whoever acts on it first removes it from all other inboxes.</div>
+    </div>
+    <div class="flag condition">
+      <span class="flag-icon">💡</span>
+      <div><strong>Administrative Support for Interview Scheduling</strong>If admin support staff need to schedule interviews on behalf of a search committee (without being actual committee members), they should be added as a Search Committee Member in the system to access the scheduling task. This is logged as a configuration item for follow-up.</div>
+    </div>
+    <div class="flag condition">
+      <span class="flag-icon">💡</span>
+      <div><strong>Reference Check Task — Pending Configuration Update</strong>Current setup routes the reference management task to the Primary Recruiter. Session feedback indicated this may better belong with the Hiring Manager, who typically handles reference checks after interviews. This is flagged as a defect for review.</div>
+    </div>
+    <div class="flag warning">
+      <span class="flag-icon">🚫</span>
+      <div><strong>Assessment Stage — NOT BEING USED</strong>While Workday supports an Assessment stage, this has been confirmed as not in use. Candidates skip from Review/Screen directly to Interview.</div>
+    </div>
+    <div class="flag warning">
+      <span class="flag-icon">🚫</span>
+      <div><strong>Excluded: Federal Work Study &amp; State Positions</strong>Federal Work Study positions and State-specific recruitment steps have been excluded from this dashboard per your request. All flows apply to City positions only.</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const tabs = ['overview','bp1','bp2','bp3','bp4','bp5','bp6','bp7','bp8','roles'];
+  const idx = tabs.indexOf(id);
+  if (idx >= 0) document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

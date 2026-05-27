@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TAM – Evergreen & Requisition Management Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0f2040;
+    --navy-mid: #1a3460;
+    --blue: #1e5fa8;
+    --blue-light: #2e7dd1;
+    --gold: #e8a922;
+    --gold-light: #f5c84a;
+    --teal: #0e8a7a;
+    --red: #c0392b;
+    --green: #1a7a4a;
+    --slate: #4a5568;
+    --light: #f4f7fb;
+    --white: #ffffff;
+    --border: #dde4ef;
+    --card-shadow: 0 4px 24px rgba(15,32,64,0.10);
+    --role-hr: #2e7dd1;
+    --role-budget: #e8a922;
+    --role-payroll: #0e8a7a;
+    --role-manager: #7c3aed;
+    --role-admin: #64748b;
+    --role-recruiter: #c0392b;
+    --role-diversity: #0e8a7a;
+    --role-civil: #5b2a00;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--light);
+    color: var(--navy);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, var(--blue) 100%);
+    color: white;
+    padding: 36px 48px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute; top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(232,169,34,0.18) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .header::after {
+    content: '';
+    position: absolute; bottom: -40px; left: 30%;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(46,125,209,0.2) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .header-inner { position: relative; z-index: 1; }
+  .header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.2rem;
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+  }
+  .header p { color: rgba(255,255,255,0.72); font-size: 0.95rem; font-weight: 400; }
+  .header-badge {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--navy);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+
+  /* NAV TABS */
+  .tabs-bar {
+    background: var(--white);
+    border-bottom: 2px solid var(--border);
+    padding: 0 48px;
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(15,32,64,0.07);
+  }
+  .tab-btn {
+    padding: 16px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--slate);
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    position: relative;
+    top: 2px;
+  }
+  .tab-btn:hover { color: var(--blue); }
+  .tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+  /* CONTENT */
+  .content { max-width: 1200px; margin: 0 auto; padding: 36px 48px 60px; }
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* CARDS */
+  .card {
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+    padding: 32px;
+    margin-bottom: 28px;
+    border: 1px solid var(--border);
+  }
+  .card-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.35rem;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+  .card-subtitle {
+    font-size: 0.82rem;
+    color: var(--slate);
+    margin-bottom: 22px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  /* OVERVIEW GRID */
+  .overview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+    margin-bottom: 32px;
+  }
+  .overview-tile {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+    color: white;
+    border-radius: 14px;
+    padding: 22px 20px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+  }
+  .overview-tile::after {
+    content: '';
+    position: absolute; bottom: -20px; right: -20px;
+    width: 80px; height: 80px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 50%;
+  }
+  .overview-tile:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(15,32,64,0.18); }
+  .overview-tile:nth-child(2) { background: linear-gradient(135deg, #1a4a2e 0%, var(--teal) 100%); }
+  .overview-tile:nth-child(3) { background: linear-gradient(135deg, #5b2a00 0%, #c06a10 100%); }
+  .overview-tile:nth-child(4) { background: linear-gradient(135deg, #2d1060 0%, var(--role-manager) 100%); }
+  .overview-tile:nth-child(5) { background: linear-gradient(135deg, #0a3030 0%, #0e6060 100%); }
+  .tile-icon { font-size: 1.8rem; margin-bottom: 10px; }
+  .tile-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
+  .tile-desc { font-size: 0.78rem; opacity: 0.8; line-height: 1.5; }
+
+  /* FLOWCHART */
+  .flowchart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    padding: 10px 0;
+  }
+  .flow-node {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+  }
+  .flow-box {
+    border-radius: 10px;
+    padding: 14px 22px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    text-align: center;
+    position: relative;
+    border: 2px solid transparent;
+    transition: transform 0.15s;
+  }
+  .flow-box:hover { transform: scale(1.02); }
+  .flow-start {
+    background: var(--navy);
+    color: white;
+    border-radius: 30px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 12px 32px;
+  }
+  .flow-end {
+    background: var(--teal);
+    color: white;
+    border-radius: 30px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 12px 32px;
+  }
+  .flow-action {
+    background: #eef3fb;
+    border-color: var(--role-hr);
+    color: var(--navy);
+  }
+  .flow-action.budget { background: #fef8ec; border-color: var(--gold); }
+  .flow-action.recruiter { background: #fef2f2; border-color: var(--role-recruiter); }
+  .flow-action.diversity { background: #edfaf7; border-color: var(--teal); }
+  .flow-action.civil { background: #fdf4e7; border-color: #c06a10; }
+  .flow-action.manager { background: #f5f0ff; border-color: var(--role-manager); }
+  .flow-action.admin { background: #f1f5f9; border-color: var(--slate); }
+  .flow-decision {
+    background: #fff8e1;
+    border: 2px dashed var(--gold);
+    border-radius: 8px;
+    color: var(--navy);
+    font-style: italic;
+    font-size: 0.84rem;
+    padding: 12px 20px;
+  }
+  .flow-auto {
+    background: #f0fdf4;
+    border: 2px solid #16a34a;
+    border-radius: 10px;
+    color: #14532d;
+    font-size: 0.84rem;
+    padding: 10px 18px;
+  }
+  .flow-connector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 36px;
+    justify-content: center;
+    color: var(--slate);
+    font-size: 1.3rem;
+    position: relative;
+  }
+  .flow-connector::before {
+    content: '';
+    width: 2px;
+    height: 100%;
+    background: var(--border);
+    position: absolute;
+  }
+  .flow-connector span {
+    background: white;
+    padding: 0 4px;
+    position: relative;
+    z-index: 1;
+    font-size: 1.1rem;
+    color: var(--slate);
+  }
+  .flow-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+    font-size: 0.75rem;
+    color: var(--slate);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    justify-content: center;
+  }
+  .role-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  .role-dot.hr { background: var(--role-hr); }
+  .role-dot.budget { background: var(--role-budget); }
+  .role-dot.recruiter { background: var(--role-recruiter); }
+  .role-dot.diversity { background: var(--teal); }
+  .role-dot.civil { background: #c06a10; }
+  .role-dot.manager { background: var(--role-manager); }
+  .role-dot.admin { background: var(--role-admin); }
+
+  /* DECISION BRANCH */
+  .decision-branch {
+    display: flex;
+    gap: 18px;
+    width: 100%;
+    max-width: 700px;
+    justify-content: center;
+  }
+  .branch-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+  .branch-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--slate);
+    margin-bottom: 6px;
+    background: var(--light);
+    padding: 2px 10px;
+    border-radius: 20px;
+  }
+
+  /* ROLES TABLE */
+  .roles-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  .roles-table th {
+    background: var(--navy);
+    color: white;
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+  .roles-table th:first-child { border-radius: 8px 0 0 0; }
+  .roles-table th:last-child { border-radius: 0 8px 0 0; }
+  .roles-table td {
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .roles-table tr:hover td { background: #f8faff; }
+  .roles-table tr:last-child td { border-bottom: none; }
+  .check { color: var(--green); font-size: 1rem; }
+  .dash { color: #ccc; font-size: 1rem; }
+
+  .role-tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 2px 9px;
+    border-radius: 20px;
+    margin: 2px;
+    white-space: nowrap;
+  }
+  .role-tag.hr { background: #ddeeff; color: var(--blue); }
+  .role-tag.budget { background: #fff3cc; color: #7a5800; }
+  .role-tag.recruiter { background: #fce7e7; color: var(--red); }
+  .role-tag.diversity { background: #d9f5ef; color: var(--teal); }
+  .role-tag.civil { background: #fdf4e7; color: #7a3800; }
+  .role-tag.manager { background: #ede9ff; color: #5b21b6; }
+  .role-tag.admin { background: #f1f5f9; color: var(--slate); }
+
+  /* FLAGS */
+  .flag {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    font-size: 0.87rem;
+    line-height: 1.6;
+  }
+  .flag.decision { background: #fff8e1; border-left: 4px solid var(--gold); }
+  .flag.condition { background: #edfaf7; border-left: 4px solid var(--teal); }
+  .flag.warning { background: #fef2f2; border-left: 4px solid #ef4444; }
+  .flag.info { background: #eff6ff; border-left: 4px solid var(--blue); }
+  .flag-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+  .flag strong { color: var(--navy); display: block; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+
+  /* PROCESS HEADER */
+  .process-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--border);
+  }
+  .process-icon-big {
+    width: 56px; height: 56px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem;
+    flex-shrink: 0;
+  }
+  .process-icon-big.blue { background: linear-gradient(135deg, var(--navy), var(--blue)); }
+  .process-icon-big.green { background: linear-gradient(135deg, #1a4a2e, var(--teal)); }
+  .process-icon-big.gold { background: linear-gradient(135deg, #5b2a00, #c06a10); }
+  .process-icon-big.purple { background: linear-gradient(135deg, #2d1060, var(--role-manager)); }
+  .process-icon-big.red { background: linear-gradient(135deg, #7a0a0a, var(--red)); }
+  .process-icon-big.slate { background: linear-gradient(135deg, #2a3040, var(--slate)); }
+  .process-meta { flex: 1; }
+  .process-meta h2 { font-family: 'DM Serif Display', serif; font-size: 1.6rem; color: var(--navy); }
+  .process-meta p { color: var(--slate); font-size: 0.88rem; margin-top: 4px; }
+  .completion-badge {
+    background: var(--light);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 0.78rem;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .completion-badge strong { color: var(--navy); display: block; font-size: 0.95rem; margin-top: 4px; }
+
+  /* TWO-COL */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 28px; }
+  @media (max-width: 800px) { .two-col { grid-template-columns: 1fr; } .content { padding: 24px 20px; } .tabs-bar { padding: 0 16px; } .header { padding: 28px 20px; } }
+
+  .section-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--slate);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .who-list { list-style: none; }
+  .who-list li {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.87rem;
+  }
+  .who-list li:last-child { border-bottom: none; }
+
+  /* Print-ready */
+  @media print {
+    .tabs-bar { display: none !important; }
+    .section { display: block !important; page-break-before: always; }
+    .section:first-of-type { page-break-before: auto; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-badge">TAM · Talent Acquisition Management · City Positions Only</div>
+    <h1>Evergreen &amp; Requisition Management Dashboard</h1>
+    <p>Interactive guide to all 5 requisition workflows — Evergreen, Change, Close, Freeze/Unfreeze, and Duplicate Management · Excluding Federal Work Study &amp; State-Only Steps</p>
+  </div>
+</div>
+
+<div class="tabs-bar">
+  <button class="tab-btn active" onclick="showTab('overview')">📋 Overview</button>
+  <button class="tab-btn" onclick="showTab('bp1')">🌲 Evergreen Req</button>
+  <button class="tab-btn" onclick="showTab('bp2')">✏️ Change/Edit Req</button>
+  <button class="tab-btn" onclick="showTab('bp3')">🔒 Close Req</button>
+  <button class="tab-btn" onclick="showTab('bp4')">❄️ Freeze / Unfreeze</button>
+  <button class="tab-btn" onclick="showTab('bp5')">🔗 Duplicate Mgmt</button>
+  <button class="tab-btn" onclick="showTab('roles')">👥 Roles &amp; Permissions</button>
+</div>
+
+<div class="content">
+
+<!-- ══════════════════════ OVERVIEW ══════════════════════ -->
+<div id="overview" class="section active">
+  <div class="card">
+    <div class="card-title">Requisition Management at a Glance</div>
+    <div class="card-subtitle">5 Business Processes · City Positions · Excluding Federal Work Study &amp; State-Only Steps</div>
+    <div class="overview-grid">
+      <div class="overview-tile" onclick="showTab('bp1')">
+        <div class="tile-icon">🌲</div>
+        <div class="tile-name">Evergreen Requisition</div>
+        <div class="tile-desc">Long-term candidate pool requisition. Must link to a job req before hiring. Completes after all reviews.</div>
+      </div>
+      <div class="overview-tile" onclick="showTab('bp2')">
+        <div class="tile-icon">✏️</div>
+        <div class="tile-name">Change / Edit Requisition</div>
+        <div class="tile-desc">Edit job description, time type, compensation, remote type, or assigned roles. Triggers unpost/repost if currently posted.</div>
+      </div>
+      <div class="overview-tile" onclick="showTab('bp3')">
+        <div class="tile-icon">🔒</div>
+        <div class="tile-name">Close Job Requisition</div>
+        <div class="tile-desc">Permanently close a requisition. Candidates must be dispositioned first. Cannot close same day as creation.</div>
+      </div>
+      <div class="overview-tile" onclick="showTab('bp4')">
+        <div class="tile-icon">❄️</div>
+        <div class="tile-name">Freeze / Unfreeze</div>
+        <div class="tile-desc">Temporarily pause recruiting. Auto-unposts on freeze. Repost required on unfreeze. Mass freeze available.</div>
+      </div>
+      <div class="overview-tile" onclick="showTab('bp5')">
+        <div class="tile-icon">🔗</div>
+        <div class="tile-name">Duplicate Management</div>
+        <div class="tile-desc">Identify and merge duplicate candidate records. Triggered when a potential duplicate is detected in the system.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Security Roles Legend</div>
+    <div class="card-subtitle">Who participates across all processes</div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px;">
+      <span class="role-tag hr">🔵 HR Partner</span>
+      <span class="role-tag manager">🟣 Manager / Hiring Manager</span>
+      <span class="role-tag recruiter">🔴 Primary Recruiter / Recruiter</span>
+      <span class="role-tag diversity">🟢 Chief Diversity Officer</span>
+      <span class="role-tag civil">🟠 Civil Service Admin / Director</span>
+      <span class="role-tag admin">⚫ HR Administrator / Recruiting Admin</span>
+    </div>
+    <div class="flag decision">
+      <span class="flag-icon">⚠️</span>
+      <div><strong>Key Rule: Evergreen Cannot Hire Directly</strong>Candidates applied to an Evergreen requisition must be moved to a linked job requisition (matching job profile) before an offer can be extended. Hiring from an Evergreen is not possible in Workday.</div>
+    </div>
+    <div class="flag condition">
+      <span class="flag-icon">🔗</span>
+      <div><strong>Evergreen → Job Requisition Link</strong>The connection between an Evergreen and a job requisition is established by a shared job profile. Both must have the same job profile to link.</div>
+    </div>
+    <div class="flag info">
+      <span class="flag-icon">❄️</span>
+      <div><strong>Freeze vs Unfreeze</strong>Freeze and Unfreeze use the same task in Workday — the action is determined by the current state of the requisition. Freezing auto-unposts; unfreezing requires manual repost by Primary Recruiter or Civil Service Admin.</div>
+    </div>
+    <div class="flag warning">
+      <span class="flag-icon">🚫</span>
+      <div><strong>Excluded from this Dashboard</strong>Federal Work Study Coordinator roles and State-specific steps have been excluded per scope definition. Contact your FWS or State team for those workflows.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ BP1: EVERGREEN REQUISITION ══════════════════════ -->
+<div id="bp1" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big blue">🌲</div>
+      <div class="process-meta">
+        <h2>Evergreen Job Requisition</h2>
+        <p>Initiate · Review · Post Job — Long-term candidate pool for high-turnover or high-volume roles</p>
+      </div>
+      <div class="completion-badge">Completes When<strong>All Reviews Done</strong></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot manager"></span><span class="role-tag manager">Manager / Hiring Manager</span> Can initiate</li>
+          <li><span class="role-dot hr"></span><span class="role-tag hr">HR Partner</span> Can initiate · Reviews</li>
+          <li><span class="role-dot civil"></span><span class="role-tag civil">Faculty Relations Partner</span> Can initiate</li>
+          <li><span class="role-dot civil"></span><span class="role-tag civil">Civil Service Admin</span> Can initiate</li>
+          <li><span class="role-dot civil"></span><span class="role-tag civil">Civil Service Director</span> Can initiate · Reviews</li>
+          <li><span class="role-dot diversity"></span><span class="role-tag diversity">Chief Diversity Officer</span> Reviews</li>
+          <li><span class="role-dot recruiter"></span><span class="role-tag recruiter">Primary Recruiter</span> Posts job</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Key Rules &amp; Notes</div>
+        <div class="flag decision">
+          <span class="flag-icon">⚠️</span>
+          <div><strong>Cannot Hire from Evergreen</strong>Candidates must be moved to a linked job requisition first. The link is created by matching job profiles.</div>
+        </div>
+        <div class="flag condition">
+          <span class="flag-icon">💡</span>
+          <div><strong>Best Practice</strong>Close and reopen Evergreen requisitions each semester to maintain a fresh and relevant candidate pool. Avoid keeping them open for years.</div>
+        </div>
+        <div class="flag info">
+          <span class="flag-icon">📋</span>
+          <div><strong>Consolidated Template</strong>Compensation and assigned roles are added as part of the Evergreen initiation — same as standard job requisitions.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Process Flowchart</div>
+    <div class="flowchart">
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot manager"></span> Manager · <span class="role-dot hr"></span> HR Partner · <span class="role-dot civil"></span> Faculty Relations · Civil Service Admin/Director</div>
+        <div class="flow-box flow-start">🚀 INITIATION — Create Evergreen Requisition</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot hr"></span> Initiator</div>
+        <div class="flow-box flow-action">Add Compensation &amp; Assign Roles (Consolidated Template)</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot civil"></span> Civil Service Director</div>
+        <div class="flow-box flow-action civil">Review — Civil Service Director <span style="font-size:0.75rem;color:#888;">(if applicable)</span></div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot hr"></span> HR Partner</div>
+        <div class="flow-box flow-action">Review — HR Partner</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot diversity"></span> Chief Diversity Officer</div>
+        <div class="flow-box flow-action diversity">Review — Chief Diversity Officer</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot recruiter"></span> Primary Recruiter</div>
+        <div class="flow-box flow-action recruiter">Post Job — Primary Recruiter</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="flow-node">
+        <div class="flow-box flow-end">✅ COMPLETE — Evergreen Requisition Posted &amp; Open</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ When ready to hire: Are candidates ready to move forward?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ YES — Move to Job Req</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot recruiter"></span> Primary Recruiter</div>
+            <div class="flow-box flow-action recruiter">Move Candidate to Linked Job Requisition (matching job profile)</div>
+          </div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-end">✅ Candidate can now be hired from the Job Requisition</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">⏭ NO — Continue Pooling</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action" style="opacity:0.5;">Evergreen stays open; continue collecting applicants</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ BP2: CHANGE / EDIT JOB REQUISITION ══════════════════════ -->
+<div id="bp2" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big green">✏️</div>
+      <div class="process-meta">
+        <h2>Change / Edit Job Requisition</h2>
+        <p>Also called "Edit Job Requisition" in Workday — used interchangeably. Edit description, time type, compensation, remote type, assigned roles.</p>
+      </div>
+      <div class="completion-badge">Completes When<strong>All Reviews Done</strong></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot admin"></span><span class="role-tag admin">HR Administrator</span> Can initiate</li>
+          <li><span class="role-dot hr"></span><span class="role-tag hr">HR Partner</span> Can initiate</li>
+          <li><span class="role-dot manager"></span><span class="role-tag manager">Manager</span> Can initiate</li>
+          <li><span class="role-dot recruiter"></span><span class="role-tag recruiter">Recruiter</span> Can initiate · Reviews · Unpost/Post Job</li>
+          <li><span class="role-dot admin"></span><span class="role-tag admin">Recruiting Administrator</span> Can initiate</li>
+          <li><span class="role-dot civil"></span><span class="role-tag civil">Faculty Relations Partner</span> Can initiate</li>
+          <li><span class="role-dot civil"></span><span class="role-tag civil">Civil Service Administrator</span> Can initiate · Post Job</li>
+          <li><span class="role-dot civil"></span><span class="role-tag civil">Civil Service Director</span> Can initiate · Reviews</li>
+          <li><span class="role-dot recruiter"></span><span class="role-tag recruiter">Primary Recruiter</span> Reviews · Unpost Job · Post Job</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Key Rules &amp; Notes</div>
+        <div class="flag decision">
+          <span class="flag-icon">⚠️</span>
+          <div><strong>Currently Posted = Must Unpost First</strong>If the requisition is posted on a career site, it must be unposted before changes take effect, then reposted after review. Both steps route through Primary Recruiter (or Civil Service Admin for civil service reqs).</div>
+        </div>
+        <div class="flag condition">
+          <span class="flag-icon">💡</span>
+          <div><strong>Editable Fields</strong>Job description · Time type · Remote type · Compensation · Assigned roles · Any fields from the Create Job Requisition form.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Process Flowchart</div>
+    <div class="flowchart">
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot admin"></span> HR Admin · <span class="role-dot hr"></span> HR Partner · <span class="role-dot manager"></span> Manager · <span class="role-dot recruiter"></span> Recruiter · <span class="role-dot admin"></span> Recruiting Admin · <span class="role-dot civil"></span> Faculty Relations · Civil Service Admin/Director</div>
+        <div class="flow-box flow-start">🚀 INITIATION — Change / Edit Job Requisition</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Is the job requisition currently posted on a career site?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ YES — Currently Posted</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot recruiter"></span> Primary Recruiter</div>
+            <div class="flow-box flow-action recruiter">Unpost Job (routes to Primary Recruiter)</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">⏭ NO — Not Posted</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action" style="opacity:0.4;">Unpost Step — SKIPPED</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot civil"></span> Civil Service Director</div>
+        <div class="flow-box flow-action civil">Review — Civil Service Director <span style="font-size:0.75rem;color:#888;">(civil service reqs only)</span></div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot recruiter"></span> Primary Recruiter</div>
+        <div class="flow-box flow-action recruiter">Review — Primary Recruiter</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Does the requisition need to be reposted?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ YES — Repost Required</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot recruiter"></span> Primary Recruiter · <span class="role-dot civil"></span> Civil Service Admin</div>
+            <div class="flow-box flow-action recruiter">Post Job (Primary Recruiter or Civil Service Admin for civil service reqs)</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">⏭ NO — No Repost</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action" style="opacity:0.4;">Post Step — SKIPPED</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="flow-node">
+        <div class="flow-box flow-end">✅ COMPLETE — Requisition Updated</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ BP3: CLOSE JOB REQUISITION ══════════════════════ -->
+<div id="bp3" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big red">🔒</div>
+      <div class="process-meta">
+        <h2>Close Job Requisition</h2>
+        <p>Permanently close a requisition. Automatic processes run on close: unpost job, optionally close position, decline remaining candidates.</p>
+      </div>
+      <div class="completion-badge">Completes When<strong>All Approvals Done</strong></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot hr"></span><span class="role-tag hr">HR Partner</span> Can initiate · Approves</li>
+          <li><span class="role-dot diversity"></span><span class="role-tag diversity">Chief Diversity Officer</span> Can initiate</li>
+          <li><span class="role-dot recruiter"></span><span class="role-tag recruiter">Primary Recruiter</span> Can initiate</li>
+          <li><span class="role-dot civil"></span><span class="role-tag civil">Faculty Relations Partner</span> Can initiate</li>
+          <li><span class="role-dot admin"></span><span class="role-tag admin">Civil Service Admin</span> Can initiate</li>
+          <li><span class="role-dot civil"></span><span class="role-tag civil">Civil Service Director</span> Can initiate · Approves</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Key Rules &amp; Notes</div>
+        <div class="flag warning">
+          <span class="flag-icon">🚫</span>
+          <div><strong>Cannot Close Same Day as Creation</strong>Effective date is end of midnight, so closing must happen the following day. If created in error, simply do not post — candidates won't see it.</div>
+        </div>
+        <div class="flag decision">
+          <span class="flag-icon">⚠️</span>
+          <div><strong>Disposition Candidates First</strong>All active candidates must be moved to a final disposition (declined or otherwise) before closing the requisition.</div>
+        </div>
+        <div class="flag condition">
+          <span class="flag-icon">🔄</span>
+          <div><strong>Automatic Processes on Close</strong>Workday automatically runs: Unpost Job · Optionally Close the linked Position · Decline Remaining Candidates.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Process Flowchart</div>
+    <div class="flowchart">
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot hr"></span> HR Partner · <span class="role-dot diversity"></span> CDO · <span class="role-dot recruiter"></span> Primary Recruiter · <span class="role-dot civil"></span> Faculty Relations · Civil Service Admin/Director</div>
+        <div class="flow-box flow-start">🚀 INITIATION — Close Job Requisition</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="flow-node">
+        <div class="flow-label">Initiator</div>
+        <div class="flow-box flow-action">Select Close Reason (Cancelled / No Longer Recruiting / Position Closed / Opened in Error)</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Are there active candidates still in the pipeline?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ YES — Disposition Required</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot recruiter"></span> Recruiter / HR Partner</div>
+            <div class="flow-box flow-action recruiter">Disposition remaining candidates (decline or move)</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">⏭ NO — Already Dispositioned</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action" style="opacity:0.4;">Proceed directly to close</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot hr"></span> HR Partner</div>
+        <div class="flow-box flow-action">Approval — HR Partner</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot civil"></span> Civil Service Director</div>
+        <div class="flow-box flow-action civil">Approval — Civil Service Director <span style="font-size:0.75rem;color:#888;">(civil service reqs only)</span></div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="flow-node">
+        <div class="flow-label">⚙️ Workday Automatic</div>
+        <div class="flow-box flow-auto">🔄 AUTO: Unpost Job · Decline Remaining Candidates · Optionally Close Position</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="flow-node">
+        <div class="flow-box flow-end">✅ COMPLETE — Requisition Closed</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ BP4: FREEZE / UNFREEZE ══════════════════════ -->
+<div id="bp4" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big purple">❄️</div>
+      <div class="process-meta">
+        <h2>Freeze / Unfreeze Job Requisition</h2>
+        <p>Same task in Workday — used for hiring freezes, budget reviews, or structural holds. Completes immediately after initiation.</p>
+      </div>
+      <div class="completion-badge">Completes When<strong>Submitted</strong></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot hr"></span><span class="role-tag hr">HR Partner</span> Can initiate (freeze or unfreeze)</li>
+          <li><span class="role-dot recruiter"></span><span class="role-tag recruiter">Recruiter</span> Can initiate</li>
+          <li><span class="role-dot diversity"></span><span class="role-tag diversity">Chief Diversity Officer</span> Can initiate</li>
+          <li><span class="role-dot civil"></span><span class="role-tag civil">Faculty Relations Partner</span> Can initiate</li>
+          <li><span class="role-dot civil"></span><span class="role-tag civil">Civil Service Admin</span> Can initiate · Post Job (unfreeze)</li>
+          <li><span class="role-dot civil"></span><span class="role-tag civil">Civil Service Director</span> Can initiate</li>
+          <li><span class="role-dot recruiter"></span><span class="role-tag recruiter">Primary Recruiter</span> Post Job (after unfreeze)</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Key Rules &amp; Notes</div>
+        <div class="flag decision">
+          <span class="flag-icon">⚠️</span>
+          <div><strong>Same Task, Two States</strong>The "Freeze" and "Unfreeze" actions use the same Workday task. The bucket you're in determines whether you're freezing or unfreezing.</div>
+        </div>
+        <div class="flag condition">
+          <span class="flag-icon">❄️</span>
+          <div><strong>Freeze Reasons</strong>Hold for Structure Review · Freeze for Budget Review · Vacancy Board Review · Budget Freeze.</div>
+        </div>
+        <div class="flag info">
+          <span class="flag-icon">📦</span>
+          <div><strong>Mass Freeze Available</strong>If your entire campus needs a freeze, use Mass Freeze/Unfreeze instead of individual task-by-task freezing.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Process Flowchart</div>
+    <div class="flowchart">
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot hr"></span> HR Partner · <span class="role-dot recruiter"></span> Recruiter · <span class="role-dot diversity"></span> CDO · <span class="role-dot civil"></span> Faculty Relations · Civil Service Admin/Director</div>
+        <div class="flow-box flow-start">🚀 INITIATION — Freeze or Unfreeze Requisition</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Is this a FREEZE or UNFREEZE action?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">❄️ FREEZING</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label">Initiator</div>
+            <div class="flow-box flow-action">Select Freeze Reason &amp; Date</div>
+          </div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label">⚙️ Workday Automatic</div>
+            <div class="flow-box flow-auto">🔄 AUTO: Job Automatically Unposts</div>
+          </div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-end">✅ Requisition Frozen</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">🔥 UNFREEZING</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label">Initiator</div>
+            <div class="flow-box flow-action">Submit Unfreeze</div>
+          </div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot recruiter"></span> Primary Recruiter · <span class="role-dot civil"></span> Civil Service Admin</div>
+            <div class="flow-box flow-action recruiter">Post Job — Repost the Requisition</div>
+          </div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-end">✅ Requisition Unfrozen &amp; Reposted</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ BP5: DUPLICATE MANAGEMENT ══════════════════════ -->
+<div id="bp5" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big slate">🔗</div>
+      <div class="process-meta">
+        <h2>Duplicate Management</h2>
+        <p>Identify and merge duplicate candidate records. Triggered when Workday detects a potential match between a candidate profile and a worker record.</p>
+      </div>
+      <div class="completion-badge">Triggered When<strong>Duplicate Detected</strong></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who Can Merge Duplicates</div>
+        <ul class="who-list">
+          <li><span class="role-dot recruiter"></span><span class="role-tag recruiter">Primary Recruiter</span> Manually merge records</li>
+          <li><span class="role-dot recruiter"></span><span class="role-tag recruiter">Recruiter</span> Manually merge records</li>
+          <li><span class="role-dot admin"></span><span class="role-tag admin">Recruiting Admin</span> Manually merge records</li>
+          <li><span class="role-dot admin"></span><span class="role-tag admin">HR Administrator</span> Manually merge records</li>
+          <li><span class="role-dot hr"></span><span class="role-tag hr">HR Partner</span> Manually merge records</li>
+        </ul>
+        <div style="margin-top:16px;">
+          <div class="section-label">Reports Available</div>
+          <div class="flag info">
+            <span class="flag-icon">📊</span>
+            <div><strong>Manage Duplicate Records</strong>View all flagged potential duplicates in the system.</div>
+          </div>
+          <div class="flag info">
+            <span class="flag-icon">📊</span>
+            <div><strong>Manage Merged Records</strong>Audit trail of all previously merged candidate records.</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="section-label">Why Duplicates Happen</div>
+        <div class="flag decision">
+          <span class="flag-icon">⚠️</span>
+          <div><strong>External Application by Internal Worker</strong>If an existing CUNY employee accidentally applies via the external career site instead of the internal site, a new candidate record is created — separate from their worker record — creating a duplicate.</div>
+        </div>
+        <div class="flag condition">
+          <span class="flag-icon">🔍</span>
+          <div><strong>Workday Checks Automatically</strong>When candidates come in, Workday checks for matching records. If a match is found, the system flags it for manual review and merge.</div>
+        </div>
+        <div class="flag warning">
+          <span class="flag-icon">🚫</span>
+          <div><strong>Do Not Leave Unmerged</strong>An unmerged duplicate means the hiring team won't see the candidate's full worker history. Always merge before proceeding with hiring steps.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Process Flowchart</div>
+    <div class="flowchart">
+      <div class="flow-node">
+        <div class="flow-label">⚙️ Workday Automatic</div>
+        <div class="flow-box flow-auto">🔍 TRIGGER — Workday detects a potential duplicate candidate record</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot recruiter"></span> Recruiter / HR Partner / HR Admin / Recruiting Admin</div>
+        <div class="flow-box flow-action recruiter">Review potential duplicate via "Manage Duplicate Records" report</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Is this a confirmed duplicate?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ YES — Confirmed Duplicate</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot recruiter"></span> Recruiter / HR Admin / HR Partner</div>
+            <div class="flow-box flow-action recruiter">Merge candidate records in Workday</div>
+          </div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-end">✅ Records Merged — Single unified profile</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">⏭ NO — Not a Duplicate</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action" style="opacity:0.5;">Dismiss flag — no action taken</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ ROLES TABLE ══════════════════════ -->
+<div id="roles" class="section">
+  <div class="card">
+    <div class="card-title">Master Roles &amp; Permissions Table</div>
+    <div class="card-subtitle">All 5 business processes · City positions only · FWS and State excluded</div>
+    <div style="overflow-x:auto;">
+    <table class="roles-table">
+      <thead>
+        <tr>
+          <th>Business Process</th>
+          <th><span class="role-tag hr">HR Partner</span></th>
+          <th><span class="role-tag manager">Manager</span></th>
+          <th><span class="role-tag recruiter">Primary Recruiter</span></th>
+          <th><span class="role-tag recruiter">Recruiter</span></th>
+          <th><span class="role-tag diversity">Chief Diversity Officer</span></th>
+          <th><span class="role-tag civil">Civil Service Dir</span></th>
+          <th><span class="role-tag civil">Civil Svc Admin / Faculty Rel</span></th>
+          <th><span class="role-tag admin">HR Admin / Rec Admin</span></th>
+          <th>Completes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>🌲 Evergreen Requisition</strong></td>
+          <td><span class="check">✔</span> Initiate<br><span class="check">✔</span> Review</td>
+          <td><span class="check">✔</span> Initiate</td>
+          <td><span class="check">✔</span> Post Job</td>
+          <td><span class="dash">—</span></td>
+          <td><span class="check">✔</span> Review</td>
+          <td><span class="check">✔</span> Initiate<br><span class="check">✔</span> Review</td>
+          <td><span class="check">✔</span> Initiate (Fac Rel &amp; CS Admin)</td>
+          <td><span class="dash">—</span></td>
+          <td>After all reviews</td>
+        </tr>
+        <tr>
+          <td><strong>✏️ Change / Edit Requisition</strong></td>
+          <td><span class="check">✔</span> Initiate</td>
+          <td><span class="check">✔</span> Initiate</td>
+          <td><span class="check">✔</span> Review<br><span class="check">✔</span> Unpost<br><span class="check">✔</span> Post Job</td>
+          <td><span class="check">✔</span> Initiate</td>
+          <td><span class="dash">—</span></td>
+          <td><span class="check">✔</span> Initiate<br><span class="check">✔</span> Review</td>
+          <td><span class="check">✔</span> Initiate<br><span class="check">✔</span> Post Job (CS Admin)</td>
+          <td><span class="check">✔</span> Initiate (both)</td>
+          <td>After all reviews</td>
+        </tr>
+        <tr>
+          <td><strong>🔒 Close Job Requisition</strong></td>
+          <td><span class="check">✔</span> Initiate<br><span class="check">✔</span> Approve</td>
+          <td><span class="dash">—</span></td>
+          <td><span class="check">✔</span> Initiate</td>
+          <td><span class="dash">—</span></td>
+          <td><span class="check">✔</span> Initiate</td>
+          <td><span class="check">✔</span> Initiate<br><span class="check">✔</span> Approve</td>
+          <td><span class="check">✔</span> Initiate (CS Admin &amp; Fac Rel)</td>
+          <td><span class="dash">—</span></td>
+          <td>After all approvals</td>
+        </tr>
+        <tr>
+          <td><strong>❄️ Freeze / Unfreeze</strong></td>
+          <td><span class="check">✔</span> Initiate</td>
+          <td><span class="dash">—</span></td>
+          <td><span class="check">✔</span> Post Job (unfreeze)</td>
+          <td><span class="check">✔</span> Initiate</td>
+          <td><span class="check">✔</span> Initiate</td>
+          <td><span class="check">✔</span> Initiate</td>
+          <td><span class="check">✔</span> Initiate<br><span class="check">✔</span> Post Job (CS Admin, unfreeze)</td>
+          <td><span class="dash">—</span></td>
+          <td>After initiation</td>
+        </tr>
+        <tr>
+          <td><strong>🔗 Duplicate Management</strong></td>
+          <td><span class="check">✔</span> Merge</td>
+          <td><span class="dash">—</span></td>
+          <td><span class="check">✔</span> Merge</td>
+          <td><span class="check">✔</span> Merge</td>
+          <td><span class="dash">—</span></td>
+          <td><span class="dash">—</span></td>
+          <td><span class="dash">—</span></td>
+          <td><span class="check">✔</span> Merge (both HR Admin &amp; Rec Admin)</td>
+          <td>When duplicate identified</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Decision Points &amp; Conditions Summary</div>
+    <div class="card-subtitle">Flags across all 5 processes</div>
+    <div class="flag decision">
+      <span class="flag-icon">⚠️</span>
+      <div><strong>Evergreen: Cannot Hire Directly</strong>Candidates must always be moved to a linked job requisition (matching job profile) before an offer or hire can take place. Hiring directly from an Evergreen is not supported in Workday.</div>
+    </div>
+    <div class="flag decision">
+      <span class="flag-icon">⚠️</span>
+      <div><strong>Change Req: Unpost/Repost if Currently Posted</strong>Any edit to a live (posted) job requisition triggers an unpost → review → repost cycle. This ensures career site accuracy.</div>
+    </div>
+    <div class="flag decision">
+      <span class="flag-icon">⚠️</span>
+      <div><strong>Close Req: Cannot Close Same Day as Creation</strong>Effective date is end of midnight. Wait until the following day. If opened in error, do not post — just close the next day.</div>
+    </div>
+    <div class="flag condition">
+      <span class="flag-icon">🔀</span>
+      <div><strong>Civil Service Routing Condition</strong>For civil service job requisitions, the Civil Service Director participates in review/approval. For non-civil-service reqs, those steps are skipped. Civil Service Admin handles the Post Job step for civil service reqs.</div>
+    </div>
+    <div class="flag condition">
+      <span class="flag-icon">❄️</span>
+      <div><strong>Freeze: Auto-Unpost</strong>When a requisition is frozen, Workday automatically unposts it. No manual unpost step is needed. When unfreezing, the repost must be done manually by Primary Recruiter or Civil Service Admin.</div>
+    </div>
+    <div class="flag condition">
+      <span class="flag-icon">📦</span>
+      <div><strong>Mass Freeze Option</strong>If an entire campus or college needs a hiring freeze, the Mass Freeze/Unfreeze task is available — no need to freeze each requisition individually.</div>
+    </div>
+    <div class="flag info">
+      <span class="flag-icon">🔗</span>
+      <div><strong>Evergreen Lifecycle Best Practice</strong>Close and reopen Evergreen requisitions each semester. Keeping them open indefinitely leads to stale candidate pools and potential compliance issues. Best practice is to post for a defined period, unpost, and reopen as needed.</div>
+    </div>
+    <div class="flag warning">
+      <span class="flag-icon">🚫</span>
+      <div><strong>Excluded: FWS &amp; State</strong>Federal Work Study Coordinator roles and all State-specific process steps are excluded from this dashboard per scope definition.</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const tabs = ['overview','bp1','bp2','bp3','bp4','bp5','roles'];
+  const idx = tabs.indexOf(id);
+  if (idx >= 0) document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

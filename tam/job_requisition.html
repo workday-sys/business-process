@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TAM – Job Requisition Business Process Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0f2040;
+    --navy-mid: #1a3460;
+    --blue: #1e5fa8;
+    --blue-light: #2e7dd1;
+    --gold: #e8a922;
+    --gold-light: #f5c84a;
+    --teal: #0e8a7a;
+    --red: #c0392b;
+    --green: #1a7a4a;
+    --slate: #4a5568;
+    --light: #f4f7fb;
+    --white: #ffffff;
+    --border: #dde4ef;
+    --card-shadow: 0 4px 24px rgba(15,32,64,0.10);
+    --role-hr: #2e7dd1;
+    --role-budget: #e8a922;
+    --role-payroll: #0e8a7a;
+    --role-manager: #7c3aed;
+    --role-admin: #64748b;
+    --role-recruiter: #c0392b;
+    --role-diversity: #0e6060;
+    --role-civil: #5b2a00;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--light);
+    color: var(--navy);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, var(--blue) 100%);
+    color: white;
+    padding: 36px 48px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute; top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(232,169,34,0.18) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .header::after {
+    content: '';
+    position: absolute; bottom: -40px; left: 30%;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(46,125,209,0.2) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .header-inner { position: relative; z-index: 1; }
+  .header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.2rem;
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+  }
+  .header p { color: rgba(255,255,255,0.72); font-size: 0.95rem; font-weight: 400; }
+  .header-badge {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--navy);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+
+  /* NAV TABS */
+  .tabs-bar {
+    background: var(--white);
+    border-bottom: 2px solid var(--border);
+    padding: 0 48px;
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(15,32,64,0.07);
+  }
+  .tab-btn {
+    padding: 16px 18px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--slate);
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    position: relative;
+    top: 2px;
+  }
+  .tab-btn:hover { color: var(--blue); }
+  .tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+  /* CONTENT */
+  .content { max-width: 1200px; margin: 0 auto; padding: 36px 48px 60px; }
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* CARDS */
+  .card {
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+    padding: 32px;
+    margin-bottom: 28px;
+    border: 1px solid var(--border);
+  }
+  .card-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.35rem;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+  .card-subtitle {
+    font-size: 0.82rem;
+    color: var(--slate);
+    margin-bottom: 22px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  /* OVERVIEW GRID */
+  .overview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+    margin-bottom: 32px;
+  }
+  .overview-tile {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+    color: white;
+    border-radius: 14px;
+    padding: 22px 20px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+  }
+  .overview-tile::after {
+    content: '';
+    position: absolute; bottom: -20px; right: -20px;
+    width: 80px; height: 80px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 50%;
+  }
+  .overview-tile:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(15,32,64,0.18); }
+  .overview-tile:nth-child(2) { background: linear-gradient(135deg, #1a4a2e 0%, var(--teal) 100%); }
+  .overview-tile:nth-child(3) { background: linear-gradient(135deg, #5b2a00 0%, #c06a10 100%); }
+  .overview-tile:nth-child(4) { background: linear-gradient(135deg, #2d1060 0%, var(--role-manager) 100%); }
+  .tile-icon { font-size: 1.8rem; margin-bottom: 10px; }
+  .tile-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
+  .tile-desc { font-size: 0.78rem; opacity: 0.8; line-height: 1.5; }
+
+  /* FLOWCHART */
+  .flowchart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    padding: 10px 0;
+  }
+  .flow-node {
+    position: relative;
+    width: 100%;
+    max-width: 620px;
+  }
+  .flow-box {
+    border-radius: 10px;
+    padding: 14px 22px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    text-align: center;
+    position: relative;
+    border: 2px solid transparent;
+    transition: transform 0.15s;
+  }
+  .flow-box:hover { transform: scale(1.02); }
+  .flow-start {
+    background: var(--navy);
+    color: white;
+    border-radius: 30px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 12px 32px;
+  }
+  .flow-end {
+    background: var(--teal);
+    color: white;
+    border-radius: 30px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 12px 32px;
+  }
+  .flow-action {
+    background: #eef3fb;
+    border-color: var(--role-hr);
+    color: var(--navy);
+  }
+  .flow-action.budget { background: #fef8ec; border-color: var(--gold); }
+  .flow-action.manager { background: #f5f0ff; border-color: var(--role-manager); }
+  .flow-action.recruiter { background: #fef2f2; border-color: var(--role-recruiter); }
+  .flow-action.diversity { background: #edfaf7; border-color: var(--role-diversity); }
+  .flow-action.civil { background: #fdf6ee; border-color: #c06a10; }
+  .flow-decision {
+    background: #fff8e1;
+    border: 2px dashed var(--gold);
+    border-radius: 8px;
+    color: var(--navy);
+    font-style: italic;
+    font-size: 0.84rem;
+    padding: 12px 20px;
+  }
+  .flow-connector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 36px;
+    justify-content: center;
+    color: var(--slate);
+    font-size: 1.3rem;
+    position: relative;
+  }
+  .flow-connector::before {
+    content: '';
+    width: 2px;
+    height: 100%;
+    background: var(--border);
+    position: absolute;
+  }
+  .flow-connector span {
+    background: white;
+    padding: 0 4px;
+    position: relative;
+    z-index: 1;
+    font-size: 1.1rem;
+    color: var(--slate);
+  }
+  .flow-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+    font-size: 0.75rem;
+    color: var(--slate);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    justify-content: center;
+  }
+  .role-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  .role-dot.hr { background: var(--role-hr); }
+  .role-dot.budget { background: var(--role-budget); }
+  .role-dot.manager { background: var(--role-manager); }
+  .role-dot.admin { background: var(--role-admin); }
+  .role-dot.recruiter { background: var(--role-recruiter); }
+  .role-dot.diversity { background: var(--role-diversity); }
+  .role-dot.civil { background: #c06a10; }
+  .role-dot.external { background: #64748b; }
+
+  /* DECISION BRANCH */
+  .decision-branch {
+    display: flex;
+    gap: 18px;
+    width: 100%;
+    max-width: 760px;
+    justify-content: center;
+  }
+  .branch-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+  .branch-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--slate);
+    margin-bottom: 6px;
+    background: var(--light);
+    padding: 2px 10px;
+    border-radius: 20px;
+  }
+
+  /* ROLES TABLE */
+  .roles-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  .roles-table th {
+    background: var(--navy);
+    color: white;
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+  .roles-table th:first-child { border-radius: 8px 0 0 0; }
+  .roles-table th:last-child { border-radius: 0 8px 0 0; }
+  .roles-table td {
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .roles-table tr:hover td { background: #f8faff; }
+  .roles-table tr:last-child td { border-bottom: none; }
+  .check { color: var(--green); font-size: 1rem; }
+  .dash { color: #ccc; font-size: 1rem; }
+
+  .role-tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 2px 9px;
+    border-radius: 20px;
+    margin: 2px;
+    white-space: nowrap;
+  }
+  .role-tag.hr { background: #ddeeff; color: var(--blue); }
+  .role-tag.budget { background: #fff3cc; color: #7a5800; }
+  .role-tag.manager { background: #ede9ff; color: #5b21b6; }
+  .role-tag.admin { background: #f1f5f9; color: var(--slate); }
+  .role-tag.recruiter { background: #fde8e8; color: #9b1c1c; }
+  .role-tag.diversity { background: #d9f5ef; color: #0e6060; }
+  .role-tag.civil { background: #fef0e0; color: #7a4000; }
+  .role-tag.faculty { background: #eef3fb; color: var(--blue); }
+  .role-tag.external { background: #f1f5f9; color: #374151; }
+
+  /* FLAGS */
+  .flag {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    font-size: 0.87rem;
+    line-height: 1.6;
+  }
+  .flag.decision { background: #fff8e1; border-left: 4px solid var(--gold); }
+  .flag.condition { background: #edfaf7; border-left: 4px solid var(--teal); }
+  .flag.warning { background: #fef2f2; border-left: 4px solid #ef4444; }
+  .flag.info { background: #eef3fb; border-left: 4px solid var(--blue); }
+  .flag-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+  .flag strong { color: var(--navy); display: block; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+
+  /* PROCESS HEADER */
+  .process-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--border);
+  }
+  .process-icon-big {
+    width: 56px; height: 56px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem;
+    flex-shrink: 0;
+  }
+  .process-icon-big.blue { background: linear-gradient(135deg, var(--navy), var(--blue)); }
+  .process-icon-big.green { background: linear-gradient(135deg, #1a4a2e, var(--teal)); }
+  .process-icon-big.gold { background: linear-gradient(135deg, #5b2a00, #c06a10); }
+  .process-icon-big.purple { background: linear-gradient(135deg, #2d1060, var(--role-manager)); }
+  .process-meta { flex: 1; }
+  .process-meta h2 { font-family: 'DM Serif Display', serif; font-size: 1.6rem; color: var(--navy); }
+  .process-meta p { color: var(--slate); font-size: 0.88rem; margin-top: 4px; }
+  .completion-badge {
+    background: var(--light);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 0.78rem;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .completion-badge strong { color: var(--navy); display: block; font-size: 0.95rem; margin-top: 4px; }
+
+  /* TWO-COL */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 28px; }
+  @media (max-width: 800px) {
+    .two-col { grid-template-columns: 1fr; }
+    .content { padding: 24px 20px; }
+    .tabs-bar { padding: 0 16px; }
+    .header { padding: 28px 20px; }
+    .decision-branch { flex-direction: column; }
+  }
+
+  .section-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--slate);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .who-list { list-style: none; }
+  .who-list li {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.87rem;
+  }
+  .who-list li:last-child { border-bottom: none; }
+
+  /* Print */
+  @media print {
+    .tabs-bar { display: none !important; }
+    .section { display: block !important; page-break-before: always; }
+    .section:first-of-type { page-break-before: auto; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-badge">TAM · Job Requisition · City Positions Only</div>
+    <h1>Job Requisition Business Process Dashboard</h1>
+    <p>Interactive guide covering Job Requisition, Post/Un-Post Job, Update Job Posting, and Create Prospect — roles, steps, decisions, and approvals · Excluding Federal Work Study &amp; State positions</p>
+  </div>
+</div>
+
+<div class="tabs-bar">
+  <button class="tab-btn active" onclick="showTab('overview')">📋 Overview</button>
+  <button class="tab-btn" onclick="showTab('bp1')">📄 Create Job Req</button>
+  <button class="tab-btn" onclick="showTab('bp2')">📌 Post Job</button>
+  <button class="tab-btn" onclick="showTab('bp3')">🔄 Update Job Posting</button>
+  <button class="tab-btn" onclick="showTab('bp4')">👤 Create Prospect</button>
+  <button class="tab-btn" onclick="showTab('roles')">👥 Roles &amp; Permissions</button>
+</div>
+
+<div class="content">
+
+<!-- ══════════════════════ OVERVIEW ══════════════════════ -->
+<div id="overview" class="section active">
+  <div class="card">
+    <div class="card-title">Job Requisition Processes at a Glance</div>
+    <div class="card-subtitle">4 Business Processes · City Positions · Excluding Federal Work Study &amp; State Positions</div>
+    <div class="overview-grid">
+      <div class="overview-tile" onclick="showTab('bp1')">
+        <div class="tile-icon">📄</div>
+        <div class="tile-name">Create Job Requisition</div>
+        <div class="tile-desc">Full lifecycle from initiation through review, approval, and posting. Includes conditional Budget Manager approval and CDO equity review.</div>
+      </div>
+      <div class="overview-tile" onclick="showTab('bp2')">
+        <div class="tile-icon">📌</div>
+        <div class="tile-name">Post Job</div>
+        <div class="tile-desc">Sub-process of Create Job Req — or standalone. Primary Recruiter / Civil Service Administrator posts internally and/or externally.</div>
+      </div>
+      <div class="overview-tile" onclick="showTab('bp3')">
+        <div class="tile-icon">🔄</div>
+        <div class="tile-name">Update Job Posting</div>
+        <div class="tile-desc">Un-post and re-post a job. Multiple roles can update the posting end date or modify details before reposting.</div>
+      </div>
+      <div class="overview-tile" onclick="showTab('bp4')">
+        <div class="tile-icon">👤</div>
+        <div class="tile-name">Create Prospect</div>
+        <div class="tile-desc">Add potential candidates before they apply. Initiated internally by HR Admin/Manager/Recruiter, or by the prospect themselves via the external career site.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Key Decision Points &amp; Conditions</div>
+    <div class="card-subtitle">Flags to know before testing or using these processes</div>
+
+    <div class="flag decision">
+      <span class="flag-icon">⚠️</span>
+      <div><strong>Review Step Skipped When Self-Initiated</strong>If the HR Partner, Civil Service Director, or Faculty Relations Partner initiates the requisition themselves, their own review step is skipped — they already own the record.</div>
+    </div>
+    <div class="flag condition">
+      <span class="flag-icon">🔀</span>
+      <div><strong>Budget Manager Approval — Conditional on Pay Range</strong>Budget Manager approval is triggered when proposed compensation falls outside the established salary range. If compensation is within range, that step is bypassed.</div>
+    </div>
+    <div class="flag condition">
+      <span class="flag-icon">🔀</span>
+      <div><strong>Population Determines Who Posts</strong>For regular staff/faculty positions → Primary Recruiter posts. For Civil Service positions → Civil Service Administrator posts.</div>
+    </div>
+    <div class="flag info">
+      <span class="flag-icon">🆕</span>
+      <div><strong>New in A&amp;C2: Expanded Posting Roles</strong>Previously only Primary Recruiters could post. Now Recruiters and Recruiting Administrators can also initiate and complete the post/un-post job task as a standalone process.</div>
+    </div>
+    <div class="flag condition">
+      <span class="flag-icon">🔀</span>
+      <div><strong>Manager Approval Required After CDO Review</strong>After the Chief Diversity Officer reviews the requisition, a final Manager approval step is required before the job is posted.</div>
+    </div>
+    <div class="flag warning">
+      <span class="flag-icon">🚫</span>
+      <div><strong>Federal Work Study &amp; State Positions Excluded</strong>All workflows on this dashboard apply to City positions only. Federal Work Study and State-specific process steps are excluded throughout.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Roles Involved in These Processes</div>
+    <div class="card-subtitle">Quick reference — click a process tab above for full role-to-step mapping</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;">
+      <span class="role-tag manager">Manager</span>
+      <span class="role-tag hr">HR Partner</span>
+      <span class="role-tag faculty">Faculty Relations Partner</span>
+      <span class="role-tag civil">Civil Service Director</span>
+      <span class="role-tag civil">Civil Service Administrator</span>
+      <span class="role-tag diversity">Chief Diversity Officer</span>
+      <span class="role-tag recruiter">Primary Recruiter</span>
+      <span class="role-tag recruiter">Recruiter</span>
+      <span class="role-tag admin">Recruiting Administrator</span>
+      <span class="role-tag budget">Budget Manager</span>
+      <span class="role-tag admin">HR Administrator</span>
+      <span class="role-tag external">External Prospect (Self)</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ BP1: CREATE JOB REQUISITION ══════════════════════ -->
+<div id="bp1" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big blue">📄</div>
+      <div class="process-meta">
+        <h2>Create Job Requisition</h2>
+        <p>Initiation → Reviews → Approvals → Post Job · City positions only · Excludes Federal Work Study &amp; State</p>
+      </div>
+      <div class="completion-badge">
+        Completed When<strong>Job is Posted</strong>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who Is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot manager"></span><span><strong>Manager</strong> — Initiates &amp; Approves</span></li>
+          <li><span class="role-dot hr"></span><span><strong>HR Partner</strong> — Initiates &amp; Reviews</span></li>
+          <li><span class="role-dot faculty"></span><span><strong>Faculty Relations Partner</strong> — Initiates &amp; Reviews</span></li>
+          <li><span class="role-dot civil"></span><span><strong>Civil Service Director</strong> — Initiates &amp; Reviews</span></li>
+          <li><span class="role-dot diversity"></span><span><strong>Chief Diversity Officer</strong> — Reviews (equity check)</span></li>
+          <li><span class="role-dot recruiter"></span><span><strong>Primary Recruiter</strong> — Initiates &amp; Posts Job</span></li>
+          <li><span class="role-dot recruiter"></span><span><strong>Recruiter</strong> — Can Initiate</span></li>
+          <li><span class="role-dot budget"></span><span><strong>Budget Manager</strong> — Conditional Approval</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Key Notes</div>
+        <div class="flag decision" style="margin-bottom:10px;">
+          <span class="flag-icon">⚠️</span>
+          <div><strong>Review Skipped if Self-Initiated</strong>If the HR Partner, Faculty Relations Partner, or Civil Service Director initiates, their own review step is bypassed.</div>
+        </div>
+        <div class="flag condition">
+          <span class="flag-icon">🔀</span>
+          <div><strong>Budget Approval Conditional</strong>Budget Manager approval fires only if proposed pay falls outside the established salary range.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Process Flowchart</div>
+    <div class="flowchart">
+
+      <div class="flow-node">
+        <div class="flow-label">
+          <span class="role-dot manager"></span> Manager &nbsp;|&nbsp;
+          <span class="role-dot hr"></span> HR Partner &nbsp;|&nbsp;
+          <span class="role-dot faculty"></span> Faculty Relations Partner &nbsp;|&nbsp;
+          <span class="role-dot civil"></span> Civil Service Director &nbsp;|&nbsp;
+          <span class="role-dot recruiter"></span> Primary Recruiter / Recruiter
+        </div>
+        <div class="flow-box flow-start">🚀 INITIATION — Create Job Requisition</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <!-- Decision: who initiated? -->
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Decision: Was the process initiated by someone other than HR Partner / Faculty Relations Partner / Civil Service Director?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="decision-branch" style="max-width:760px;">
+        <div class="branch-side">
+          <div class="branch-label">✅ YES — Manager or Recruiter initiated</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node" style="max-width:340px;">
+            <div class="flow-label"><span class="role-dot hr"></span> HR Partner / Faculty Relations Partner / Civil Service Director</div>
+            <div class="flow-box flow-action">Review Job Requisition<br><span style="font-size:0.78rem;color:#666;">(Can modify, correct, or send back to initiator with comments)</span></div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">⏭ NO — HR Partner / FRP / CSD self-initiated</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node" style="max-width:340px;">
+            <div class="flow-box flow-action" style="opacity:0.35;">Review Step — SKIPPED</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot diversity"></span> Chief Diversity Officer</div>
+        <div class="flow-box flow-action diversity">Equity Review — Review Job Description, Compensation &amp; Posting Details<br><span style="font-size:0.78rem;color:#555;">(Can approve, send back to initiator or to HR Partner review step)</span></div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <!-- Budget Approval Decision -->
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Decision: Is proposed pay OUTSIDE the established salary range?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="decision-branch" style="max-width:760px;">
+        <div class="branch-side">
+          <div class="branch-label">✅ YES — Pay outside range</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node" style="max-width:340px;">
+            <div class="flow-label"><span class="role-dot budget"></span> Budget Manager</div>
+            <div class="flow-box flow-action budget">Budget Manager Approval</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">⏭ NO — Pay within range</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node" style="max-width:340px;">
+            <div class="flow-box flow-action budget" style="opacity:0.35;">Budget Approval — SKIPPED</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot manager"></span> Manager</div>
+        <div class="flow-box flow-action manager">Final Approval by Manager</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <!-- Post Job sub-process -->
+      <div class="flow-node">
+        <div class="flow-box flow-decision">🔀 Population: Regular Staff/Faculty vs. Civil Service?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="decision-branch" style="max-width:760px;">
+        <div class="branch-side">
+          <div class="branch-label">Regular Staff / Faculty</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node" style="max-width:340px;">
+            <div class="flow-label"><span class="role-dot recruiter"></span> Primary Recruiter</div>
+            <div class="flow-box flow-action recruiter">Post Job (Sub-Process)<br><span style="font-size:0.78rem;color:#666;">Internal and/or External posting</span></div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">Civil Service</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node" style="max-width:340px;">
+            <div class="flow-label"><span class="role-dot civil"></span> Civil Service Administrator</div>
+            <div class="flow-box flow-action civil">Post Job (Sub-Process)<br><span style="font-size:0.78rem;color:#666;">Civil Service posting</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="flow-node">
+        <div class="flow-box flow-end">✅ COMPLETE — Job Requisition Created &amp; Posted</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ BP2: POST JOB ══════════════════════ -->
+<div id="bp2" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big green">📌</div>
+      <div class="process-meta">
+        <h2>Post Job</h2>
+        <p>Sub-process of Create Job Requisition — or standalone action · Posts internally and/or externally</p>
+      </div>
+      <div class="completion-badge">
+        Triggered After<strong>All Approvals</strong>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who Is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot recruiter"></span><span><strong>Primary Recruiter</strong> — Posts for regular staff/faculty positions</span></li>
+          <li><span class="role-dot civil"></span><span><strong>Civil Service Administrator</strong> — Posts for civil service positions</span></li>
+          <li><span class="role-dot recruiter"></span><span><strong>Recruiter</strong> — Can post as standalone (new in A&amp;C2)</span></li>
+          <li><span class="role-dot admin"></span><span><strong>Recruiting Administrator</strong> — Can post as standalone (new in A&amp;C2)</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Key Notes</div>
+        <div class="flag info" style="margin-bottom:10px;">
+          <span class="flag-icon">🆕</span>
+          <div><strong>New in A&amp;C2</strong>Previously only Primary Recruiters could post. Recruiters and Recruiting Administrators now have this capability as a standalone task.</div>
+        </div>
+        <div class="flag condition">
+          <span class="flag-icon">📋</span>
+          <div><strong>Posting Locations</strong>Jobs post to the internal career site and/or external career site. Preview job posting is available before finalizing.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Process Flowchart</div>
+    <div class="flowchart">
+
+      <div class="flow-node">
+        <div class="flow-box flow-decision">🔀 Entry Point: How was this triggered?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="decision-branch" style="max-width:760px;">
+        <div class="branch-side">
+          <div class="branch-label">Sub-Process — After Create Job Req Approvals</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node" style="max-width:340px;">
+            <div class="flow-label"><span class="role-dot recruiter"></span> Primary Recruiter / <span class="role-dot civil"></span> Civil Service Admin</div>
+            <div class="flow-box flow-action recruiter">Task auto-routes to inbox after all approvals complete</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">Standalone — User Initiates Directly</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node" style="max-width:340px;">
+            <div class="flow-label"><span class="role-dot recruiter"></span> Primary Recruiter / Recruiter / <span class="role-dot admin"></span> Recruiting Admin</div>
+            <div class="flow-box flow-action recruiter">User navigates to job req and initiates Post Job action</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot recruiter"></span> Primary Recruiter / Recruiter / Recruiting Admin / Civil Service Admin</div>
+        <div class="flow-box flow-action recruiter">Preview Job Posting<br><span style="font-size:0.78rem;color:#666;">Review verbiage and job description before posting. Edit Job Req if changes needed.</span></div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="flow-node">
+        <div class="flow-box flow-decision">🔀 Where to post?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="decision-branch" style="max-width:760px;">
+        <div class="branch-side">
+          <div class="branch-label">Internal Only</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node" style="max-width:300px;">
+            <div class="flow-box flow-action recruiter">Post to Internal Career Site</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">External Only</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node" style="max-width:300px;">
+            <div class="flow-box flow-action recruiter">Post to External Career Site</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">Both</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node" style="max-width:300px;">
+            <div class="flow-box flow-action recruiter">Post to Internal &amp; External</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="flow-node">
+        <div class="flow-box flow-end">✅ COMPLETE — Job is Posted (with Posting End Date)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ BP3: UPDATE JOB POSTING (UN-POST / RE-POST) ══════════════════════ -->
+<div id="bp3" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big gold">🔄</div>
+      <div class="process-meta">
+        <h2>Update Job Posting — Un-Post / Re-Post</h2>
+        <p>Modify a posted job's end date, un-post, or re-post after making updates to the job requisition</p>
+      </div>
+      <div class="completion-badge">
+        Triggered When<strong>Posting Needs Update</strong>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who Is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot recruiter"></span><span><strong>Primary Recruiter</strong> — Full access</span></li>
+          <li><span class="role-dot admin"></span><span><strong>Recruiting Administrator</strong> — Full access (new in A&amp;C2)</span></li>
+          <li><span class="role-dot recruiter"></span><span><strong>Recruiter</strong> — Full access (new in A&amp;C2)</span></li>
+          <li><span class="role-dot civil"></span><span><strong>Civil Service Director</strong> — Can update/unpost</span></li>
+          <li><span class="role-dot diversity"></span><span><strong>Chief Diversity Officer</strong> — Can update/unpost</span></li>
+          <li><span class="role-dot hr"></span><span><strong>HR Partner</strong> — Can update/unpost</span></li>
+          <li><span class="role-dot faculty"></span><span><strong>Faculty Relations Partner</strong> — Can update/unpost</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Key Notes</div>
+        <div class="flag info" style="margin-bottom:10px;">
+          <span class="flag-icon">📅</span>
+          <div><strong>Posting End Date</strong>When posting a job, a posting end date is set. Users can manually un-post before that end date if needed (e.g., job filled early or posting needs revision).</div>
+        </div>
+        <div class="flag condition">
+          <span class="flag-icon">🔄</span>
+          <div><strong>Edit &amp; Repost</strong>If job description or details need updating, users can un-post, edit the job requisition, then re-post to refresh the listing.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Process Flowchart</div>
+    <div class="flowchart">
+
+      <div class="flow-node">
+        <div class="flow-label">
+          <span class="role-dot recruiter"></span> Primary Recruiter / Recruiter &nbsp;|&nbsp;
+          <span class="role-dot admin"></span> Recruiting Admin &nbsp;|&nbsp;
+          <span class="role-dot civil"></span> Civil Service Director &nbsp;|&nbsp;
+          <span class="role-dot diversity"></span> CDO &nbsp;|&nbsp;
+          <span class="role-dot hr"></span> HR Partner &nbsp;|&nbsp;
+          <span class="role-dot faculty"></span> Faculty Relations Partner
+        </div>
+        <div class="flow-box flow-start">🚀 INITIATION — Update Job Posting</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="flow-node">
+        <div class="flow-box flow-decision">🔀 What action is needed?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="decision-branch" style="max-width:760px;">
+        <div class="branch-side">
+          <div class="branch-label">Update End Date Only</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node" style="max-width:300px;">
+            <div class="flow-box flow-action recruiter">Modify posting end date<br><span style="font-size:0.78rem;color:#666;">Extend or shorten posting window</span></div>
+          </div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node" style="max-width:300px;">
+            <div class="flow-box flow-end" style="font-size:0.82rem;">✅ Posting Updated</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">Un-Post (Manual Early Close)</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node" style="max-width:300px;">
+            <div class="flow-box flow-action recruiter">Select posting(s) to un-post<br><span style="font-size:0.78rem;color:#666;">Internal / External / Both</span></div>
+          </div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node" style="max-width:300px;">
+            <div class="flow-box flow-decision" style="font-size:0.78rem;">⚠️ Need to re-post after edits?</div>
+          </div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node" style="max-width:300px;">
+            <div class="flow-box flow-action recruiter">Edit Job Requisition (if needed) → Re-Post Job</div>
+          </div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node" style="max-width:300px;">
+            <div class="flow-box flow-end" style="font-size:0.82rem;">✅ Posting Updated / Re-Posted</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ BP4: CREATE PROSPECT ══════════════════════ -->
+<div id="bp4" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big purple">👤</div>
+      <div class="process-meta">
+        <h2>Create Prospect</h2>
+        <p>Add a potential candidate's basic info before they apply to any specific job · Internal or External initiation</p>
+      </div>
+      <div class="completion-badge">
+        Completed Upon<strong>Submission</strong>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who Is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot admin"></span><span><strong>HR Administrator</strong> — Can create a prospect internally</span></li>
+          <li><span class="role-dot manager"></span><span><strong>Manager</strong> — Can create a prospect internally</span></li>
+          <li><span class="role-dot recruiter"></span><span><strong>Recruiter</strong> — Can create a prospect internally</span></li>
+          <li><span class="role-dot admin"></span><span><strong>Recruiting Administrator</strong> — Can create a prospect internally</span></li>
+          <li><span class="role-dot external"></span><span><strong>External Prospect (Self)</strong> — "Introduce Yourself" via external career site</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">What is a Prospect?</div>
+        <div class="flag info" style="margin-bottom:10px;">
+          <span class="flag-icon">💼</span>
+          <div><strong>Like a Business Card</strong>A prospect is someone whose basic info is stored in the system but who has not yet applied to a specific job. They are not tied to a job requisition yet.</div>
+        </div>
+        <div class="flag condition">
+          <span class="flag-icon">🔍</span>
+          <div><strong>Find Candidates Report</strong>Prospects appear in the Find Candidates report alongside active candidates. Teams can filter by candidate type (Prospect). From there, prospects can be invited to apply or have a job application created on their behalf.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Process Flowchart</div>
+    <div class="flowchart">
+
+      <div class="flow-node">
+        <div class="flow-box flow-decision">🔀 Entry Point: Who is initiating?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="decision-branch" style="max-width:760px;">
+        <div class="branch-side">
+          <div class="branch-label">Internal — HR Admin / Manager / Recruiter / Recruiting Admin</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node" style="max-width:340px;">
+            <div class="flow-label"><span class="role-dot admin"></span> HR Admin / <span class="role-dot manager"></span> Manager / <span class="role-dot recruiter"></span> Recruiter / <span class="role-dot admin"></span> Recruiting Admin</div>
+            <div class="flow-box flow-action manager">Create Prospect Task in Workday<br><span style="font-size:0.78rem;color:#666;">Enter name, contact info, basic background details</span></div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">External — Prospect Self-Submits</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node" style="max-width:340px;">
+            <div class="flow-label"><span class="role-dot external"></span> External Prospect</div>
+            <div class="flow-box flow-action" style="border-color:#64748b;background:#f8fafc;">
+              "Introduce Yourself" on External Career Site<br><span style="font-size:0.78rem;color:#666;">Submits basic info &amp; resume voluntarily</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="flow-node">
+        <div class="flow-box flow-end">✅ COMPLETE — Prospect Record Created</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot recruiter"></span> Recruiter / Recruiting Admin / Manager / HR Admin</div>
+        <div class="flow-box flow-action" style="border-color:#64748b;background:#f8fafc;">Prospect Searchable in Find Candidates Report<br><span style="font-size:0.78rem;color:#666;">Can invite to apply · Create job application on their behalf · Add to candidate pool · Share prospect info · Edit details</span></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ ROLES TABLE ══════════════════════ -->
+<div id="roles" class="section">
+  <div class="card">
+    <div class="card-title">Master Roles &amp; Permissions Table</div>
+    <div class="card-subtitle">All 4 business processes · City positions only · Federal Work Study and State excluded</div>
+    <div style="overflow-x:auto;">
+    <table class="roles-table">
+      <thead>
+        <tr>
+          <th>Business Process</th>
+          <th><span class="role-tag manager">Manager</span></th>
+          <th><span class="role-tag hr">HR Partner</span></th>
+          <th><span class="role-tag faculty">Faculty Relations Partner</span></th>
+          <th><span class="role-tag civil">Civil Service Director / Admin</span></th>
+          <th><span class="role-tag diversity">Chief Diversity Officer</span></th>
+          <th><span class="role-tag recruiter">Primary Recruiter / Recruiter</span></th>
+          <th><span class="role-tag admin">Recruiting Admin / HR Admin</span></th>
+          <th><span class="role-tag budget">Budget Manager</span></th>
+          <th><span class="role-tag external">External Prospect</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Create Job Requisition</strong><br><span style="font-size:0.78rem;color:#666;">📄 Full initiation-to-post lifecycle</span></td>
+          <td>Initiates; Final Approval</td>
+          <td>Initiates; Reviews (if not self-initiated)</td>
+          <td>Initiates; Reviews (if not self-initiated)</td>
+          <td>Initiates; Reviews (if not self-initiated); Posts (Civil Svc)</td>
+          <td>Equity Review</td>
+          <td>Initiates; Posts job (Primary Recruiter)</td>
+          <td><span class="dash">—</span></td>
+          <td>Conditional Approval (pay outside range)</td>
+          <td><span class="dash">—</span></td>
+        </tr>
+        <tr>
+          <td><strong>Post Job</strong><br><span style="font-size:0.78rem;color:#666;">📌 Sub-process or standalone</span></td>
+          <td><span class="dash">—</span></td>
+          <td>Can post (standalone)</td>
+          <td>Can post (standalone)</td>
+          <td>Posts for Civil Service positions</td>
+          <td>Can post (standalone)</td>
+          <td>Posts for regular staff/faculty; standalone (new A&amp;C2)</td>
+          <td>Standalone posting (new A&amp;C2)</td>
+          <td><span class="dash">—</span></td>
+          <td><span class="dash">—</span></td>
+        </tr>
+        <tr>
+          <td><strong>Update Job Posting</strong><br><span style="font-size:0.78rem;color:#666;">🔄 Un-post / Re-post / Update end date</span></td>
+          <td><span class="dash">—</span></td>
+          <td>Can update / un-post</td>
+          <td>Can update / un-post</td>
+          <td>Can update / un-post</td>
+          <td>Can update / un-post</td>
+          <td>Full access to update, un-post, re-post</td>
+          <td>Full access (new A&amp;C2)</td>
+          <td><span class="dash">—</span></td>
+          <td><span class="dash">—</span></td>
+        </tr>
+        <tr>
+          <td><strong>Create Prospect</strong><br><span style="font-size:0.78rem;color:#666;">👤 Pre-application candidate record</span></td>
+          <td>Can create prospect (internal)</td>
+          <td><span class="dash">—</span></td>
+          <td><span class="dash">—</span></td>
+          <td><span class="dash">—</span></td>
+          <td><span class="dash">—</span></td>
+          <td>Can create prospect (internal)</td>
+          <td>Can create prospect (internal — HR Admin &amp; Recruiting Admin)</td>
+          <td><span class="dash">—</span></td>
+          <td>Self-submits via external career site ("Introduce Yourself")</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Key Decision Points &amp; Flags</div>
+    <div class="card-subtitle">Conditions that change the process flow</div>
+
+    <div class="flag decision">
+      <span class="flag-icon">⚠️</span>
+      <div><strong>Self-Initiated = Review Step Skipped</strong>Applies to: Create Job Requisition. When HR Partner, Faculty Relations Partner, or Civil Service Director initiates the requisition themselves, their own review step is automatically bypassed.</div>
+    </div>
+    <div class="flag condition">
+      <span class="flag-icon">🔀</span>
+      <div><strong>Budget Manager Approval — Conditional on Pay Range</strong>In the Create Job Requisition process, if the proposed compensation for a full-time position is outside the established salary range, the Budget Manager approval step is triggered. If within range, it is skipped.</div>
+    </div>
+    <div class="flag condition">
+      <span class="flag-icon">🔀</span>
+      <div><strong>Posting Role Depends on Population</strong>Primary Recruiter posts for regular staff and faculty positions. Civil Service Administrator posts for civil service positions.</div>
+    </div>
+    <div class="flag info">
+      <span class="flag-icon">🆕</span>
+      <div><strong>New in A&amp;C2 — Expanded Posting Capabilities</strong>Post Job and Un-Post Job can now be initiated and completed by Recruiters and Recruiting Administrators as standalone tasks, in addition to Primary Recruiters.</div>
+    </div>
+    <div class="flag info">
+      <span class="flag-icon">💬</span>
+      <div><strong>Send Back Requires a Comment</strong>At any review or approval step, if a reviewer sends the requisition back to a previous step (initiator or prior reviewer), a comment explaining the reason is mandatory.</div>
+    </div>
+    <div class="flag warning">
+      <span class="flag-icon">🚫</span>
+      <div><strong>Federal Work Study &amp; State Positions Excluded</strong>All processes and roles described in this dashboard apply to City positions only. Federal Work Study and State-specific configurations are outside this scope.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Role Definitions Quick Reference</div>
+    <div class="card-subtitle">Roles appearing across Job Requisition processes</div>
+    <div style="overflow-x:auto;">
+    <table class="roles-table">
+      <thead>
+        <tr>
+          <th>Role</th>
+          <th>Primary Responsibilities in TAM</th>
+          <th>Processes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="role-tag manager">Manager</span></td>
+          <td>Initiates job requisitions; provides final approval; creates prospects internally</td>
+          <td>Create Job Req, Create Prospect</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag hr">HR Partner</span></td>
+          <td>Initiates and/or reviews job requisitions; can post/un-post jobs as standalone</td>
+          <td>Create Job Req, Post Job, Update Job Posting</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag faculty">Faculty Relations Partner</span></td>
+          <td>Initiates and/or reviews faculty-related job requisitions; can post/un-post</td>
+          <td>Create Job Req, Post Job, Update Job Posting</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag civil">Civil Service Director</span></td>
+          <td>Initiates and reviews civil service job requisitions; can update postings</td>
+          <td>Create Job Req, Post Job, Update Job Posting</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag civil">Civil Service Administrator</span></td>
+          <td>Posts and manages job postings for civil service positions</td>
+          <td>Post Job, Update Job Posting</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag diversity">Chief Diversity Officer</span></td>
+          <td>Equity review of job requisitions (job description, compensation, posting details); can send back or approve</td>
+          <td>Create Job Req, Post Job, Update Job Posting</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag recruiter">Primary Recruiter</span></td>
+          <td>Can initiate job requisitions; posts jobs for regular staff/faculty; manages job postings</td>
+          <td>Create Job Req, Post Job, Update Job Posting</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag recruiter">Recruiter</span></td>
+          <td>Can initiate job requisitions; can post/un-post/re-post (new in A&amp;C2); creates prospects</td>
+          <td>Create Job Req, Post Job, Update Job Posting, Create Prospect</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag admin">Recruiting Administrator</span></td>
+          <td>Can post/un-post/re-post jobs (new in A&amp;C2); creates prospects</td>
+          <td>Post Job, Update Job Posting, Create Prospect</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag budget">Budget Manager</span></td>
+          <td>Conditional approval when compensation is outside established salary range</td>
+          <td>Create Job Req (conditional)</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag admin">HR Administrator</span></td>
+          <td>Creates prospect records internally</td>
+          <td>Create Prospect</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag external">External Prospect (Self)</span></td>
+          <td>Submits own basic information via the external career site ("Introduce Yourself")</td>
+          <td>Create Prospect</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  const sec = document.getElementById(id);
+  if (sec) sec.classList.add('active');
+  const tabs = document.querySelectorAll('.tab-btn');
+  const map = { overview:0, bp1:1, bp2:2, bp3:3, bp4:4, roles:5 };
+  if (map[id] !== undefined && tabs[map[id]]) tabs[map[id]].classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
