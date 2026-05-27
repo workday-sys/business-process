@@ -15,23 +15,25 @@
     --gold: #e8a922;
     --gold-light: #f5c84a;
     --teal: #0e8a7a;
+    --red: #c0392b;
+    --green: #1a7a4a;
     --slate: #4a5568;
     --light: #f4f7fb;
     --white: #ffffff;
     --border: #dde4ef;
     --card-shadow: 0 4px 24px rgba(15,32,64,0.10);
+    --role-manager: #7c3aed;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'DM Sans', Arial, sans-serif;
     background: var(--light);
     color: var(--navy);
     min-height: 100vh;
   }
 
-  /* HEADER */
+  /* ── HEADER ── */
   .header {
-    background: -webkit-linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, var(--blue) 100%);
     background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, var(--blue) 100%);
     color: white;
     padding: 36px 48px 28px;
@@ -53,6 +55,13 @@
     border-radius: 50%;
   }
   .header-inner { position: relative; z-index: 1; }
+  .header h1 {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: 2.2rem;
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+  }
+  .header p { color: rgba(255,255,255,0.72); font-size: 0.95rem; font-weight: 400; }
   .header-badge {
     display: inline-block;
     background: var(--gold);
@@ -65,265 +74,296 @@
     border-radius: 20px;
     margin-bottom: 12px;
   }
-  .header h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 2.2rem;
-    letter-spacing: -0.5px;
-    margin-bottom: 6px;
-  }
-  .header p {
-    color: rgba(255,255,255,0.72);
-    font-size: 0.95rem;
-    font-weight: 400;
-  }
 
-  /* CONTENT */
-  .content {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 40px 48px 80px;
-  }
+  /* ── CONTENT ── */
+  .content { max-width: 1200px; margin: 0 auto; padding: 36px 48px 60px; }
 
-  /* DASHBOARD CARDS */
-  .cards {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    gap: 24px;
-  }
-  .dashboard-card {
-    background: var(--white);
-    border-radius: 16px;
-    -webkit-box-shadow: var(--card-shadow);
-    box-shadow: var(--card-shadow);
-    border: 1px solid var(--border);
-    overflow: hidden;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: row;
-    flex-direction: row;
-  }
-  .card-accent {
-    width: 8px;
-    -ms-flex-negative: 0;
-    flex-shrink: 0;
-  }
-  .card-accent.teal { background: var(--teal); }
-  .card-accent.gold { background: -webkit-linear-gradient(top, #c06a10, #e8a922); background: linear-gradient(180deg, #c06a10, #e8a922); }
-
-  .card-body {
-    padding: 28px 32px;
-    -webkit-box-flex: 1;
-    -ms-flex: 1;
-    flex: 1;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    gap: 24px;
-  }
-  .card-icon {
-    font-size: 2.4rem;
-    -ms-flex-negative: 0;
-    flex-shrink: 0;
-    width: 64px;
-    height: 64px;
-    border-radius: 14px;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    justify-content: center;
-  }
-  .card-icon.teal {
-    background: -webkit-linear-gradient(135deg, #0a3030, var(--teal));
-    background: linear-gradient(135deg, #0a3030, var(--teal));
-  }
-  .card-icon.gold {
-    background: -webkit-linear-gradient(135deg, #3d1f00, #b85e00);
-    background: linear-gradient(135deg, #3d1f00, #b85e00);
-  }
-  .card-info { -webkit-box-flex: 1; -ms-flex: 1; flex: 1; }
-  .card-part {
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 1.2px;
-    text-transform: uppercase;
-    color: var(--slate);
-    margin-bottom: 4px;
-  }
-  .card-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.35rem;
+  /* ── SECTION INTRO ── */
+  .section-intro { margin-bottom: 28px; }
+  .section-intro h2 {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: 1.5rem;
     color: var(--navy);
     margin-bottom: 6px;
-    line-height: 1.3;
   }
-  .card-desc {
-    font-size: 0.85rem;
-    color: var(--slate);
-    line-height: 1.6;
-    margin-bottom: 14px;
-  }
-  .card-pills {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-  .pill {
-    font-size: 0.72rem;
-    font-weight: 600;
-    padding: 3px 10px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    background: var(--light);
-    color: var(--slate);
-    white-space: nowrap;
-  }
-  .card-action { -ms-flex-negative: 0; flex-shrink: 0; }
-  .open-btn {
-    display: -webkit-inline-box;
-    display: -ms-inline-flexbox;
-    display: inline-flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 22px;
-    border-radius: 10px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 700;
-    text-decoration: none;
-    color: white;
-    -webkit-transition: opacity 0.2s, -webkit-transform 0.2s;
-    transition: opacity 0.2s, transform 0.2s;
-    white-space: nowrap;
-  }
-  .open-btn:hover { opacity: 0.88; -webkit-transform: translateY(-2px); transform: translateY(-2px); }
-  .open-btn.teal { background: -webkit-linear-gradient(135deg, #0a3030, var(--teal)); background: linear-gradient(135deg, #0a3030, var(--teal)); }
-  .open-btn.gold { background: -webkit-linear-gradient(135deg, #3d1f00, #b85e00); background: linear-gradient(135deg, #3d1f00, #b85e00); }
+  .section-intro p { color: var(--slate); font-size: 0.9rem; }
 
-  /* NOTE */
-  .note {
-    display: -webkit-box;
-    display: -ms-flexbox;
+  /* ── INFO BANNER ── */
+  .info-banner {
     display: flex;
-    -webkit-box-align: flex-start;
-    -ms-flex-align: flex-start;
     align-items: flex-start;
     gap: 12px;
     background: var(--white);
     border: 1px solid var(--border);
-    border-left: 4px solid var(--blue-light);
+    border-left: 4px solid var(--blue);
     border-radius: 10px;
     padding: 14px 18px;
-    margin-top: 32px;
-    font-size: 0.85rem;
+    margin-bottom: 28px;
+    font-size: 0.86rem;
     color: var(--slate);
     line-height: 1.6;
-    -webkit-box-shadow: var(--card-shadow);
     box-shadow: var(--card-shadow);
   }
-  .note-icon { font-size: 1.1rem; margin-top: 1px; -ms-flex-negative: 0; flex-shrink: 0; }
-  .note strong { color: var(--navy); display: block; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+  .info-banner strong { color: var(--navy); }
 
-  /* RESPONSIVE */
-  @media (max-width: 700px) {
-    .content { padding: 28px 20px 60px; }
-    .header { padding: 28px 20px; }
-    .header h1 { font-size: 1.6rem; }
-    .dashboard-card { -webkit-box-orient: vertical; -webkit-box-direction: normal; -ms-flex-direction: column; flex-direction: column; }
-    .card-accent { width: 100%; height: 6px; }
-    .card-body { -webkit-box-orient: vertical; -webkit-box-direction: normal; -ms-flex-direction: column; flex-direction: column; -webkit-box-align: start; -ms-flex-align: start; align-items: flex-start; padding: 22px 20px; gap: 16px; }
-    .card-action { width: 100%; }
-    .open-btn { width: 100%; -webkit-box-pack: center; -ms-flex-pack: center; justify-content: center; }
+  /* ── SCOPE BANNER ── */
+  .scope-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--red);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-top: 28px;
+    font-size: 0.86rem;
+    color: var(--slate);
+    line-height: 1.6;
+    box-shadow: var(--card-shadow);
+  }
+  .scope-banner strong { color: var(--navy); }
+
+  /* ── GRID ── */
+  .dashboards-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+
+  /* ── CARD ── */
+  .dashboard-card {
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--border);
+    padding: 28px 28px 24px;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 calc(50% - 12px);
+    min-width: 280px;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .dashboard-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 36px rgba(15,32,64,0.14);
+  }
+
+  /* ── CARD HEADER ── */
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .card-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+  .card-icon.blue   { background: linear-gradient(135deg, var(--navy), var(--blue)); }
+  .card-icon.teal   { background: linear-gradient(135deg, #1a4a2e, var(--teal)); }
+  .card-icon.gold   { background: linear-gradient(135deg, #5b2a00, #c06a10); }
+  .card-icon.purple { background: linear-gradient(135deg, #2d1060, var(--role-manager)); }
+
+  .card-title-block { flex: 1; }
+  .card-title {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: 1.2rem;
+    color: var(--navy);
+    margin-bottom: 3px;
+    line-height: 1.3;
+  }
+  .card-subtitle {
+    font-size: 0.78rem;
+    color: var(--slate);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+  }
+
+  /* ── DESCRIPTION ── */
+  .card-description {
+    font-size: 0.88rem;
+    color: var(--slate);
+    line-height: 1.65;
+    margin-bottom: 18px;
+    flex: 1;
+  }
+
+  /* ── PILLS ── */
+  .pills-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--slate);
+    margin-bottom: 8px;
+  }
+  .pills-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 22px;
+  }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 11px;
+    border-radius: 20px;
+    font-size: 0.76rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .pill.blue   { background: #ddeeff; color: var(--blue); }
+  .pill.teal   { background: #d9f5ef; color: var(--teal); }
+  .pill.gold   { background: #fff3cc; color: #7a5800; }
+  .pill.purple { background: #ede9ff; color: #5b21b6; }
+  .pill.red    { background: #fce7e7; color: var(--red); }
+  .pill.slate  { background: #f1f5f9; color: var(--slate); }
+  .pill.navy   { background: #e0e8f5; color: var(--navy); }
+
+  /* ── OPEN BUTTON ── */
+  .open-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    font-family: 'DM Sans', Arial, sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+    margin-top: auto;
+  }
+  .open-btn:hover  { opacity: 0.88; transform: translateY(-1px); }
+  .open-btn:active { transform: translateY(0); }
+  .open-btn svg {
+    width: 14px; height: 14px;
+    fill: none;
+    stroke: white;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 860px) {
+    .dashboard-card { flex: 1 1 100%; }
+    .content { padding: 24px 20px 48px; }
+    .header  { padding: 28px 20px 22px; }
+    .header h1 { font-size: 1.7rem; }
+  }
+  @media (max-width: 480px) {
+    .header h1 { font-size: 1.4rem; }
+    .dashboards-grid { gap: 16px; }
+    .dashboard-card  { padding: 22px 20px 20px; }
   }
 </style>
 </head>
 <body>
 
+<!-- ── HEADER ── -->
 <div class="header">
   <div class="header-inner">
-    <div class="header-badge">Business Process</div>
+    <div class="header-badge">Time &amp; Leave &nbsp;&#183;&nbsp; Business Processes</div>
     <h1>Time &amp; Leave Dashboard</h1>
     <p>Interactive guides for Time &amp; Leave workflows &mdash; roles, steps, decisions, and approvals</p>
   </div>
 </div>
 
+<!-- ── CONTENT ── -->
 <div class="content">
-  <div class="cards">
 
-    <!-- Time Entry -->
+  <div class="info-banner">
+    <span style="font-size:1.1rem;flex-shrink:0;">&#128204;</span>
+    <div>
+      <strong>How to use this hub:</strong>
+      Each card below represents a dedicated interactive dashboard. Click <strong>Open Dashboard</strong> to explore the full process &mdash; flowcharts, role breakdowns, decision points, and approvals &mdash; for that topic.
+    </div>
+  </div>
+
+  <div class="section-intro">
+    <h2>Available Dashboards</h2>
+    <p>2 interactive guides covering Time &amp; Leave workflows</p>
+  </div>
+
+  <div class="dashboards-grid">
+
+    <!-- CARD 1: Time Entry -->
     <div class="dashboard-card">
-      <div class="card-accent teal"></div>
-      <div class="card-body">
-        <div class="card-icon teal">&#9201;</div>
-        <div class="card-info">
-          <div class="card-part">Time &amp; Leave &bull; Part 2</div>
+      <div class="card-header">
+        <div class="card-icon blue">&#9201;</div>
+        <div class="card-title-block">
           <div class="card-title">Time Entry</div>
-          <div class="card-desc">How employees enter, submit, approve, and correct timesheets. Covers web clock for non-exempt employees, microblock self-reporting for HEO/HEA, and absence requests.</div>
-          <div class="card-pills">
-            <span class="pill">&#9201; Enter Time</span>
-            <span class="pill">&#9989; Approve Time</span>
-            <span class="pill">&#9999;&#65039; Edit / Correct Time</span>
-            <span class="pill">&#128197; Request Absence</span>
-          </div>
-        </div>
-        <div class="card-action">
-          <a class="open-btn teal" href="https://workday-sys.github.io/business-process/timeandleave/time_entry.html" target="_blank" rel="noopener">
-            Open Dashboard &#8594;
-          </a>
+          <div class="card-subtitle">Time &amp; Leave &middot; Part 2</div>
         </div>
       </div>
+      <p class="card-description">
+        How employees enter, submit, approve, and correct timesheets. Covers web clock for non-exempt employees, microblock self-reporting for HEO/HEA, and absence requests.
+      </p>
+      <div class="pills-label">Workflows Covered</div>
+      <div class="pills-row">
+        <span class="pill blue">&#9201; Enter Time</span>
+        <span class="pill teal">&#10003; Approve Time</span>
+        <span class="pill gold">&#9999;&#65039; Edit / Correct Time</span>
+        <span class="pill slate">&#128197; Request Absence</span>
+      </div>
+      <a class="open-btn" href="https://workday-sys.github.io/business-process/timeandleave/time_entry.html" target="_blank" rel="noopener noreferrer">
+        Open Dashboard
+        <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </a>
     </div>
 
-    <!-- Request & Correct Time Off -->
+    <!-- CARD 2: Request & Correct Time Off -->
     <div class="dashboard-card">
-      <div class="card-accent gold"></div>
-      <div class="card-body">
-        <div class="card-icon gold">&#128197;</div>
-        <div class="card-info">
-          <div class="card-part">Time &amp; Leave &bull; Part 1</div>
+      <div class="card-header">
+        <div class="card-icon teal">&#128197;</div>
+        <div class="card-title-block">
           <div class="card-title">Request &amp; Correct Time Off</div>
-          <div class="card-desc">Managing absence requests from start to finish. Submit a request, correct one that&rsquo;s already been approved, or update and cancel a request that&rsquo;s still pending.</div>
-          <div class="card-pills">
-            <span class="pill">&#128197; Request Time Off</span>
-            <span class="pill">&#9999;&#65039; Correct Time Off</span>
-            <span class="pill">&#128260; Update / Cancel</span>
-          </div>
-        </div>
-        <div class="card-action">
-          <a class="open-btn gold" href="https://workday-sys.github.io/business-process/timeandleave/request_correct_timeoff.html" target="_blank" rel="noopener">
-            Open Dashboard &#8594;
-          </a>
+          <div class="card-subtitle">Time &amp; Leave &middot; Part 1</div>
         </div>
       </div>
+      <p class="card-description">
+        Managing absence requests from start to finish. Submit a request, correct one that&rsquo;s already been approved, or update and cancel a request that&rsquo;s still pending.
+      </p>
+      <div class="pills-label">Workflows Covered</div>
+      <div class="pills-row">
+        <span class="pill teal">&#128197; Request Time Off</span>
+        <span class="pill gold">&#9999;&#65039; Correct Time Off</span>
+        <span class="pill blue">&#128257; Update / Cancel</span>
+      </div>
+      <a class="open-btn" href="https://workday-sys.github.io/business-process/timeandleave/request_correct_timeoff.html" target="_blank" rel="noopener noreferrer">
+        Open Dashboard
+        <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </a>
     </div>
 
+  </div><!-- /grid -->
+
+  <!-- SCOPE NOTE -->
+  <div class="scope-banner">
+    <span style="font-size:1.1rem;flex-shrink:0;">&#128683;</span>
+    <div>
+      <strong>Scope:</strong>
+      All processes shown apply to City positions only. Federal Work Study positions and State-specific steps are excluded from these dashboards.
+    </div>
   </div>
 
-  <div class="note">
-    <span class="note-icon">&#128683;</span>
-    <div><strong>Scope</strong>All processes shown apply to City positions only. Federal Work Study positions and State-specific steps are excluded from these dashboards.</div>
-  </div>
-</div>
+</div><!-- /content -->
 
 </body>
 </html>
