@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>¡Feliz Cumpleaños Gaby! 🎂</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  :root {
+    --pink: #FF6B9D;
+    --yellow: #FFD93D;
+    --mint: #6BCB77;
+    --blue: #4D96FF;
+    --orange: #FF9A3C;
+    --purple: #C77DFF;
+    --coral: #FF6B6B;
+    --white: #FFFFFF;
+  }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: #1a0533;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    user-select: none;
+  }
+
+  /* Animated gradient background */
+  .bg {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(135deg, #1a0533, #0d1f4d, #1a0533);
+    z-index: 0;
+  }
+
+  /* Floating circles background decoration */
+  .circle {
+    position: fixed;
+    border-radius: 50%;
+    opacity: 0.12;
+    animation: floatCircle linear infinite;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  @keyframes floatCircle {
+    0% { transform: translateY(110vh) scale(1); opacity: 0.12; }
+    100% { transform: translateY(-10vh) scale(1.3); opacity: 0; }
+  }
+
+  /* Confetti */
+  .confetti {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    top: -10px;
+    border-radius: 2px;
+    animation: confettiFall linear infinite;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  @keyframes confettiFall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0.4; }
+  }
+
+  /* Stars */
+  .star {
+    position: fixed;
+    font-size: 16px;
+    animation: twinkle ease-in-out infinite;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0;
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0; transform: scale(0.5); }
+    50% { opacity: 0.8; transform: scale(1.2); }
+  }
+
+  /* Main screen */
+  #screen {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+
+  /* Cards */
+  .card {
+    display: none;
+    width: 100%;
+    max-width: 420px;
+    animation: cardPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  .card.active { display: block; }
+
+  @keyframes cardPop {
+    from { opacity: 0; transform: scale(0.8) rotate(-2deg); }
+    to { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+
+  .card-inner {
+    border-radius: 28px;
+    padding: 28px 24px 22px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.3);
+  }
+
+  .card-inner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 50%);
+    pointer-events: none;
+    border-radius: 28px;
+  }
+
+  /* Card themes */
+  .theme-intro { background: linear-gradient(135deg, #FF6B9D, #FF9A3C); }
+  .theme-1992  { background: linear-gradient(135deg, #C77DFF, #4D96FF); }
+  .theme-1997  { background: linear-gradient(135deg, #FF6B9D, #C77DFF); }
+  .theme-2002  { background: linear-gradient(135deg, #FFD93D, #FF9A3C); }
+  .theme-2007  { background: linear-gradient(135deg, #6BCB77, #4D96FF); }
+  .theme-2012  { background: linear-gradient(135deg, #4D96FF, #C77DFF); }
+  .theme-2017  { background: linear-gradient(135deg, #FFD93D, #FF6B9D); }
+  .theme-2022  { background: linear-gradient(135deg, #FF6B6B, #C77DFF); }
+  .theme-2026  { background: linear-gradient(135deg, #FF9A3C, #FF6B9D); }
+  .theme-final { background: linear-gradient(135deg, #6BCB77, #4D96FF, #C77DFF); }
+
+  /* Year badge */
+  .year-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.25);
+    backdrop-filter: blur(4px);
+    border: 2px solid rgba(255,255,255,0.4);
+    border-radius: 50px;
+    padding: 6px 18px;
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(14px, 4vw, 18px);
+    color: white;
+    letter-spacing: 1px;
+    margin-bottom: 14px;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+
+  /* Card title */
+  .card-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(22px, 7vw, 34px);
+    color: white;
+    line-height: 1.15;
+    margin-bottom: 16px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+
+  /* Divider */
+  .divider {
+    height: 2px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 2px;
+    margin-bottom: 16px;
+  }
+
+  /* Lines */
+  .lines {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .line {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    animation: lineIn 0.4s ease forwards;
+    opacity: 0;
+  }
+
+  .line:nth-child(1)  { animation-delay: 0.1s; }
+  .line:nth-child(2)  { animation-delay: 0.2s; }
+  .line:nth-child(3)  { animation-delay: 0.3s; }
+  .line:nth-child(4)  { animation-delay: 0.4s; }
+  .line:nth-child(5)  { animation-delay: 0.5s; }
+  .line:nth-child(6)  { animation-delay: 0.6s; }
+  .line:nth-child(7)  { animation-delay: 0.7s; }
+  .line:nth-child(8)  { animation-delay: 0.8s; }
+  .line:nth-child(9)  { animation-delay: 0.9s; }
+  .line:nth-child(10) { animation-delay: 1.0s; }
+  .line:nth-child(11) { animation-delay: 1.1s; }
+  .line:nth-child(12) { animation-delay: 1.2s; }
+
+  @keyframes lineIn {
+    from { opacity: 0; transform: translateX(-12px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  .line-emoji {
+    font-size: clamp(16px, 4.5vw, 22px);
+    flex-shrink: 0;
+    line-height: 1.4;
+  }
+
+  .line-text {
+    font-size: clamp(13px, 3.8vw, 17px);
+    color: white;
+    line-height: 1.45;
+    font-weight: 700;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  }
+
+  .line-text.funny {
+    font-style: italic;
+    font-weight: 600;
+    opacity: 0.92;
+  }
+
+  /* Intro specific */
+  .intro-emoji {
+    font-size: clamp(56px, 18vw, 90px);
+    text-align: center;
+    display: block;
+    animation: bounce 1s ease-in-out infinite alternate;
+    margin-bottom: 8px;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
+  }
+
+  @keyframes bounce {
+    from { transform: translateY(0) scale(1); }
+    to   { transform: translateY(-10px) scale(1.05); }
+  }
+
+  .intro-name {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(42px, 14vw, 72px);
+    color: white;
+    text-align: center;
+    line-height: 1;
+    text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    margin-bottom: 8px;
+  }
+
+  .intro-sub {
+    font-size: clamp(14px, 4vw, 19px);
+    color: rgba(255,255,255,0.9);
+    text-align: center;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+
+  .intro-date {
+    font-size: clamp(12px, 3.2vw, 16px);
+    color: rgba(255,255,255,0.75);
+    text-align: center;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* Final card */
+  .final-emoji-row {
+    font-size: clamp(28px, 8vw, 44px);
+    text-align: center;
+    letter-spacing: 4px;
+    animation: rainbow 2s linear infinite;
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  @keyframes rainbow {
+    0%   { filter: hue-rotate(0deg); }
+    100% { filter: hue-rotate(360deg); }
+  }
+
+  .final-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(26px, 8vw, 40px);
+    color: white;
+    text-align: center;
+    line-height: 1.15;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    margin-bottom: 14px;
+  }
+
+  /* Navigation */
+  #nav {
+    position: fixed;
+    bottom: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 100;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 90vw;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+    cursor: pointer;
+    transition: all 0.3s;
+    flex-shrink: 0;
+  }
+
+  .dot.active {
+    background: white;
+    width: 20px;
+    border-radius: 4px;
+    box-shadow: 0 0 8px rgba(255,255,255,0.6);
+  }
+
+  /* Next button */
+  #next-btn {
+    position: fixed;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    border: 2px solid rgba(255,255,255,0.4);
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    backdrop-filter: blur(6px);
+    transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  #next-btn:hover, #next-btn:active {
+    background: rgba(255,255,255,0.35);
+    transform: translateY(-50%) scale(1.1);
+  }
+
+  /* Tap hint */
+  #tap-hint {
+    position: fixed;
+    bottom: 58px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255,255,255,0.5);
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 700;
+    z-index: 100;
+    white-space: nowrap;
+  }
+
+  /* Progress bar */
+  #progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #FFD93D, #FF6B9D, #C77DFF);
+    z-index: 200;
+    transition: width 7s linear;
+    width: 0%;
+    box-shadow: 0 0 10px rgba(255,215,61,0.6);
+  }
+
+  /* Restart button */
+  .restart-btn {
+    display: block;
+    margin: 18px auto 0;
+    padding: 12px 32px;
+    background: rgba(255,255,255,0.25);
+    border: 2px solid rgba(255,255,255,0.5);
+    border-radius: 50px;
+    color: white;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+  }
+
+  .restart-btn:hover, .restart-btn:active {
+    background: rgba(255,255,255,0.4);
+    transform: scale(1.05);
+  }
+</style>
+</head>
+<body>
+
+<div class="bg"></div>
+<div id="progress"></div>
+
+<div id="screen">
+
+  <!-- INTRO -->
+  <div class="card active" id="c0">
+    <div class="card-inner theme-intro">
+      <span class="intro-emoji">🎂</span>
+      <div class="intro-name">¡GABY!</div>
+      <div class="intro-sub">Hoy cumples 34 años 🎉</div>
+      <div class="intro-date">29 de Mayo de 2026</div>
+    </div>
+  </div>
+
+  <!-- 1992 -->
+  <div class="card" id="c1">
+    <div class="card-inner theme-1992">
+      <div class="year-badge">🍼 1992 — El año que todo empezó</div>
+      <div class="divider"></div>
+      <div class="lines">
+        <div class="line"><span class="line-emoji">🐒</span><span class="line-text">Naciste en el Año del Mono</span></div>
+        <div class="line"><span class="line-emoji">😏</span><span class="line-text funny">Traviesa, ingeniosa y adorable desde el día 1</span></div>
+        <div class="line"><span class="line-emoji">⏰</span><span class="line-text">Tomó largas horas en llegar — ya desde bebé hacía las cosas a su tiempo</span></div>
+        <div class="line"><span class="line-emoji">😂</span><span class="line-text funny">Spoiler: nunca cambió</span></div>
+        <div class="line"><span class="line-emoji">♊</span><span class="line-text">Eres Géminis — 5 personas distintas antes del desayuno</span></div>
+        <div class="line"><span class="line-emoji">😂</span><span class="line-text funny">Tus amigos lo confirman. Tu familia también</span></div>
+        <div class="line"><span class="line-emoji">🎵</span><span class="line-text">Luis Miguel cantaba "No Sé Tú" cuando llegaste</span></div>
+        <div class="line"><span class="line-emoji">💫</span><span class="line-text funny">El universo eligió tu canción personalmente</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1997 -->
+  <div class="card" id="c2">
+    <div class="card-inner theme-1997">
+      <div class="year-badge">👶 5 años — 1997</div>
+      <div class="divider"></div>
+      <div class="lines">
+        <div class="line"><span class="line-emoji">🧒</span><span class="line-text">Con 5 añitos el mundo se preparaba para ella</span></div>
+        <div class="line"><span class="line-emoji">📖</span><span class="line-text">Harry Potter llegó ese mismo año</span></div>
+        <div class="line"><span class="line-emoji">✨</span><span class="line-text funny">La edad perfecta para creer en magia</span></div>
+        <div class="line"><span class="line-emoji">🚢</span><span class="line-text">Titanic hacía llorar a millones</span></div>
+        <div class="line"><span class="line-emoji">😏</span><span class="line-text funny">Ella: demasiado ocupada jugando. Prioridades claras</span></div>
+        <div class="line"><span class="line-emoji">💃</span><span class="line-text">Las Spice Girls y su "Wannabe" dijeron que las niñas podían ser lo que quisieran</span></div>
+        <div class="line"><span class="line-emoji">🎤</span><span class="line-text funny">Tell me what you want, what you really really want</span></div>
+        <div class="line"><span class="line-emoji">👑</span><span class="line-text">Gaby ya lo sabía. Ellas llegaron tarde</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2002 -->
+  <div class="card" id="c3">
+    <div class="card-inner theme-2002">
+      <div class="year-badge">🎒 10 años — 2002</div>
+      <div class="divider"></div>
+      <div class="lines">
+        <div class="line"><span class="line-emoji">🎒</span><span class="line-text">Con 10 años ya tenía criterio propio</span></div>
+        <div class="line"><span class="line-emoji">🍕</span><span class="line-text">SpongeBob dominaba la tele y nadie lo entendía</span></div>
+        <div class="line"><span class="line-emoji">😂</span><span class="line-text funny">Todos lo veían igual. Sin vergüenza. Sin explicación</span></div>
+        <div class="line"><span class="line-emoji">🎶</span><span class="line-text">Shakira sonaba en cada radio de Ecuador con "Whenever, Wherever"</span></div>
+        <div class="line"><span class="line-emoji">🔥</span><span class="line-text funny">Antes de ser famosa mundial. Gaby la conoció primero</span></div>
+        <div class="line"><span class="line-emoji">🎮</span><span class="line-text">Mientras otros jugaban tranquilos, Gaby jugaba Mortal Kombat</span></div>
+        <div class="line"><span class="line-emoji">💀</span><span class="line-text">"FINISH HIM!"</span></div>
+        <div class="line"><span class="line-emoji">🩸</span><span class="line-text">"FATALITY!"</span></div>
+        <div class="line"><span class="line-emoji">😂</span><span class="line-text funny">A los 10 años ya no había que meterse con ella</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2007 -->
+  <div class="card" id="c4">
+    <div class="card-inner theme-2007">
+      <div class="year-badge">💅 15 años — 2007</div>
+      <div class="divider"></div>
+      <div class="lines">
+        <div class="line"><span class="line-emoji">💅</span><span class="line-text">Con 15 años el mundo cambió — literalmente</span></div>
+        <div class="line"><span class="line-emoji">📱</span><span class="line-text">Steve Jobs presentó el iPhone</span></div>
+        <div class="line"><span class="line-emoji">😱</span><span class="line-text funny">Todo lo que vino después: culpa suya</span></div>
+        <div class="line"><span class="line-emoji">🎬</span><span class="line-text">High School Musical 2 — 17 millones lo vieron</span></div>
+        <div class="line"><span class="line-emoji">😂</span><span class="line-text funny">Gaby entre ellos. No hay de qué avergonzarse</span></div>
+        <div class="line"><span class="line-emoji">🧛</span><span class="line-text">Eclipse de Twilight — Team Edward o Team Jacob</span></div>
+        <div class="line"><span class="line-emoji">⚔️</span><span class="line-text funny">No había término medio. No había paz. Nunca</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2012 -->
+  <div class="card" id="c5">
+    <div class="card-inner theme-2012">
+      <div class="year-badge">💪 20 años — 2012</div>
+      <div class="divider"></div>
+      <div class="lines">
+        <div class="line"><span class="line-emoji">🐴</span><span class="line-text">Todo el mundo bailaba "Gangnam Style" sin entender la letra</span></div>
+        <div class="line"><span class="line-emoji">😂</span><span class="line-text funny">Todos. Sin excepción. Sin vergüenza</span></div>
+        <div class="line"><span class="line-emoji">📞</span><span class="line-text">"Call Me Maybe" — resistirlo era clínicamente imposible</span></div>
+        <div class="line"><span class="line-emoji">🔬</span><span class="line-text funny">Los científicos lo confirmaron</span></div>
+        <div class="line"><span class="line-emoji">⚽</span><span class="line-text">LDU Quito — el único equipo ecuatoriano en ganar la Copa Libertadores</span></div>
+        <div class="line"><span class="line-emoji">👑</span><span class="line-text">El orgullo de todo Quito... de acuerdo a Gaby</span></div>
+        <div class="line"><span class="line-emoji">😂</span><span class="line-text funny">Y Gaby no acepta debate al respecto</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2017 -->
+  <div class="card" id="c6">
+    <div class="card-inner theme-2017">
+      <div class="year-badge">🌟 25 años — 2017</div>
+      <div class="divider"></div>
+      <div class="lines">
+        <div class="line"><span class="line-emoji">🌟</span><span class="line-text">Con 25 años hasta el universo hizo un show</span></div>
+        <div class="line"><span class="line-emoji">☀️</span><span class="line-text">Eclipse solar total en EE.UU. — el primero en 99 años</span></div>
+        <div class="line"><span class="line-emoji">🎉</span><span class="line-text funny">El universo apagó las luces para celebrarle. No hay otra explicación</span></div>
+        <div class="line"><span class="line-emoji">🎵</span><span class="line-text">"Despacito" — 4 billones de vistas en YouTube</span></div>
+        <div class="line"><span class="line-emoji">🕺</span><span class="line-text">Imposible escucharla sin mover los pies</span></div>
+        <div class="line"><span class="line-emoji">😏</span><span class="line-text funny">Si Gaby no bailó esta canción, algo estaba muy mal</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2022 -->
+  <div class="card" id="c7">
+    <div class="card-inner theme-2022">
+      <div class="year-badge">🥂 30 años — 2022</div>
+      <div class="divider"></div>
+      <div class="lines">
+        <div class="line"><span class="line-emoji">📺</span><span class="line-text">Stranger Things tenía al mundo obsesionado</span></div>
+        <div class="line"><span class="line-emoji">💃</span><span class="line-text funny">Gaby hacía el baile de Wednesday mejor que nadie</span></div>
+        <div class="line"><span class="line-emoji">👋</span><span class="line-text">Will Smith le pegó una cachetada a Chris Rock en los Oscars</span></div>
+        <div class="line"><span class="line-emoji">😳</span><span class="line-text">Nadie sabía si era real. Era real</span></div>
+        <div class="line"><span class="line-emoji">🗣️</span><span class="line-text funny">Tres días con la boca abierta. El mundo entero</span></div>
+        <div class="line"><span class="line-emoji">🇪🇨</span><span class="line-text">Ecuador abrió el Mundial de Qatar ganando 2-0</span></div>
+        <div class="line"><span class="line-emoji">⚽</span><span class="line-text funny">Gaby cumplió 30 en el año más épico del fútbol ecuatoriano</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2026 -->
+  <div class="card" id="c8">
+    <div class="card-inner theme-2026">
+      <div class="year-badge">🎂 HOY — 34 años — 2026</div>
+      <div class="divider"></div>
+      <div class="lines">
+        <div class="line"><span class="line-emoji">🎂</span><span class="line-text">34 años — ya puedes decir "cuando yo era joven..."</span></div>
+        <div class="line"><span class="line-emoji">😂</span><span class="line-text funny">Y es completamente verdad</span></div>
+        <div class="line"><span class="line-emoji">⚽</span><span class="line-text">Sigue corriendo en la cancha mientras otros piden descanso</span></div>
+        <div class="line"><span class="line-emoji">💪</span><span class="line-text funny">Eso no es edad. Eso es superpoder</span></div>
+        <div class="line"><span class="line-emoji">💃</span><span class="line-text">Baila mejor que a los 20</span></div>
+        <div class="line"><span class="line-emoji">🔬</span><span class="line-text funny">La ciencia no puede explicarlo pero todos lo hemos visto</span></div>
+        <div class="line"><span class="line-emoji">🕯️</span><span class="line-text">34 velitas en el pastel</span></div>
+        <div class="line"><span class="line-emoji">🔥</span><span class="line-text funny">Suficientes para calentar la habitación entera</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FINAL -->
+  <div class="card" id="c9">
+    <div class="card-inner theme-final">
+      <span class="final-emoji-row">🎉🎂💕🌟🎀</span>
+      <div class="final-title">¡Feliz Cumpleaños, mi Gaby hermosa!</div>
+      <div class="divider"></div>
+      <div class="lines">
+        <div class="line"><span class="line-emoji">🌍</span><span class="line-text">Naciste en la ciudad más especial del mundo</span></div>
+        <div class="line"><span class="line-emoji">🐒</span><span class="line-text">En el año del Mono, con Luis Miguel de fondo</span></div>
+        <div class="line"><span class="line-emoji">⚽</span><span class="line-text">Corres, bailas y le das color a todo lo que tocas</span></div>
+        <div class="line"><span class="line-emoji">🌟</span><span class="line-text">El mundo es mejor porque tú estás en él</span></div>
+        <div class="line"><span class="line-emoji">💕</span><span class="line-text">Feliz cumpleaños, mi Gaby hermosa</span></div>
+        <div class="line"><span class="line-emoji">🎀</span><span class="line-text">Con todo el amor del mundo — tu tía</span></div>
+      </div>
+      <button class="restart-btn" onclick="restart()">🔄 Ver de nuevo</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- Navigation -->
+<div id="nav"></div>
+<div id="tap-hint">toca para avanzar</div>
+<button id="next-btn" onclick="next()">›</button>
+
+<script>
+  const TOTAL = 10;
+  const DELAY_FIRST = 9000;
+  const DELAY = 20000;
+  let current = 0;
+  let timer = null;
+
+  const cards = Array.from({length: TOTAL}, (_, i) => document.getElementById('c' + i));
+
+  // Build dots
+  const nav = document.getElementById('nav');
+  const dots = [];
+  for (let i = 0; i < TOTAL; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => { clearTimer(); goTo(i); schedule(); };
+    nav.appendChild(d);
+    dots.push(d);
+  }
+
+  function updateUI() {
+    dots.forEach((d, i) => d.className = 'dot' + (i === current ? ' active' : ''));
+    const btn = document.getElementById('next-btn');
+    const hint = document.getElementById('tap-hint');
+    if (current === TOTAL - 1) {
+      btn.style.display = 'none';
+      hint.style.display = 'none';
+    } else {
+      btn.style.display = 'flex';
+      hint.style.display = 'block';
+    }
+  }
+
+  function goTo(idx) {
+    cards[current].classList.remove('active');
+    current = idx;
+    cards[current].classList.add('active');
+    updateUI();
+    startProgress();
+  }
+
+  function next() {
+    clearTimer();
+    if (current < TOTAL - 1) { goTo(current + 1); schedule(); }
+  }
+
+  function getDelay() {
+    return current === 0 ? DELAY_FIRST : DELAY;
+  }
+
+  function schedule() {
+    clearTimer();
+    if (current < TOTAL - 1) {
+      timer = setTimeout(() => { goTo(current + 1); schedule(); }, getDelay());
+    }
+  }
+
+  function clearTimer() { clearTimeout(timer); }
+
+  function restart() {
+    clearTimer();
+    goTo(0);
+    document.getElementById('next-btn').style.display = 'flex';
+    document.getElementById('tap-hint').style.display = 'block';
+    schedule();
+  }
+
+  // Progress bar
+  const pb = document.getElementById('progress');
+  function startProgress() {
+    pb.style.transition = 'none';
+    pb.style.width = '0%';
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      pb.style.transition = `width ${getDelay()}ms linear`;
+      pb.style.width = '100%';
+    }));
+  }
+
+  // Touch/click to advance
+  document.getElementById('screen').addEventListener('click', (e) => {
+    if (e.target.closest('#next-btn') || e.target.closest('.restart-btn') || e.target.closest('#nav')) return;
+    next();
+  });
+
+  // Swipe
+  let tx = null;
+  document.addEventListener('touchstart', e => tx = e.touches[0].clientX, {passive: true});
+  document.addEventListener('touchend', e => {
+    if (tx === null) return;
+    if (tx - e.changedTouches[0].clientX > 40) next();
+    tx = null;
+  }, {passive: true});
+
+  // Keyboard
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') next();
+  });
+
+  // Confetti
+  const colors = ['#FF6B9D','#FFD93D','#6BCB77','#4D96FF','#FF9A3C','#C77DFF','#FF6B6B','#fff'];
+  for (let i = 0; i < 45; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    const size = 6 + Math.random() * 10;
+    c.style.cssText = `
+      left:${Math.random()*100}%;
+      width:${size}px;
+      height:${Math.random()<0.5?size:size*2.5}px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      animation-duration:${3+Math.random()*5}s;
+      animation-delay:${Math.random()*5}s;
+      border-radius:${Math.random()<0.4?'50%':'2px'};
+      opacity:${0.5+Math.random()*0.5};
+    `;
+    document.body.appendChild(c);
+  }
+
+  // Floating circles
+  for (let i = 0; i < 6; i++) {
+    const c = document.createElement('div');
+    c.className = 'circle';
+    const s = 80 + Math.random() * 150;
+    c.style.cssText = `
+      left:${Math.random()*100}%;
+      width:${s}px;height:${s}px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      animation-duration:${10+Math.random()*15}s;
+      animation-delay:${Math.random()*8}s;
+    `;
+    document.body.appendChild(c);
+  }
+
+  // Stars
+  const starChars = ['✨','⭐','💫','🌟','✦'];
+  for (let i = 0; i < 12; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.textContent = starChars[Math.floor(Math.random()*starChars.length)];
+    s.style.cssText = `
+      left:${Math.random()*100}%;
+      top:${Math.random()*100}%;
+      animation-duration:${1.5+Math.random()*3}s;
+      animation-delay:${Math.random()*3}s;
+      font-size:${14+Math.random()*18}px;
+    `;
+    document.body.appendChild(s);
+  }
+
+  // Init
+  updateUI();
+  startProgress();
+  schedule();
+</script>
+</body>
+</html>
