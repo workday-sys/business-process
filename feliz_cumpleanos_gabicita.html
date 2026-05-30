@@ -613,7 +613,7 @@
         if (goingToGroup) {
           // Use the persistent florPalida audio
           if (!florPalidaAudio) {
-            florPalidaAudio = new Audio(SONGS[8]);
+            florPalidaAudio = audioObjects[8] || new Audio(SONGS[8]);
             florPalidaAudio.loop = true;
             florPalidaAudio.volume = 0;
           }
@@ -624,7 +624,7 @@
           fadeIn(currentAudio);
         } else {
           // New song for non-group slides
-          currentAudio = new Audio(SONGS[newIdx]);
+          currentAudio = audioObjects[newIdx] || new Audio(SONGS[newIdx]);
           currentAudio.loop = true;
           currentAudio.volume = 0;
           currentAudio.play().catch(()=>{});
