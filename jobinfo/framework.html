@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Request Frameworks – Business Process Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0f2040;
+    --navy-mid: #1a3460;
+    --blue: #1e5fa8;
+    --blue-light: #2e7dd1;
+    --gold: #e8a922;
+    --gold-light: #f5c84a;
+    --teal: #0e8a7a;
+    --red: #c0392b;
+    --green: #1a7a4a;
+    --slate: #4a5568;
+    --light: #f4f7fb;
+    --white: #ffffff;
+    --border: #dde4ef;
+    --card-shadow: 0 4px 24px rgba(15,32,64,0.10);
+
+    --role-employee: #c0392b;
+    --role-hr: #2e7dd1;
+    --role-hradmin: #475569;
+    --role-hrspec: #0891b2;
+    --role-civilservice: #0e8a7a;
+    --role-benefits: #16a34a;
+    --role-comp: #b8860b;
+    --role-recruit: #7c3aed;
+    --role-cdo: #ea580c;
+    --role-manager: #be185d;
+    --role-integration: #64748b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--light); color: var(--navy); min-height: 100vh; }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, var(--blue) 100%);
+    color: white; padding: 36px 48px 28px; position: relative; overflow: hidden;
+  }
+  .header::before {
+    content: ''; position: absolute; top: -60px; right: -60px; width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(232,169,34,0.18) 0%, transparent 70%); border-radius: 50%;
+  }
+  .header::after {
+    content: ''; position: absolute; bottom: -40px; left: 30%; width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(46,125,209,0.2) 0%, transparent 70%); border-radius: 50%;
+  }
+  .header-inner { position: relative; z-index: 1; }
+  .header h1 { font-family: 'DM Serif Display', serif; font-size: 2.2rem; letter-spacing: -0.5px; margin-bottom: 6px; }
+  .header p { color: rgba(255,255,255,0.72); font-size: 0.95rem; font-weight: 400; }
+  .header-badge {
+    display: inline-block; background: var(--gold); color: var(--navy);
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 3px 10px; border-radius: 20px; margin-bottom: 12px;
+  }
+
+  /* TABS */
+  .tabs-bar {
+    background: var(--white); border-bottom: 2px solid var(--border); padding: 0 48px;
+    display: flex; gap: 4px; overflow-x: auto; position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 12px rgba(15,32,64,0.07);
+  }
+  .tab-btn {
+    padding: 16px 16px; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 600;
+    color: var(--slate); background: none; border: none; border-bottom: 3px solid transparent;
+    cursor: pointer; white-space: nowrap; transition: all 0.2s; position: relative; top: 2px;
+  }
+  .tab-btn:hover { color: var(--blue); }
+  .tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+  /* CONTENT */
+  .content { max-width: 1200px; margin: 0 auto; padding: 36px 48px 60px; }
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* CARDS */
+  .card { background: var(--white); border-radius: 16px; box-shadow: var(--card-shadow); padding: 32px; margin-bottom: 28px; border: 1px solid var(--border); }
+  .card-title { font-family: 'DM Serif Display', serif; font-size: 1.35rem; color: var(--navy); margin-bottom: 6px; }
+  .card-subtitle { font-size: 0.82rem; color: var(--slate); margin-bottom: 22px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.8px; }
+
+  /* OVERVIEW GRID */
+  .overview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; margin-bottom: 28px; }
+  .overview-tile {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+    color: white; border-radius: 14px; padding: 22px 20px; cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s; border: 2px solid transparent;
+    position: relative; overflow: hidden;
+  }
+  .overview-tile::after { content: ''; position: absolute; bottom: -20px; right: -20px; width: 80px; height: 80px; background: rgba(255,255,255,0.06); border-radius: 50%; }
+  .overview-tile:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(15,32,64,0.18); }
+  .overview-tile:nth-child(2) { background: linear-gradient(135deg, #1a4a2e 0%, var(--teal) 100%); }
+  .overview-tile:nth-child(3) { background: linear-gradient(135deg, #5b2a00 0%, #c06a10 100%); }
+  .overview-tile:nth-child(4) { background: linear-gradient(135deg, #2d1060 0%, var(--role-recruit) 100%); }
+  .overview-tile:nth-child(5) { background: linear-gradient(135deg, #7a1a1a 0%, var(--role-employee) 100%); }
+  .overview-tile:nth-child(6) { background: linear-gradient(135deg, #0c3d63 0%, var(--role-hrspec) 100%); }
+  .overview-tile:nth-child(7) { background: linear-gradient(135deg, #1a3d1a 0%, var(--role-benefits) 100%); }
+  .overview-tile:nth-child(8) { background: linear-gradient(135deg, #7a2e00 0%, var(--role-cdo) 100%); }
+  .overview-tile:nth-child(9) { background: linear-gradient(135deg, #3d0c2e 0%, var(--role-manager) 100%); }
+  .tile-icon { font-size: 1.8rem; margin-bottom: 10px; }
+  .tile-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
+  .tile-desc { font-size: 0.78rem; opacity: 0.85; line-height: 1.5; }
+
+  /* FLOWCHART */
+  .flowchart { display: flex; flex-direction: column; align-items: center; gap: 0; padding: 10px 0; }
+  .flow-node { position: relative; width: 100%; max-width: 640px; }
+  .flow-box {
+    border-radius: 10px; padding: 14px 22px; font-size: 0.88rem; font-weight: 500;
+    text-align: center; position: relative; border: 2px solid transparent; transition: transform 0.15s;
+  }
+  .flow-box:hover { transform: scale(1.02); }
+  .flow-start { background: var(--navy); color: white; border-radius: 30px; font-weight: 700; letter-spacing: 0.5px; padding: 12px 32px; }
+  .flow-end { background: var(--teal); color: white; border-radius: 30px; font-weight: 700; letter-spacing: 0.5px; padding: 12px 32px; }
+  .flow-end.denied { background: var(--red); }
+  .flow-action { background: #eef3fb; border-color: var(--role-hr); color: var(--navy); }
+  .flow-action.employee { background: #fef2f2; border-color: var(--role-employee); }
+  .flow-action.hr { background: #eef3fb; border-color: var(--role-hr); }
+  .flow-action.hradmin { background: #f1f5f9; border-color: var(--role-hradmin); }
+  .flow-action.hrspec { background: #ecfeff; border-color: var(--role-hrspec); }
+  .flow-action.civilservice { background: #edfaf7; border-color: var(--role-civilservice); }
+  .flow-action.benefits { background: #eefdf3; border-color: var(--role-benefits); }
+  .flow-action.comp { background: #fdf6e3; border-color: var(--role-comp); }
+  .flow-action.recruit { background: #f5f0ff; border-color: var(--role-recruit); }
+  .flow-action.cdo { background: #fff1ea; border-color: var(--role-cdo); }
+  .flow-action.manager { background: #fdf0f6; border-color: var(--role-manager); }
+  .flow-action.integration { background: #f1f5f9; border-color: var(--role-integration); }
+  .flow-decision { background: #fff8e1; border: 2px dashed var(--gold); border-radius: 8px; color: var(--navy); font-style: italic; font-size: 0.84rem; padding: 12px 20px; }
+  .flow-connector { display: flex; flex-direction: column; align-items: center; height: 36px; justify-content: center; color: var(--slate); font-size: 1.3rem; position: relative; }
+  .flow-connector::before { content: ''; width: 2px; height: 100%; background: var(--border); position: absolute; }
+  .flow-connector span { background: white; padding: 0 4px; position: relative; z-index: 1; font-size: 1.1rem; color: var(--slate); }
+  .flow-label { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; font-size: 0.75rem; color: var(--slate); font-weight: 600; text-transform: uppercase; letter-spacing: 0.7px; justify-content: center; flex-wrap: wrap; }
+  .role-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+  .role-dot.employee { background: var(--role-employee); }
+  .role-dot.hr { background: var(--role-hr); }
+  .role-dot.hradmin { background: var(--role-hradmin); }
+  .role-dot.hrspec { background: var(--role-hrspec); }
+  .role-dot.civilservice { background: var(--role-civilservice); }
+  .role-dot.benefits { background: var(--role-benefits); }
+  .role-dot.comp { background: var(--role-comp); }
+  .role-dot.recruit { background: var(--role-recruit); }
+  .role-dot.cdo { background: var(--role-cdo); }
+  .role-dot.manager { background: var(--role-manager); }
+  .role-dot.integration { background: var(--role-integration); }
+
+  /* DECISION BRANCH */
+  .decision-branch { display: flex; gap: 18px; width: 100%; max-width: 820px; justify-content: center; flex-wrap: wrap; }
+  .branch-side { flex: 1; min-width: 220px; display: flex; flex-direction: column; align-items: center; gap: 0; }
+  .branch-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--slate); margin-bottom: 6px; background: var(--light); padding: 2px 10px; border-radius: 20px; }
+
+  /* ROLES TABLE */
+  .roles-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  .roles-table th { background: var(--navy); color: white; padding: 12px 12px; text-align: left; font-weight: 600; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.6px; }
+  .roles-table th:first-child { border-radius: 8px 0 0 0; }
+  .roles-table th:last-child { border-radius: 0 8px 0 0; }
+  .roles-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; font-size: 0.8rem; }
+  .roles-table tr:hover td { background: #f8faff; }
+  .roles-table tr:last-child td { border-bottom: none; }
+  .check { color: var(--green); font-size: 1rem; }
+  .dash { color: #ccc; font-size: 1rem; }
+
+  .role-tag { display: inline-block; font-size: 0.68rem; font-weight: 700; padding: 2px 9px; border-radius: 20px; margin: 2px; white-space: nowrap; }
+  .role-tag.employee { background: #fee2e2; color: #991b1b; }
+  .role-tag.hr { background: #ddeeff; color: var(--blue); }
+  .role-tag.hradmin { background: #e2e8f0; color: var(--role-hradmin); }
+  .role-tag.hrspec { background: #cffafe; color: #0e7490; }
+  .role-tag.civilservice { background: #d9f5ef; color: var(--teal); }
+  .role-tag.benefits { background: #dcfce7; color: #15803d; }
+  .role-tag.comp { background: #fef3c7; color: #92400e; }
+  .role-tag.recruit { background: #ede9ff; color: #5b21b6; }
+  .role-tag.cdo { background: #ffedd5; color: #9a3412; }
+  .role-tag.manager { background: #fce7f3; color: #9d174d; }
+  .role-tag.integration { background: #f1f5f9; color: var(--slate); }
+
+  /* FLAGS */
+  .flag { display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; border-radius: 10px; margin-bottom: 12px; font-size: 0.87rem; line-height: 1.6; }
+  .flag.decision { background: #fff8e1; border-left: 4px solid var(--gold); }
+  .flag.condition { background: #edfaf7; border-left: 4px solid var(--teal); }
+  .flag.warning { background: #fef2f2; border-left: 4px solid #ef4444; }
+  .flag.info { background: #eff6ff; border-left: 4px solid var(--blue); }
+  .flag.open { background: #f5f0ff; border-left: 4px solid var(--role-recruit); }
+  .flag-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+  .flag strong { color: var(--navy); display: block; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+
+  /* TWO-COL */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-bottom: 24px; }
+  @media (max-width: 800px) { .two-col { grid-template-columns: 1fr; } }
+  .section-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--slate); margin-bottom: 12px; }
+  .who-list { list-style: none; }
+  .who-list li { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.87rem; }
+  .who-list li:last-child { border-bottom: none; }
+
+  /* PROCESS HEADER */
+  .process-header { display: flex; align-items: flex-start; gap: 20px; margin-bottom: 28px; padding-bottom: 22px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+  .process-icon-big { width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; flex-shrink: 0; }
+  .process-icon-big.blue { background: linear-gradient(135deg, var(--navy), var(--blue)); }
+  .process-icon-big.teal { background: linear-gradient(135deg, #065f46, var(--teal)); }
+  .process-icon-big.orange { background: linear-gradient(135deg, #7c2d12, #ea580c); }
+  .process-icon-big.purple { background: linear-gradient(135deg, #3b0764, var(--role-recruit)); }
+  .process-icon-big.red { background: linear-gradient(135deg, #7a1a1a, var(--role-employee)); }
+  .process-icon-big.green { background: linear-gradient(135deg, #14532d, var(--role-benefits)); }
+  .process-icon-big.slate { background: linear-gradient(135deg, #1e293b, var(--role-hradmin)); }
+  .process-icon-big.pink { background: linear-gradient(135deg, #500724, var(--role-manager)); }
+  .process-meta { flex: 1; }
+  .process-meta h2 { font-family: 'DM Serif Display', serif; font-size: 1.5rem; color: var(--navy); margin-bottom: 4px; }
+  .process-meta p { font-size: 0.85rem; color: var(--slate); }
+  .completion-badge { background: var(--light); border: 1px solid var(--border); border-radius: 10px; padding: 10px 16px; font-size: 0.78rem; color: var(--slate); text-align: center; flex-shrink: 0; }
+  .completion-badge strong { display: block; font-size: 0.92rem; color: var(--navy); margin-top: 4px; }
+
+  /* PRINT */
+  @media print {
+    .tabs-bar { display: none !important; }
+    .section { display: block !important; page-break-before: always; }
+    .section:first-of-type { page-break-before: auto; }
+  }
+  @media (max-width: 700px) {
+    .header { padding: 24px 20px 18px; }
+    .tabs-bar { padding: 0 8px; }
+    .content { padding: 20px 16px 40px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-badge">Business Process · TAM Scope</div>
+    <h1>Request Frameworks Dashboard</h1>
+    <p>Interactive guide to Request Framework workflows — initiators, reviewers, approvers, decisions &amp; open items</p>
+  </div>
+</div>
+
+<div class="tabs-bar">
+  <button class="tab-btn active" onclick="showTab('overview')">📋 Overview</button>
+  <button class="tab-btn" onclick="showTab('bp1')">📄 55-a Status</button>
+  <button class="tab-btn" onclick="showTab('bp2')">💰 Comp Review</button>
+  <button class="tab-btn" onclick="showTab('bp3')">🚨 Evacuation Assist.</button>
+  <button class="tab-btn" onclick="showTab('bp4')">🧾 FICA Exemption</button>
+  <button class="tab-btn" onclick="showTab('bp5')">🎓 Loan Forgiveness</button>
+  <button class="tab-btn" onclick="showTab('bp6')">🪪 NYSPO Activation</button>
+  <button class="tab-btn" onclick="showTab('bp7')">♿ Accommodations</button>
+  <button class="tab-btn" onclick="showTab('bp8')">🔍 Search Exception</button>
+  <button class="tab-btn" onclick="showTab('bp9')">🔁 Transfer Roster</button>
+  <button class="tab-btn" onclick="showTab('roles')">👥 Roles &amp; Permissions</button>
+</div>
+
+<div class="content">
+
+<!-- ══════ OVERVIEW ══════ -->
+<div id="overview" class="section active">
+  <div class="card">
+    <div class="card-title">Request Frameworks at a Glance</div>
+    <div class="card-subtitle">9 Request Types · 10 Business Process Flows · Federal Work Study &amp; State Positions Excluded</div>
+    <div class="overview-grid">
+      <div class="overview-tile" onclick="showTab('bp1')">
+        <div class="tile-icon">📄</div>
+        <div class="tile-name">55-a Status</div>
+        <div class="tile-desc">Competitive-title employee requests non-competitive status accommodation.</div>
+      </div>
+      <div class="overview-tile" onclick="showTab('bp2')">
+        <div class="tile-icon">💰</div>
+        <div class="tile-name">Compensation Review</div>
+        <div class="tile-desc">Requests a compensation analysis to keep positions competitive &amp; equitable.</div>
+      </div>
+      <div class="overview-tile" onclick="showTab('bp3')">
+        <div class="tile-icon">🚨</div>
+        <div class="tile-name">Emergency Evacuation Assistance</div>
+        <div class="tile-desc">Voluntary disclosure of evacuation assistance needs, typically at onboarding.</div>
+      </div>
+      <div class="overview-tile" onclick="showTab('bp4')">
+        <div class="tile-icon">🧾</div>
+        <div class="tile-name">FICA Exempt Status</div>
+        <div class="tile-desc">Integration-driven request that updates FICA exemption status.</div>
+      </div>
+      <div class="overview-tile" onclick="showTab('bp5')">
+        <div class="tile-icon">🎓</div>
+        <div class="tile-name">Loan Forgiveness</div>
+        <div class="tile-desc">Employment certification for the Public Service Loan Forgiveness program.</div>
+      </div>
+      <div class="overview-tile" onclick="showTab('bp6')">
+        <div class="tile-icon">🪪</div>
+        <div class="tile-name">NYSPO Account Activation</div>
+        <div class="tile-desc">Requests NYSPO account activation for payroll &amp; tax self-service.</div>
+      </div>
+      <div class="overview-tile" onclick="showTab('bp7')">
+        <div class="tile-icon">♿</div>
+        <div class="tile-name">Reasonable &amp; Religious Accommodations</div>
+        <div class="tile-desc">Requests accommodations for disability, pregnancy, religion, or related needs.</div>
+      </div>
+      <div class="overview-tile" onclick="showTab('bp8')">
+        <div class="tile-icon">🔍</div>
+        <div class="tile-name">Search Exception</div>
+        <div class="tile-desc">Requests an exception to the standard search process for a hire, with optional minimum-requirements waiver.</div>
+      </div>
+      <div class="overview-tile" onclick="showTab('bp9')">
+        <div class="tile-icon">🔁</div>
+        <div class="tile-name">Transfer Roster List</div>
+        <div class="tile-desc">Civil Service workers request placement on a transfer roster for up to 3 campuses (competitive or non-competitive titles).</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Security Roles Legend</div>
+    <div class="card-subtitle">Who participates across all Request Framework processes</div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px;">
+      <span class="role-tag employee">🔴 Employee / Contingent Worker As Self</span>
+      <span class="role-tag manager">💗 Manager / Management Chain</span>
+      <span class="role-tag hr">🔵 HR Partner</span>
+      <span class="role-tag hradmin">⚫ HR Administrator</span>
+      <span class="role-tag hrspec">🟦 HR Specialist</span>
+      <span class="role-tag civilservice">🟢 Civil Service Administrator</span>
+      <span class="role-tag benefits">🟩 Benefits Administrator</span>
+      <span class="role-tag comp">🟡 Compensation Partner</span>
+      <span class="role-tag recruit">🟣 Recruiting Administrator</span>
+      <span class="role-tag cdo">🟠 Chief Diversity Officer (placeholder)</span>
+      <span class="role-tag integration">⚙️ Integration (system)</span>
+    </div>
+
+    <div class="flag info">
+      <span class="flag-icon">ℹ️</span>
+      <div><strong>Two Ways to Act on a Step</strong>Reviewers can modify the request as well as approve or deny it. Approvers can only approve or deny — they cannot edit. Some request frameworks also include To-Do steps, which are reminders rather than approval gates.</div>
+    </div>
+    <div class="flag decision">
+      <span class="flag-icon">⚠️</span>
+      <div><strong>Notifications Not Yet Configured</strong>Notifications and system integrations have not been built out for these business processes yet — they will be addressed in end-to-end testing sessions. Nothing shown here reflects final notification behavior.</div>
+    </div>
+    <div class="flag open">
+      <span class="flag-icon">🛠️</span>
+      <div><strong>Several Security Groups Are Placeholders</strong>Civil Service Administrator, HR Administrator, Recruiting Administrator, and Chief Diversity Officer appear in multiple flows below as placeholders while the correct, more narrowly-scoped security groups are finalized. Flag anything that looks wrong as a defect.</div>
+    </div>
+    <div class="flag warning">
+      <span class="flag-icon">🚫</span>
+      <div><strong>Excluded from This Dashboard</strong>Federal Work Study positions and State-specific steps are not included. All flows shown apply to City/University (non-FWS, non-State) positions only. CUNYWork is not referenced or represented in this dashboard.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">General Process Terms</div>
+    <div class="card-subtitle">Vocabulary used consistently across every Request Framework</div>
+    <div class="two-col">
+      <div>
+        <div class="section-label">Business Process States</div>
+        <ul class="who-list">
+          <li><strong style="min-width:110px;display:inline-block;">Draft</strong> Not yet submitted — can still be edited</li>
+          <li><strong style="min-width:110px;display:inline-block;">In Progress</strong> Submitted — awaiting approval or denial</li>
+          <li><strong style="min-width:110px;display:inline-block;">Approved / Closed</strong> Final resolution reached</li>
+          <li><strong style="min-width:110px;display:inline-block;">Denied</strong> Request not approved</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Request Framework — 3 Parts</div>
+        <ul class="who-list">
+          <li><strong style="min-width:110px;display:inline-block;">Request Type</strong> Description, allowed security groups, attached questionnaire</li>
+          <li><strong style="min-width:110px;display:inline-block;">Questionnaire</strong> Filled out at initiation; answers visible to reviewers/approvers directly in their inbox task</li>
+          <li><strong style="min-width:110px;display:inline-block;">BP Version</strong> A copy of the default Request business process, modified per request type via condition rules</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ BP1: 55-a STATUS ══════ -->
+<div id="bp1" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big red">📄</div>
+      <div class="process-meta">
+        <h2>Request 55-a Status</h2>
+        <p>Initiated by Employee As Self · For competitive-title employees requesting non-competitive status</p>
+      </div>
+      <div class="completion-badge">Status<strong>In Progress / Not Final</strong></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot employee"></span><span class="role-tag employee">Employee As Self</span> Initiates the request</li>
+          <li><span class="role-dot hr"></span><span class="role-tag hr">HR Partner</span> Reviews &amp; uploads job description form; later gets the to-do to update non-competitive status</li>
+          <li><span class="role-dot civilservice"></span><span class="role-tag civilservice">Civil Service Administrator*</span> Reviews request &amp; sends forms to the outside entity for approval</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Decision Flags</div>
+        <div class="flag decision">
+          <span class="flag-icon">⚠️</span>
+          <div><strong>Validation: Document Required</strong>HR Partner cannot proceed without uploading the completed job description form. Civil Service Administrator cannot approve without uploading the certification of disability/fitness for non-competitive position.</div>
+        </div>
+        <div class="flag open">
+          <span class="flag-icon">🛠️</span>
+          <div><strong>Open Items from Review Session</strong>(1) Whether a pre-hire can be an allowed initiator is still being investigated. (2) The approving security group is a placeholder — "Civil Service Administrator" vs. "Civil Service Director" is still being worked out; the latter currently has no one assigned. (3) A defect was logged: the to-do step was routing to an HR Partner outside the employee's own campus — this is being corrected.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-title" style="font-size:1rem;margin-bottom:18px;">Flowchart — Request 55-a Status</div>
+    <div class="flowchart">
+      <div class="flow-node"><div class="flow-box flow-start">📄 START — Employee Initiates 55-a Request</div></div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot hr"></span> HR Partner</div>
+        <div class="flow-box flow-action hr">Reviews Document — Downloads &amp; Uploads Completed<br>Job Description Form <small style="opacity:0.65">(required to proceed)</small></div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot civilservice"></span> Civil Service Administrator*</div>
+        <div class="flow-box flow-action civilservice">Reviews Request · Sends Forms to Outside Entity</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node"><div class="flow-box flow-decision">⚠️ Decision: Approved by outside entity?</div></div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ YES — Approved</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot civilservice"></span> Civil Service Administrator*</div>
+            <div class="flow-box flow-action civilservice">Uploads Decision + Certification of<br>Disability/Fitness <small style="opacity:0.65">(required)</small></div>
+          </div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot hr"></span> HR Partner</div>
+            <div class="flow-box flow-action hr">To-Do: Update Non-Competitive Status<br><small style="opacity:0.65">Custom field on the worker profile</small></div>
+          </div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node"><div class="flow-box flow-end">✅ COMPLETE — Status Updated</div></div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">❌ NO — Denied</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node"><div class="flow-box flow-end denied">⛔ CLOSED — No Status Change</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:28px;">
+      <div class="flag info">
+        <span class="flag-icon">📅</span>
+        <div><strong>Timing</strong>Completes after the Civil Service team's final approval is recorded.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ BP2: COMPENSATION REVIEW ══════ -->
+<div id="bp2" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big blue">💰</div>
+      <div class="process-meta">
+        <h2>Compensation Review for Compensation Analysis</h2>
+        <p>Initiated by HR Partner (must be submitted by HRD) · Streamlines compensation analysis requests</p>
+      </div>
+      <div class="completion-badge">Status<strong>Steps Still Finalizing</strong></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot hr"></span><span class="role-tag hr">HR Partner</span> Only role that can initiate; currently placeholder for closing as well</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Decision Flags</div>
+        <div class="flag decision">
+          <span class="flag-icon">⚠️</span>
+          <div><strong>Conditional Questionnaire Branches</strong>New position vs. current employee action changes required fields. A counter-offer pending action requires an uploaded offer letter — counter offers without one will not be considered.</div>
+        </div>
+        <div class="flag open">
+          <span class="flag-icon">🛠️</span>
+          <div><strong>Open Item: "Approve/Deny" Wording</strong>Clarified in session: the compensation team doesn't approve or deny — they complete an analysis and return it. Resolution labels are likely to change from Approved/Denied to something like "Completed." The correct closing security group is also still being determined (HR Partner is currently a placeholder).</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-title" style="font-size:1rem;margin-bottom:18px;">Flowchart — Compensation Review</div>
+    <div class="flowchart">
+      <div class="flow-node"><div class="flow-box flow-start">💰 START — HR Partner (HRD) Initiates</div></div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot hr"></span> HR Partner</div>
+        <div class="flow-box flow-action hr">Completes Questionnaire — Position, Job Code,<br>New vs. Current Employee, Supporting Docs</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node"><div class="flow-box flow-decision">⚠️ Decision: New position or current-employee action?</div></div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">🆕 New Position</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node"><div class="flow-box flow-action hr">Provide Justification + Job Comparisons</div></div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">👤 Current Employee</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node"><div class="flow-box flow-action hr">Enter Employee Hire Date, Name, ID +<br>Select Pending Action Type</div></div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot hr"></span> Closing Group (placeholder: HR Partner)*</div>
+        <div class="flow-box flow-action hr">Reviews Request · Provides Compensation Analysis · Closes Request</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node"><div class="flow-box flow-end">✅ COMPLETE — Analysis Provided</div></div>
+    </div>
+
+    <div style="margin-top:28px;">
+      <div class="flag info">
+        <span class="flag-icon">📅</span>
+        <div><strong>Timing</strong>Completes after the closing security group closes the request.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ BP3: EMERGENCY EVACUATION ASSISTANCE ══════ -->
+<div id="bp3" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big orange">🚨</div>
+      <div class="process-meta">
+        <h2>Emergency Evacuation Assistance</h2>
+        <p>Initiated by Employee As Self · Contingent Worker As Self · Typically offered during onboarding</p>
+      </div>
+      <div class="completion-badge">Status<strong>Fairly Simple / Being Refined</strong></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot employee"></span><span class="role-tag employee">Employee / Contingent Worker As Self</span> Voluntarily initiates the request</li>
+          <li><span class="role-dot hr"></span><span class="role-tag hr">HR Partner</span> Closes the request</li>
+          <li><span class="role-dot hrspec"></span><span class="role-tag hrspec">HR Specialist</span> To-Do: reviews the type of assistance needed</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Decision Flags</div>
+        <div class="flag decision">
+          <span class="flag-icon">⚠️</span>
+          <div><strong>Voluntary Disclosure, Restricted Sharing</strong>Information is shared only with those who have responsibilities under the emergency evacuation plan.</div>
+        </div>
+        <div class="flag open">
+          <span class="flag-icon">🛠️</span>
+          <div><strong>Open Item: To-Do Routing Questioned</strong>Testers asked why the request routes to an HR Specialist after the HR Partner already closed it, and suggested it may instead need to go to Public Safety. This is under discussion — the to-do step may be reassigned or removed. Resolution wording ("Approved") is also expected to change to something like "Closed" or "Confirmed," since this isn't really an approval decision.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-title" style="font-size:1rem;margin-bottom:18px;">Flowchart — Emergency Evacuation Assistance</div>
+    <div class="flowchart">
+      <div class="flow-node"><div class="flow-box flow-start">🚨 START — Employee/Contingent Worker Initiates</div></div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee / Contingent Worker As Self</div>
+        <div class="flow-box flow-action employee">Would You Need Assistance? Yes/No + Describe Need</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot hr"></span> HR Partner</div>
+        <div class="flow-box flow-action hr">Close Request <small style="opacity:0.65">(resolution wording under review)</small></div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot hrspec"></span> HR Specialist</div>
+        <div class="flow-box flow-action hrspec">To-Do: Review Type of Assistance <small style="opacity:0.65">(reminder step — routing under discussion)</small></div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node"><div class="flow-box flow-end">✅ COMPLETE — Assistance Info on File</div></div>
+    </div>
+
+    <div style="margin-top:28px;">
+      <div class="flag info">
+        <span class="flag-icon">📅</span>
+        <div><strong>Timing</strong>Completes after the HR Partner closes the request.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ BP4: FICA EXEMPT STATUS ══════ -->
+<div id="bp4" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big slate">🧾</div>
+      <div class="process-meta">
+        <h2>FICA Exempt Status Request</h2>
+        <p>Initiated by Employee As Self · Primarily used by the FICA integration</p>
+      </div>
+      <div class="completion-badge">Status<strong>Simple / Integration-Driven</strong></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot employee"></span><span class="role-tag employee">Employee As Self</span> Provides employee ID / record info</li>
+          <li><span class="role-dot hr"></span><span class="role-tag hr">HR Partner</span> Closes the request</li>
+          <li><span class="role-dot integration"></span><span class="role-tag integration">Integration (system)</span> Sends outbound update to Campus Solutions</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Decision Flags</div>
+        <div class="flag condition">
+          <span class="flag-icon">🔀</span>
+          <div><strong>Integration Detail</strong>Outbound: CentOfcPositions update flows to Campus Solutions after closing. Integration testing/detail is deferred to end-to-end sessions.</div>
+        </div>
+        <div class="flag open">
+          <span class="flag-icon">🛠️</span>
+          <div><strong>Open Item: Additional Integrations Discussed</strong>Attendees noted there are also existing inbound integrations to job data and to Campus Solutions (to pull student status) outside of Workday today — whether/how that inbound flow is still needed once Workday is live is being confirmed with the integration team.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-title" style="font-size:1rem;margin-bottom:18px;">Flowchart — FICA Exempt Status Request</div>
+    <div class="flowchart">
+      <div class="flow-node"><div class="flow-box flow-start">🧾 START — Employee Initiates</div></div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee As Self</div>
+        <div class="flow-box flow-action employee">Provides Employee ID &amp; Employee Record Number</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot hr"></span> HR Partner</div>
+        <div class="flow-box flow-action hr">Close Request — Approved / Denied</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot integration"></span> Integration (system)</div>
+        <div class="flow-box flow-action integration">Outbound: CentOfcPositions Update to Campus Solutions</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node"><div class="flow-box flow-end">✅ COMPLETE — FICA Status Updated</div></div>
+    </div>
+
+    <div style="margin-top:28px;">
+      <div class="flag info">
+        <span class="flag-icon">📅</span>
+        <div><strong>Timing</strong>Completes after the HR Partner closes the request; integration then runs automatically.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ BP5: LOAN FORGIVENESS ══════ -->
+<div id="bp5" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big green">🎓</div>
+      <div class="process-meta">
+        <h2>Loan Forgiveness (PSLF Certification)</h2>
+        <p>Initiated by Employee As Self · Primarily a Benefits-side process</p>
+      </div>
+      <div class="completion-badge">Status<strong>High Volume of Expected Defects</strong></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot employee"></span><span class="role-tag employee">Employee As Self</span> Initiates &amp; reviews the certification document</li>
+          <li><span class="role-dot benefits"></span><span class="role-tag benefits">Benefits Administrator</span> Closes the request</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Decision Flags</div>
+        <div class="flag decision">
+          <span class="flag-icon">⚠️</span>
+          <div><strong>Document Handling Under Review</strong>Currently the employee views/receives the certification document but is not required to upload a completed, signed version before moving forward — this may need to change so a completed document is retained on the request.</div>
+        </div>
+        <div class="flag open">
+          <span class="flag-icon">🛠️</span>
+          <div><strong>Open Items from Review Session (Expect Multiple Defects)</strong>
+            • At some campuses this is not handled by Benefits staff at all — it's treated like an employment-verification process handled by other staff, so the BP may need campus-specific routing.<br>
+            • The legacy process auto-generates the form and pre-populates employee info; the new flow may need the same instead of a blank upload.<br>
+            • Request volume is very high.<br>
+            • Adjunct calculations are significantly more complex — hours vary by semester and require a multiplier to determine PSLF-qualifying full/part-time status, often needing more than one generated document.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-title" style="font-size:1rem;margin-bottom:18px;">Flowchart — Loan Forgiveness</div>
+    <div class="flowchart">
+      <div class="flow-node"><div class="flow-box flow-start">🎓 START — Employee Initiates</div></div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee As Self</div>
+        <div class="flow-box flow-action employee">Confirms PSLF Employment Certification Request (Yes/No)</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee As Self</div>
+        <div class="flow-box flow-action employee">Review Documents <small style="opacity:0.65">(PSLF certification form — upload of completed form under review)</small></div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot benefits"></span> Benefits Administrator</div>
+        <div class="flow-box flow-action benefits">Close Request — Approved / Denied</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node"><div class="flow-box flow-end">✅ COMPLETE — Certification Closed</div></div>
+    </div>
+
+    <div style="margin-top:28px;">
+      <div class="flag info">
+        <span class="flag-icon">📅</span>
+        <div><strong>Timing</strong>Completes after the Benefits Administrator closes the request.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ BP6: NYSPO ACCOUNT ACTIVATION ══════ -->
+<div id="bp6" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big slate">🪪</div>
+      <div class="process-meta">
+        <h2>NYSPO Account Activation Request</h2>
+        <p>Initiated by Employee As Self · Enables payroll/tax self-service via NYSPO</p>
+      </div>
+      <div class="completion-badge">Status<strong>Simple — Central Admin Step</strong></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot employee"></span><span class="role-tag employee">Employee As Self</span> Requests activation</li>
+          <li><span class="role-dot integration"></span><span class="role-tag integration">Integration (system)</span> Communicates with NYSPO/State to determine activation</li>
+          <li><span class="role-dot hradmin"></span><span class="role-tag hradmin">HR Administrator (central)</span> Updates the NYSPO custom field on the worker profile</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Decision Flags</div>
+        <div class="flag decision">
+          <span class="flag-icon">⚠️</span>
+          <div><strong>Hard-Stop Validation</strong>An employee cannot resubmit this request once already requested — the system throws an error to prevent duplicate submissions.</div>
+        </div>
+        <div class="flag condition">
+          <span class="flag-icon">🔀</span>
+          <div><strong>No Separate Review Step</strong>There isn't a campus-level approval — the HR Administrator role that updates the custom field sits at the central office level. This was confirmed during the walkthrough as intentional, not a gap.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-title" style="font-size:1rem;margin-bottom:18px;">Flowchart — NYSPO Account Activation Request</div>
+    <div class="flowchart">
+      <div class="flow-node"><div class="flow-box flow-start">🪪 START — Employee Initiates</div></div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node"><div class="flow-box flow-decision">⚠️ Decision: Already requested activation before?</div></div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">⛔ Already Requested</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node"><div class="flow-box flow-end denied">⛔ BLOCKED — Error: Cannot Resubmit</div></div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">✅ Not Yet Requested</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot employee"></span> Employee As Self</div>
+            <div class="flow-box flow-action employee">Requests Activation (Yes/No) + Reviews Info Document</div>
+          </div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot integration"></span> Integration (system)</div>
+            <div class="flow-box flow-action integration">Communicates With NYSPO / State</div>
+          </div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot hradmin"></span> HR Administrator (central)</div>
+            <div class="flow-box flow-action hradmin">Update NYSPO Custom Field<br><small style="opacity:0.65">Account created? · Sent to state? · Activation completed?</small></div>
+          </div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node"><div class="flow-box flow-end">✅ COMPLETE — Custom Field Updated</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:28px;">
+      <div class="flag info">
+        <span class="flag-icon">📅</span>
+        <div><strong>Timing</strong>Completes after the HR Administrator updates the NYSPO custom field.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ BP7: REASONABLE & RELIGIOUS ACCOMMODATIONS ══════ -->
+<div id="bp7" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big purple">♿</div>
+      <div class="process-meta">
+        <h2>Reasonable &amp; Religious Accommodations</h2>
+        <p>Initiated by Employee As Self · Supports disability, pregnancy/childbirth, religious, and related needs</p>
+      </div>
+      <div class="completion-badge">Status<strong>Fairly Simple / Being Refined</strong></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot employee"></span><span class="role-tag employee">Employee As Self</span> Initiates &amp; describes the request</li>
+          <li><span class="role-dot hr"></span><span class="role-tag hr">HR Partner</span> Reviews &amp; closes the request</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Decision Flags</div>
+        <div class="flag decision">
+          <span class="flag-icon">⚠️</span>
+          <div><strong>Conditional Questions by Accommodation Type</strong>Disability, pregnancy/childbirth, religious, and domestic-violence-status questions each branch to their own follow-up questions. Not all fields are required — e.g. "permanent or temporary condition" is optional since it may not apply to everyone.</div>
+        </div>
+        <div class="flag open">
+          <span class="flag-icon">🛠️</span>
+          <div><strong>Open Items from Review Session</strong>
+            • A request was made to add a Review Document step so a blank healthcare-provider accommodation assessment form can live in the process for the employee to download, complete, and re-upload (currently that back-and-forth happens outside the system).<br>
+            • Post-decision communication — appeal rights on denial, effective date ranges on approval — is expected to remain largely outside Workday for now, though notifications/letters may be built out later.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-title" style="font-size:1rem;margin-bottom:18px;">Flowchart — Reasonable &amp; Religious Accommodations</div>
+    <div class="flowchart">
+      <div class="flow-node"><div class="flow-box flow-start">♿ START — Employee Initiates</div></div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee As Self</div>
+        <div class="flow-box flow-action employee">Describes Request — Disability? Pregnancy/Childbirth?<br>Religious? Domestic-Violence Status? <small style="opacity:0.65">(conditional follow-ups per answer)</small></div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee As Self</div>
+        <div class="flow-box flow-action employee">Describes Limitations · Selects Potential Accommodations ·<br>Uploads Supporting Documentation <small style="opacity:0.65">(optional)</small></div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot hr"></span> HR Partner</div>
+        <div class="flow-box flow-action hr">Reviews Request &amp; Documentation · Closes Request — Approved/Denied</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node"><div class="flow-box flow-end">✅ COMPLETE — Request Closed</div></div>
+    </div>
+
+    <div style="margin-top:28px;">
+      <div class="flag info">
+        <span class="flag-icon">📅</span>
+        <div><strong>Timing</strong>Completes after the HR Partner closes the request.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ BP8: SEARCH EXCEPTION ══════ -->
+<div id="bp8" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big pink">🔍</div>
+      <div class="process-meta">
+        <h2>Search Exception Request</h2>
+        <p>Initiated by HR Partner · Manager · Management Chain · Requests exception to the standard hiring search</p>
+      </div>
+      <div class="completion-badge">Approvals<strong>3–4 Steps</strong></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot manager"></span><span class="role-tag manager">HR Partner / Manager / Mgmt Chain</span> Initiates the request</li>
+          <li><span class="role-dot comp"></span><span class="role-tag comp">Compensation Partner</span> First approval</li>
+          <li><span class="role-dot recruit"></span><span class="role-tag recruit">Recruiting Administrator</span> Second approval</li>
+          <li><span class="role-dot cdo"></span><span class="role-tag cdo">Chief Diversity Officer*</span> Approves waiver of minimum requirements (only if requested)</li>
+          <li><span class="role-dot hradmin"></span><span class="role-tag hradmin">HR Administrator</span> Closes the request (comment required)</li>
+          <li><span class="role-dot hr"></span><span class="role-tag hr">HR Partner</span> To-Do: attaches resolution to Hire/Change Job (only if approved)</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Decision Flags</div>
+        <div class="flag decision">
+          <span class="flag-icon">⚠️</span>
+          <div><strong>Waiver of Minimum Requirements Branch</strong>If the initiator answers "yes" to the waiver question, an extra approval step is inserted before closing. If "no," that step is skipped entirely.</div>
+        </div>
+        <div class="flag condition">
+          <span class="flag-icon">🔀</span>
+          <div><strong>Conditional To-Do</strong>The final To-Do — attaching the Search Exception Resolution to the Hire/Change Job form — only fires if the request was approved. If denied, there is nothing further to attach.</div>
+        </div>
+        <div class="flag open">
+          <span class="flag-icon">🛠️</span>
+          <div><strong>Open Items from Review Session</strong>
+            • "Chief Diversity Officer" is a placeholder security group; testers clarified the real approver for a minimum-requirements waiver should be the Chancellor's Office (the CDO has typically already written the supporting letter by this point), so this step is expected to be reassigned.<br>
+            • Recruiting Administrator and other "administrator" groups may currently be too broad — e.g. central staff outside the campus are also assigned the role and may see confidential search information they shouldn't. Narrower, campus-specific security groups are being scoped.<br>
+            • Requests for an approval notification/letter to be generated automatically were raised and logged for the notifications workstream.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-title" style="font-size:1rem;margin-bottom:18px;">Flowchart — Search Exception Request</div>
+    <div class="flowchart">
+      <div class="flow-node"><div class="flow-box flow-start">🔍 START — HR Partner / Manager / Mgmt Chain Initiates</div></div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot manager"></span> Initiator</div>
+        <div class="flow-box flow-action manager">Completes Form + Uploads Job Description, Org Chart,<br>Letter, Resume, and Any Supporting Documents</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot comp"></span> Compensation Partner</div>
+        <div class="flow-box flow-action comp">Approval</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot recruit"></span> Recruiting Administrator</div>
+        <div class="flow-box flow-action recruit">Approval</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node"><div class="flow-box flow-decision">⚠️ Decision: Waiver of minimum requirements requested?</div></div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ YES</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot cdo"></span> Chief Diversity Officer*</div>
+            <div class="flow-box flow-action cdo">Approve Waiver of Minimum Requirements<br><small style="opacity:0.65">*Placeholder — real approver likely Chancellor's Office</small></div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">⏭ NO</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node"><div class="flow-box flow-action" style="background:#f4f7fb;border-color:#94a3b8;color:#64748b;">Step Skipped</div></div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot hradmin"></span> HR Administrator</div>
+        <div class="flow-box flow-action hradmin">Close Request <small style="opacity:0.65">(comment required to submit)</small></div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node"><div class="flow-box flow-decision">⚠️ Decision: Request approved?</div></div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ Approved</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot hr"></span> HR Partner</div>
+            <div class="flow-box flow-action hr">To-Do: Attach Search Exception Resolution to<br>Hire/Change Job Form</div>
+          </div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node"><div class="flow-box flow-end">✅ COMPLETE — Resolution Attached</div></div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">❌ Not Approved</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node"><div class="flow-box flow-end denied">⛔ CLOSED — No Attach Step</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:28px;">
+      <div class="flag info">
+        <span class="flag-icon">📅</span>
+        <div><strong>Timing</strong>Completes after the HR Partner closes the request (or attaches the resolution, if approved).</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ BP9: TRANSFER ROSTER LIST ══════ -->
+<div id="bp9" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big teal">🔁</div>
+      <div class="process-meta">
+        <h2>Transfer Roster List — Competitive &amp; Labor/Non-Competitive Titles</h2>
+        <p>Initiated by Employee As Self · Civil Service workers request transfer to up to 3 campuses</p>
+      </div>
+      <div class="completion-badge">Variants<strong>2 — Same Flow, Different Questionnaire</strong></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot employee"></span><span class="role-tag employee">Employee As Self</span> Initiates the request</li>
+          <li><span class="role-dot hr"></span><span class="role-tag hr">HR Partner</span> Approves the request</li>
+          <li><span class="role-dot civilservice"></span><span class="role-tag civilservice">Civil Service Administrator*</span> Closes the request</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Decision Flags</div>
+        <div class="flag decision">
+          <span class="flag-icon">⚠️</span>
+          <div><strong>Two Request Types, One Process</strong>Competitive Titles and Labor/Non-Competitive Titles use the same business process flow — only the questionnaire content differs, since eligibility questions vary by classification.</div>
+        </div>
+        <div class="flag condition">
+          <span class="flag-icon">🔀</span>
+          <div><strong>Hardship Case Branch</strong>If the request is a hardship case, the employee must confirm a letter with supporting documentation was sent to the union official before proceeding.</div>
+        </div>
+        <div class="flag open">
+          <span class="flag-icon">🛠️</span>
+          <div><strong>Open Items from Review Session</strong>
+            • The 27 CUNY campuses had to be split into two separate lists (senior colleges / community colleges) because Workday's questionnaire "multiple choice" field type caps out at 25 options — this is a platform limitation, not a design choice, and campuses were asked to flag if any list entries should be removed or consolidated.<br>
+            • The "select up to 3 campuses" rule is not systematically enforced — testers found they could select more than 3 with no validation, since multi-choice questionnaire fields can't enforce a maximum. This will either need to stay a soft guideline or move to a standard document/form instead of a questionnaire.<br>
+            • Civil Service Administrator, as the closing group, is considered a likely-too-broad placeholder that will be narrowed down.<br>
+            • A separate, in-progress goal (not yet built) is a report so each campus can see its own transfer roster directly in Workday instead of using spreadsheets.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-title" style="font-size:1rem;margin-bottom:18px;">Flowchart — Transfer Roster List</div>
+    <div class="flowchart">
+      <div class="flow-node"><div class="flow-box flow-start">🔁 START — Employee Initiates (Competitive or Non-Competitive)</div></div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee As Self</div>
+        <div class="flow-box flow-action employee">Eligibility Questions — Permanent Status + Years of Service ·<br>Disciplinary Actions? · Satisfactory Performance Evaluation?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node"><div class="flow-box flow-decision">⚠️ Decision: Is this a hardship case?</div></div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ YES — Hardship</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot employee"></span> Employee As Self</div>
+            <div class="flow-box flow-action employee">Confirms Union Notification Letter Sent<br>+ Supporting Documentation</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">⏭ NO — Standard</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node"><div class="flow-box flow-action" style="background:#f4f7fb;border-color:#94a3b8;color:#64748b;">Step Skipped</div></div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee As Self</div>
+        <div class="flow-box flow-action employee">Reason for Transfer · Prior-Transfer History ·<br>Selects Up to 3 Campuses <small style="opacity:0.65">(senior + community college lists)</small></div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot hr"></span> HR Partner</div>
+        <div class="flow-box flow-action hr">Approval</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot civilservice"></span> Civil Service Administrator*</div>
+        <div class="flow-box flow-action civilservice">Close Request — Approved / Denied</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node"><div class="flow-box flow-end">✅ COMPLETE — Added to Transfer Roster</div></div>
+    </div>
+
+    <div style="margin-top:28px;">
+      <div class="flag info">
+        <span class="flag-icon">📅</span>
+        <div><strong>Timing</strong>Completes after the Civil Service Administrator closes the request.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ ROLES TABLE ══════ -->
+<div id="roles" class="section">
+  <div class="card">
+    <div class="card-title">Master Roles &amp; Permissions Table</div>
+    <div class="card-subtitle">Request Frameworks · TAM Scope · Federal Work Study &amp; State Positions Excluded</div>
+    <div style="overflow-x:auto;">
+    <table class="roles-table">
+      <thead>
+        <tr>
+          <th>Business Process</th>
+          <th><span class="role-tag employee">Employee</span></th>
+          <th><span class="role-tag manager">Manager / Mgmt Chain</span></th>
+          <th><span class="role-tag hr">HR Partner</span></th>
+          <th><span class="role-tag hradmin">HR Admin</span></th>
+          <th><span class="role-tag hrspec">HR Specialist</span></th>
+          <th><span class="role-tag civilservice">Civil Svc Admin</span></th>
+          <th><span class="role-tag benefits">Benefits Admin</span></th>
+          <th><span class="role-tag comp">Comp Partner</span></th>
+          <th><span class="role-tag recruit">Recruiting Admin</span></th>
+          <th><span class="role-tag cdo">CDO*</span></th>
+          <th><span class="role-tag integration">Integration</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>55-a Status</strong><br><small>Non-competitive status request</small></td>
+          <td><span class="check">✔</span> Initiate</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="check">✔</span> Review doc; To-Do update</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="check">✔</span> Review &amp; approve*</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+        </tr>
+        <tr>
+          <td><strong>Compensation Review</strong><br><small>Compensation analysis request</small></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="check">✔</span> Initiate &amp; close*</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+        </tr>
+        <tr>
+          <td><strong>Emergency Evacuation Assistance</strong></td>
+          <td><span class="check">✔</span> Initiate</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="check">✔</span> Close</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="check">✔</span> To-Do review</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+        </tr>
+        <tr>
+          <td><strong>FICA Exempt Status</strong></td>
+          <td><span class="check">✔</span> Initiate</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="check">✔</span> Close</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="check">✔</span> Outbound update</td>
+        </tr>
+        <tr>
+          <td><strong>Loan Forgiveness</strong><br><small>PSLF certification</small></td>
+          <td><span class="check">✔</span> Initiate &amp; review docs</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="check">✔</span> Close</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+        </tr>
+        <tr>
+          <td><strong>NYSPO Account Activation</strong></td>
+          <td><span class="check">✔</span> Initiate</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="check">✔</span> Update custom field</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="check">✔</span> Activation lookup</td>
+        </tr>
+        <tr>
+          <td><strong>Reasonable &amp; Religious Accommodations</strong></td>
+          <td><span class="check">✔</span> Initiate</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="check">✔</span> Review &amp; close</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+        </tr>
+        <tr>
+          <td><strong>Search Exception Request</strong></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="check">✔</span> Initiate (or HR Partner)</td>
+          <td><span class="check">✔</span> Initiate; To-Do attach</td>
+          <td><span class="check">✔</span> Close (comment req.)</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="check">✔</span> Approval 1</td>
+          <td><span class="check">✔</span> Approval 2</td>
+          <td><span class="check">✔</span> Waiver approval (conditional)*</td>
+          <td><span class="dash">–</span></td>
+        </tr>
+        <tr>
+          <td><strong>Transfer Roster List</strong><br><small>Competitive &amp; Non-Competitive</small></td>
+          <td><span class="check">✔</span> Initiate</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="check">✔</span> Approval</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="check">✔</span> Close*</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    <div style="margin-top:16px;">
+      <div class="flag open">
+        <span class="flag-icon">🛠️</span>
+        <div><strong>* = Placeholder Security Group</strong>Cells marked with an asterisk in the table above use a security group that was explicitly called out in the review session as a placeholder pending further security-mapping work (Civil Service Administrator, HR Administrator naming, Chief Diversity Officer for the waiver step, and the Compensation Review closing group). Expect these to change before end-to-end testing.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Role Definitions</div>
+    <div class="card-subtitle">Security role descriptions for Request Frameworks scope</div>
+    <table class="roles-table">
+      <thead>
+        <tr>
+          <th>Role</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="role-tag employee">Employee / Contingent Worker As Self</span></td>
+          <td>The worker initiating a request about themselves. Cannot approve their own request.</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag manager">Manager / Management Chain</span></td>
+          <td>Listed as an allowed initiator for Search Exception Request alongside HR Partner.</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag hr">HR Partner</span></td>
+          <td>Campus-level HR role. Reviews, approves, closes, and receives To-Do steps across most request frameworks. Only role that can initiate Compensation Review.</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag hradmin">HR Administrator</span></td>
+          <td>Central-office-level role (per session clarification). Closes Search Exception Requests and updates the NYSPO custom field. Naming may change so campuses don't assume it's central-only by default.</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag hrspec">HR Specialist</span></td>
+          <td>Receives the To-Do step to review type of assistance on Emergency Evacuation Assistance requests. Distinct from HR Partner.</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag civilservice">Civil Service Administrator</span></td>
+          <td>Reviews/approves 55-a Status and closes Transfer Roster List requests. Currently a placeholder in several flows pending security mapping (vs. "Civil Service Director").</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag benefits">Benefits Administrator</span></td>
+          <td>Closes Loan Forgiveness requests. Session noted this doesn't map cleanly to every campus's actual process owner.</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag comp">Compensation Partner</span></td>
+          <td>First approval step on Search Exception Request.</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag recruit">Recruiting Administrator</span></td>
+          <td>Second approval step on Search Exception Request. Session flagged this group as potentially too broad (includes central staff outside the requesting campus).</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag cdo">Chief Diversity Officer</span></td>
+          <td>Placeholder security group for the conditional waiver-of-minimum-requirements approval on Search Exception Request. Real approver expected to be the Chancellor's Office.</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag integration">Integration (system)</span></td>
+          <td>Automated background step — not a person. Used on FICA Exempt Status (outbound to Campus Solutions) and NYSPO Account Activation (communicates with NYSPO/State).</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="margin-top:24px;">
+      <div class="flag warning">
+        <span class="flag-icon">🚫</span>
+        <div><strong>Excluded: Federal Work Study &amp; State Positions</strong>Federal Work Study time/positions and State-specific roles or steps are not included anywhere in this dashboard. All Request Frameworks shown apply outside those scopes.</div>
+      </div>
+      <div class="flag decision">
+        <span class="flag-icon">⚠️</span>
+        <div><strong>Notifications Not Yet Built</strong>None of the flows above reflect final notification behavior — several review-session attendees requested notifications/letters be generated on approval or denial, and this has been logged for the notifications workstream ahead of end-to-end testing.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const tabs = ['overview','bp1','bp2','bp3','bp4','bp5','bp6','bp7','bp8','bp9','roles'];
+  const idx = tabs.indexOf(id);
+  if(idx >= 0) document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
