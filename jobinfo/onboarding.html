@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onboarding – Staff &amp; Faculty Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0f2040;
+    --navy-mid: #1a3460;
+    --blue: #1e5fa8;
+    --blue-light: #2e7dd1;
+    --gold: #e8a922;
+    --gold-light: #f5c84a;
+    --teal: #0e8a7a;
+    --red: #c0392b;
+    --green: #1a7a4a;
+    --slate: #4a5568;
+    --light: #f4f7fb;
+    --white: #ffffff;
+    --border: #dde4ef;
+    --card-shadow: 0 4px 24px rgba(15,32,64,0.10);
+    --role-hr: #2e7dd1;
+    --role-budget: #e8a922;
+    --role-payroll: #0e8a7a;
+    --role-manager: #7c3aed;
+    --role-tk: #d97706;
+    --role-admin: #64748b;
+    --role-employee: #c0392b;
+    --role-tta: #0e6060;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--light); color: var(--navy); min-height: 100vh; }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, var(--blue) 100%);
+    color: white; padding: 36px 48px 28px; position: relative; overflow: hidden;
+  }
+  .header::before {
+    content: ''; position: absolute; top: -60px; right: -60px; width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(232,169,34,0.18) 0%, transparent 70%); border-radius: 50%;
+  }
+  .header::after {
+    content: ''; position: absolute; bottom: -40px; left: 30%; width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(46,125,209,0.2) 0%, transparent 70%); border-radius: 50%;
+  }
+  .header-inner { position: relative; z-index: 1; }
+  .header h1 { font-family: 'DM Serif Display', serif; font-size: 2.2rem; letter-spacing: -0.5px; margin-bottom: 6px; }
+  .header p { color: rgba(255,255,255,0.72); font-size: 0.95rem; font-weight: 400; }
+  .header-badge {
+    display: inline-block; background: var(--gold); color: var(--navy);
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 3px 10px; border-radius: 20px; margin-bottom: 12px;
+  }
+
+  /* TABS */
+  .tabs-bar {
+    background: var(--white); border-bottom: 2px solid var(--border); padding: 0 48px;
+    display: flex; gap: 4px; overflow-x: auto; position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 12px rgba(15,32,64,0.07);
+  }
+  .tab-btn {
+    padding: 16px 18px; font-family: 'DM Sans', sans-serif; font-size: 0.83rem; font-weight: 600;
+    color: var(--slate); background: none; border: none; border-bottom: 3px solid transparent;
+    cursor: pointer; white-space: nowrap; transition: all 0.2s; position: relative; top: 2px;
+  }
+  .tab-btn:hover { color: var(--blue); }
+  .tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+  /* CONTENT */
+  .content { max-width: 1200px; margin: 0 auto; padding: 36px 48px 60px; }
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* CARDS */
+  .card { background: var(--white); border-radius: 16px; box-shadow: var(--card-shadow); padding: 32px; margin-bottom: 28px; border: 1px solid var(--border); }
+  .card-title { font-family: 'DM Serif Display', serif; font-size: 1.35rem; color: var(--navy); margin-bottom: 6px; }
+  .card-subtitle { font-size: 0.82rem; color: var(--slate); margin-bottom: 22px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.8px; }
+
+  /* OVERVIEW GRID */
+  .overview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; margin-bottom: 28px; }
+  .overview-tile {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+    color: white; border-radius: 14px; padding: 22px 20px; cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s; border: 2px solid transparent;
+    position: relative; overflow: hidden;
+  }
+  .overview-tile::after { content: ''; position: absolute; bottom: -20px; right: -20px; width: 80px; height: 80px; background: rgba(255,255,255,0.06); border-radius: 50%; }
+  .overview-tile:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(15,32,64,0.18); }
+  .overview-tile:nth-child(2) { background: linear-gradient(135deg, #1a4a2e 0%, var(--teal) 100%); }
+  .overview-tile:nth-child(3) { background: linear-gradient(135deg, #5b2a00 0%, #c06a10 100%); }
+  .overview-tile:nth-child(4) { background: linear-gradient(135deg, #2d1060 0%, var(--role-manager) 100%); }
+  .overview-tile:nth-child(5) { background: linear-gradient(135deg, #3a3a3a 0%, var(--role-admin) 100%); }
+  .tile-icon { font-size: 1.8rem; margin-bottom: 10px; }
+  .tile-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
+  .tile-desc { font-size: 0.78rem; opacity: 0.8; line-height: 1.5; }
+
+  /* FLOWCHART */
+  .flowchart { display: flex; flex-direction: column; align-items: center; gap: 0; padding: 10px 0; }
+  .flow-node { position: relative; width: 100%; max-width: 620px; }
+  .flow-box {
+    border-radius: 10px; padding: 14px 22px; font-size: 0.88rem; font-weight: 500;
+    text-align: center; position: relative; border: 2px solid transparent; transition: transform 0.15s;
+  }
+  .flow-box:hover { transform: scale(1.02); }
+  .flow-start { background: var(--navy); color: white; border-radius: 30px; font-weight: 700; letter-spacing: 0.5px; padding: 12px 32px; }
+  .flow-end { background: var(--teal); color: white; border-radius: 30px; font-weight: 700; letter-spacing: 0.5px; padding: 12px 32px; }
+  .flow-end.denied { background: var(--red); }
+  .flow-action { background: #eef3fb; border-color: var(--role-hr); color: var(--navy); }
+  .flow-action.budget { background: #fef8ec; border-color: var(--gold); }
+  .flow-action.payroll { background: #edfaf7; border-color: var(--teal); }
+  .flow-action.manager { background: #f5f0ff; border-color: var(--role-manager); }
+  .flow-action.employee { background: #fef2f2; border-color: var(--role-employee); }
+  .flow-action.tk { background: #fff7ed; border-color: var(--role-tk); }
+  .flow-action.tta { background: #ecfdfb; border-color: var(--role-tta); }
+  .flow-action.admin { background: #f1f5f9; border-color: var(--role-admin); }
+  .flow-decision { background: #fff8e1; border: 2px dashed var(--gold); border-radius: 8px; color: var(--navy); font-style: italic; font-size: 0.84rem; padding: 12px 20px; }
+  .flow-connector { display: flex; flex-direction: column; align-items: center; height: 36px; justify-content: center; color: var(--slate); font-size: 1.3rem; position: relative; }
+  .flow-connector::before { content: ''; width: 2px; height: 100%; background: var(--border); position: absolute; }
+  .flow-connector span { background: white; padding: 0 4px; position: relative; z-index: 1; font-size: 1.1rem; color: var(--slate); }
+  .flow-label { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; font-size: 0.75rem; color: var(--slate); font-weight: 600; text-transform: uppercase; letter-spacing: 0.7px; justify-content: center; }
+  .role-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+  .role-dot.hr { background: var(--role-hr); }
+  .role-dot.budget { background: var(--role-budget); }
+  .role-dot.payroll { background: var(--role-payroll); }
+  .role-dot.manager { background: var(--role-manager); }
+  .role-dot.admin { background: var(--role-admin); }
+  .role-dot.employee { background: var(--role-employee); }
+  .role-dot.tk { background: var(--role-tk); }
+  .role-dot.tta { background: var(--role-tta); }
+
+  /* DECISION BRANCH */
+  .decision-branch { display: flex; gap: 18px; width: 100%; max-width: 780px; justify-content: center; }
+  .branch-side { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0; }
+  .branch-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--slate); margin-bottom: 6px; background: var(--light); padding: 2px 10px; border-radius: 20px; }
+
+  /* ROLES TABLE */
+  .roles-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  .roles-table th { background: var(--navy); color: white; padding: 12px 14px; text-align: left; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.8px; }
+  .roles-table th:first-child { border-radius: 8px 0 0 0; }
+  .roles-table th:last-child { border-radius: 0 8px 0 0; }
+  .roles-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; font-size: 0.82rem; }
+  .roles-table tr:hover td { background: #f8faff; }
+  .roles-table tr:last-child td { border-bottom: none; }
+  .check { color: var(--green); font-size: 1rem; }
+  .dash { color: #ccc; font-size: 1rem; }
+
+  .role-tag { display: inline-block; font-size: 0.71rem; font-weight: 700; padding: 2px 9px; border-radius: 20px; margin: 2px; white-space: nowrap; }
+  .role-tag.hr { background: #ddeeff; color: var(--blue); }
+  .role-tag.budget { background: #fff3cc; color: #7a5800; }
+  .role-tag.payroll { background: #d9f5ef; color: var(--teal); }
+  .role-tag.manager { background: #ede9ff; color: #5b21b6; }
+  .role-tag.admin { background: #f1f5f9; color: var(--slate); }
+  .role-tag.employee { background: #fee2e2; color: #991b1b; }
+  .role-tag.tk { background: #fef3c7; color: #92400e; }
+  .role-tag.tta { background: #d1faf4; color: #065f46; }
+
+  /* FLAGS */
+  .flag { display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; border-radius: 10px; margin-bottom: 12px; font-size: 0.87rem; line-height: 1.6; }
+  .flag.decision { background: #fff8e1; border-left: 4px solid var(--gold); }
+  .flag.condition { background: #edfaf7; border-left: 4px solid var(--teal); }
+  .flag.warning { background: #fef2f2; border-left: 4px solid #ef4444; }
+  .flag.info { background: #eff6ff; border-left: 4px solid var(--blue); }
+  .flag-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+  .flag strong { color: var(--navy); display: block; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+
+  /* TWO-COL */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-bottom: 24px; }
+  @media (max-width: 800px) { .two-col { grid-template-columns: 1fr; } }
+  .section-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--slate); margin-bottom: 12px; }
+  .who-list { list-style: none; }
+  .who-list li { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.87rem; }
+  .who-list li:last-child { border-bottom: none; }
+
+  /* PROCESS HEADER */
+  .process-header { display: flex; align-items: flex-start; gap: 20px; margin-bottom: 28px; padding-bottom: 22px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+  .process-icon-big { width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; flex-shrink: 0; }
+  .process-icon-big.blue { background: linear-gradient(135deg, var(--navy), var(--blue)); }
+  .process-icon-big.teal { background: linear-gradient(135deg, #065f46, var(--teal)); }
+  .process-icon-big.orange { background: linear-gradient(135deg, #7c2d12, #ea580c); }
+  .process-icon-big.purple { background: linear-gradient(135deg, #3b0764, var(--role-manager)); }
+  .process-icon-big.grey { background: linear-gradient(135deg, #3a3a3a, var(--role-admin)); }
+  .process-meta { flex: 1; }
+  .process-meta h2 { font-family: 'DM Serif Display', serif; font-size: 1.5rem; color: var(--navy); margin-bottom: 4px; }
+  .process-meta p { font-size: 0.85rem; color: var(--slate); }
+  .completion-badge { background: var(--light); border: 1px solid var(--border); border-radius: 10px; padding: 10px 16px; font-size: 0.78rem; color: var(--slate); text-align: center; flex-shrink: 0; }
+  .completion-badge strong { display: block; font-size: 0.92rem; color: var(--navy); margin-top: 4px; }
+
+  /* PRINT */
+  @media print {
+    .tabs-bar { display: none !important; }
+    .section { display: block !important; page-break-before: always; }
+    .section:first-of-type { page-break-before: auto; }
+  }
+  @media (max-width: 700px) {
+    .header { padding: 24px 20px 18px; }
+    .tabs-bar { padding: 0 8px; }
+    .content { padding: 20px 16px 40px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-badge">Business Process · TAM Scope</div>
+    <h1>Onboarding – Staff &amp; Faculty Dashboard</h1>
+    <p>Interactive guide to the Onboarding business process — roles, steps, decisions, and approvals · Source: Onboarding Staff/Faculty walkthrough session &amp; business process overview deck · Federal Work Study &amp; State positions excluded</p>
+  </div>
+</div>
+
+<div class="tabs-bar">
+  <button class="tab-btn active" onclick="showTab('overview')">📋 Overview</button>
+  <button class="tab-btn" onclick="showTab('bp1')">🪪 Personal &amp; Gov't Info</button>
+  <button class="tab-btn" onclick="showTab('bp2')">📄 Documents &amp; Training</button>
+  <button class="tab-btn" onclick="showTab('bp3')">🛂 Form I-9 &amp; Eligibility</button>
+  <button class="tab-btn" onclick="showTab('bp4')">💰 Benefits, Tax &amp; Compliance</button>
+  <button class="tab-btn" onclick="showTab('bp5')">🔀 Conditional Steps</button>
+  <button class="tab-btn" onclick="showTab('roles')">👥 Roles &amp; Permissions</button>
+</div>
+
+<div class="content">
+
+<!-- ══════ OVERVIEW ══════ -->
+<div id="overview" class="section active">
+  <div class="card">
+    <div class="card-title">Onboarding — Staff &amp; Faculty at a Glance</div>
+    <div class="card-subtitle">1 End-to-End Business Process · 5 Step Groupings · Excluding Federal Work Study &amp; State-Only Positions</div>
+    <div class="overview-grid">
+      <div class="overview-tile" onclick="showTab('bp1')">
+        <div class="tile-icon">🪪</div>
+        <div class="tile-name">Personal &amp; Gov't Info</div>
+        <div class="tile-desc">Employee updates contact info, personal information, government IDs, and optional photo. This is where the overall business process is marked complete.</div>
+      </div>
+      <div class="overview-tile" onclick="showTab('bp2')">
+        <div class="tile-icon">📄</div>
+        <div class="tile-name">Documents &amp; Training</div>
+        <div class="tile-desc">Employee reviews and acknowledges onboarding documents (oath, IT security orientation) and completes required training.</div>
+      </div>
+      <div class="overview-tile" onclick="showTab('bp3')">
+        <div class="tile-icon">🛂</div>
+        <div class="tile-name">Form I-9 &amp; Eligibility</div>
+        <div class="tile-desc">Employee completes Section 1; HR Partner reviews documents in person and completes Section 2 / E-Verify within 3 days.</div>
+      </div>
+      <div class="overview-tile" onclick="showTab('bp4')">
+        <div class="tile-icon">💰</div>
+        <div class="tile-name">Benefits, Tax &amp; Compliance</div>
+        <div class="tile-desc">Employee submits benefit elections, tax and payment elections, disability self-ID, and veteran status.</div>
+      </div>
+      <div class="overview-tile" onclick="showTab('bp5')">
+        <div class="tile-icon">🔀</div>
+        <div class="tile-name">Conditional Steps</div>
+        <div class="tile-desc">Emergency contacts, emergency evacuation request, passport/visa, education, and the classified-title hiring fee — each only appears under certain conditions.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Security Roles Legend</div>
+    <div class="card-subtitle">Who participates across the Onboarding process</div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px;">
+      <span class="role-tag employee">🔴 Employee (incl. Pre-Employee / Contingent Worker as Self)</span>
+      <span class="role-tag hr">🔵 HR Partner</span>
+      <span class="role-tag admin">⚪ Business Process Administrator</span>
+    </div>
+    <div class="flag info">
+      <span class="flag-icon">ℹ️</span>
+      <div><strong>One Business Process, Many Steps</strong>Onboarding is a single Workday business process made up of a sequence of configurable steps (tasks). The process is considered technically <em>complete</em> once the worker adds Government IDs and Personal Information — remaining to-do steps (benefits, training, etc.) stay in the worker's inbox independently until each is finished, but they do not block the hire or the BP completion status.</div>
+    </div>
+    <div class="flag decision">
+      <span class="flag-icon">⚠️</span>
+      <div><strong>Pre-Hire Access Depends on Start Date</strong>If a new hire's start date is in the future, they get limited pre-hire access — only permitted onboarding tasks and permitted announcements/bulletins are visible. If the start date is today, the worker gets full access to complete all onboarding tasks and see most announcements/bulletins.</div>
+    </div>
+    <div class="flag condition">
+      <span class="flag-icon">🔀</span>
+      <div><strong>Several Steps Are Conditional</strong>Sprintax (international status), Passport/Visa, Emergency Evacuation Assistance, Education, and Pay Hiring Fee for Classified Titles only appear for workers who meet the specific condition (see Conditional Steps tab).</div>
+    </div>
+    <div class="flag warning">
+      <span class="flag-icon">🚫</span>
+      <div><strong>Excluded from this Dashboard</strong>Federal Work Study positions and State-specific steps have been excluded — this dashboard reflects Staff/Faculty onboarding only. Third-party integration icons/branding are not shown; this is a Workday-configuration view.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ BP1: PERSONAL & GOVERNMENT INFO ══════ -->
+<div id="bp1" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big blue">🪪</div>
+      <div class="process-meta">
+        <h2>Personal &amp; Government Info</h2>
+        <p>Initiated by Employee / Pre-Employee / Contingent Worker / Pre-Contingent Worker as Self</p>
+      </div>
+      <div class="completion-badge">BP Completes When<strong>Gov't IDs + Personal Info Added</strong></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot employee"></span><span class="role-tag employee">Employee</span> Updates own contact info, personal info, government IDs</li>
+          <li><span class="role-dot hr"></span><span class="role-tag hr">HR Partner</span> Pre-fills government IDs / personal info (incl. SSN) prior to hire so payroll integration can pick it up</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Decision Flags</div>
+        <div class="flag decision">
+          <span class="flag-icon">⚠️</span>
+          <div><strong>SSN Not Always Pre-Filled</strong>Social Security Number is needed by the payroll integration upon hire, so HR Partner may key it in before hire. It is not strictly mandatory in Workday — validations follow today's process, and an LID number can be used in the "Other ID" section if no SSN exists yet.</div>
+        </div>
+        <div class="flag condition">
+          <span class="flag-icon">🔀</span>
+          <div><strong>Change My Photo is Optional</strong>Purely a display picture for the Workday profile — can be skipped entirely.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-title" style="font-size:1rem;margin-bottom:18px;">Flowchart — Personal &amp; Government Info</div>
+    <div class="flowchart">
+      <div class="flow-node">
+        <div class="flow-box flow-start">🪪 START — New Hire's Onboarding Tasks Triggered</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee as Self</div>
+        <div class="flow-box flow-action employee">Update Home Contact Info<br><small style="opacity:0.65">Mostly pre-populated from pre-hire data (e.g. county, address)</small></div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee as Self</div>
+        <div class="flow-box flow-action employee">Update Personal Information<br><small style="opacity:0.65">Mandatory fields marked with an asterisk; rest optional</small></div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Decision: Was SSN already entered by HR Partner pre-hire?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ YES — Pre-Filled by HR Partner</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot employee"></span> Employee as Self</div>
+            <div class="flow-box flow-action employee">Edit Government IDs<br><small style="opacity:0.65">Review masked SSN, update if needed</small></div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">⏭ NO — Not Yet on File</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot employee"></span> Employee as Self</div>
+            <div class="flow-box flow-action employee">Edit Government IDs<br><small style="opacity:0.65">Enter SSN, or LID number under Other IDs if no SSN yet</small></div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee as Self</div>
+        <div class="flow-box flow-action employee">Change My Photo <em>(optional — can skip)</em></div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-end">✅ COMPLETE — Onboarding BP Status = Complete</div>
+      </div>
+    </div>
+
+    <div style="margin-top:28px;">
+      <div class="flag info">
+        <span class="flag-icon">📅</span>
+        <div><strong>Timing</strong>Most onboarding steps have a 2-business-day reporting window, but this doesn't force the task closed — it simply flags what's overdue on a report. The step stays in the worker's inbox until completed.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ BP2: DOCUMENTS & TRAINING ══════ -->
+<div id="bp2" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big teal">📄</div>
+      <div class="process-meta">
+        <h2>Documents &amp; Training</h2>
+        <p>Initiated by Employee as Self</p>
+      </div>
+      <div class="completion-badge">Due<strong>~2 Business Days</strong></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot employee"></span><span class="role-tag employee">Employee</span> Reads &amp; acknowledges each onboarding document, completes required training</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Decision Flags</div>
+        <div class="flag condition">
+          <span class="flag-icon">🔀</span>
+          <div><strong>Documents Can Be Targeted / Optional</strong>Onboarding documents can be configured per audience, can be acknowledged (optional per document), can link to intranet locations, and can request an attachment back from the worker.</div>
+        </div>
+        <div class="flag info">
+          <span class="flag-icon">ℹ️</span>
+          <div><strong>Not a Document Repository</strong>Workday is not a document management system — completed documents can be viewed later via the worker profile (Related Actions → Worker History → Maintain Worker Documents), but there's no version control.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-title" style="font-size:1rem;margin-bottom:18px;">Flowchart — Documents &amp; Training</div>
+    <div class="flowchart">
+      <div class="flow-node">
+        <div class="flow-box flow-start">📄 START — New Hire Onboarding Documents Task</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee as Self</div>
+        <div class="flow-box flow-action employee">Read &amp; Acknowledge: Oath Upon Appointment<br><small style="opacity:0.65">Click "Read" then "I Agree"</small></div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee as Self</div>
+        <div class="flow-box flow-action employee">Read &amp; Acknowledge: Orientation for IT Security<br><small style="opacity:0.65">Same read → acknowledge → submit pattern</small></div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Decision: Does the job profile carry a Classified job classification?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ YES — Classified Title</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot employee"></span> Employee as Self</div>
+            <div class="flow-box flow-action employee">Reviews Hiring Fee Information Document<br><small style="opacity:0.65">Continues to Pay Hiring Fee step — see Conditional Steps tab</small></div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">⏭ NO — Not Classified</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot employee"></span> Employee as Self</div>
+            <div class="flow-box flow-action employee">Step Does Not Appear<br><small style="opacity:0.65">Skips straight to Required Training</small></div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee as Self</div>
+        <div class="flow-box flow-action employee">Complete Required Training (To Do)</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-end">✅ COMPLETE — Documents Acknowledged &amp; Training Done</div>
+      </div>
+    </div>
+
+    <div style="margin-top:28px;">
+      <div class="flag info">
+        <span class="flag-icon">🖨️</span>
+        <div><strong>Printing</strong>A PDF button appears under each document title so the worker can print it; completed documents are also viewable later on the worker profile.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ BP3: FORM I-9 & EMPLOYMENT ELIGIBILITY ══════ -->
+<div id="bp3" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big orange">🛂</div>
+      <div class="process-meta">
+        <h2>Form I-9 &amp; Employment Eligibility</h2>
+        <p>Section 1: Employee as Self · Section 2: HR Partner</p>
+      </div>
+      <div class="completion-badge">Must Complete Within<strong>3 Business Days</strong></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot employee"></span><span class="role-tag employee">Employee</span> Completes Section 1 — personal info, citizenship status, preparer/translator</li>
+          <li><span class="role-dot hr"></span><span class="role-tag hr">HR Partner</span> Completes Section 2 in person — reviews List A or B&amp;C documents, submits to E-Verify, authorizes or sends back</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Decision Flags</div>
+        <div class="flag decision">
+          <span class="flag-icon">⚠️</span>
+          <div><strong>3-Day Legal Deadline</strong>The employee must present I-9 documents within 3 days of hire. If they never do, the job may ultimately need to be terminated (I-9 is only applicable to a worker's first/primary job — additional jobs for existing workers don't need a new I-9).</div>
+        </div>
+        <div class="flag condition">
+          <span class="flag-icon">🔀</span>
+          <div><strong>In-Person Requirement</strong>Section 2 must be completed in person — the HR Partner physically reviews the original documents against what the employee entered.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-title" style="font-size:1rem;margin-bottom:18px;">Flowchart — Form I-9 &amp; Employment Eligibility</div>
+    <div class="flowchart">
+      <div class="flow-node">
+        <div class="flow-box flow-start">🛂 START — Complete Form I-9 Task</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee as Self</div>
+        <div class="flow-box flow-action employee">Section 1: Verify Prepopulated Info · Select Citizenship Status</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Decision: Was a preparer or translator used?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ YES</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot employee"></span> Employee as Self</div>
+            <div class="flow-box flow-action employee">Capture Preparer/Translator Count &amp; Details</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">⏭ NO</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot employee"></span> Employee as Self</div>
+            <div class="flow-box flow-action employee">Skip Preparer/Translator Fields</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee as Self</div>
+        <div class="flow-box flow-action employee">Submit Section 1 <em>(status: In Progress — pending HR Partner)</em></div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot hr"></span> HR Partner</div>
+        <div class="flow-box flow-action hr">Section 2: Employer Review &amp; Verification — In Person<br><small style="opacity:0.65">Review List A, or List B &amp; C documents</small></div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Decision: Are the documents correct &amp; complete?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">⚠️ NO — Missing / Incorrect</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot hr"></span> HR Partner</div>
+            <div class="flow-box flow-action hr">Send Back to Employee<br><small style="opacity:0.65">Returns to the role that submitted it — the Employee</small></div>
+          </div>
+          <div class="flow-connector"><span>↺</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action employee">Employee Corrects &amp; Resubmits Section 1</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">✅ YES — Complete</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot hr"></span> HR Partner</div>
+            <div class="flow-box flow-action hr">Submit to E-Verify · Change Status to Authorized · Approve</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-end">✅ COMPLETE — I-9 Authorized / E-Verify Result Received</div>
+      </div>
+    </div>
+
+    <div style="margin-top:28px;">
+      <div class="flag warning">
+        <span class="flag-icon">🚫</span>
+        <div><strong>What Happens If It's Never Completed</strong>If a worker never produces valid I-9 documents, they cannot continue to work and the job would need to be ended/terminated (this is a manual, offline HR decision — Workday does not automate it).</div>
+      </div>
+      <div class="flag info">
+        <span class="flag-icon">🔔</span>
+        <div><strong>Notifications</strong>Workday does not deliver a built-in "I-9 overdue" reminder out of the box — a time-based notification would need to be configured if HR wants a proactive alert.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ BP4: BENEFITS, TAX & COMPLIANCE ══════ -->
+<div id="bp4" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big purple">💰</div>
+      <div class="process-meta">
+        <h2>Benefits, Tax &amp; Compliance Elections</h2>
+        <p>Initiated by Employee as Self · Reviewed by HR Partner (Disability Self-ID only)</p>
+      </div>
+      <div class="completion-badge">Reporting Window<strong>~2 Business Days</strong></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot employee"></span><span class="role-tag employee">Employee</span> Submits benefit elections, tax/payment elections, disability self-ID, veteran status</li>
+          <li><span class="role-dot hr"></span><span class="role-tag hr">HR Partner</span> Reviews &amp; comments on the Voluntary Self-ID of Disability submission, then approves</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Decision Flags</div>
+        <div class="flag decision">
+          <span class="flag-icon">⚠️</span>
+          <div><strong>Benefits Task Is Not Skippable</strong>Unlike some optional steps, Change Benefit Elections stays in the worker's inbox until completed — it just doesn't block the rest of onboarding or the hire itself.</div>
+        </div>
+        <div class="flag condition">
+          <span class="flag-icon">🔀</span>
+          <div><strong>Disability &amp; Veteran Status Are Optional</strong>Both are voluntary self-identification steps the worker can decline to answer.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-title" style="font-size:1rem;margin-bottom:18px;">Flowchart — Benefits, Tax &amp; Compliance</div>
+    <div class="flowchart">
+      <div class="flow-node">
+        <div class="flow-box flow-start">💰 START — Benefits &amp; Compliance To-Dos Triggered</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee as Self</div>
+        <div class="flow-box flow-action employee">Change Benefit Elections<br><small style="opacity:0.65">Enroll, manage, review &amp; sign · view benefit statement</small></div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee as Self</div>
+        <div class="flow-box flow-action employee">Submit Tax and Payment Elections</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee as Self</div>
+        <div class="flow-box flow-action employee">Voluntary Self-Identification of Disability <em>(optional)</em></div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot hr"></span> HR Partner</div>
+        <div class="flow-box flow-action hr">Reviews Submission · Adds Comments · Approves</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee as Self</div>
+        <div class="flow-box flow-action employee">Change Veteran Status Information <em>(optional)</em></div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-end">✅ COMPLETE — Benefit, Tax &amp; Compliance Elections Submitted</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ BP5: CONDITIONAL STEPS ══════ -->
+<div id="bp5" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big grey">🔀</div>
+      <div class="process-meta">
+        <h2>Conditional &amp; Additional Steps</h2>
+        <p>Initiated by Employee as Self · Emergency Evacuation routes to Business Process Administrator</p>
+      </div>
+      <div class="completion-badge">Applies When<strong>Condition Is Met</strong></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot employee"></span><span class="role-tag employee">Employee</span> Enters emergency contacts, and — only if applicable — passport/visa, education, evacuation request, or hiring fee</li>
+          <li><span class="role-dot admin"></span><span class="role-tag admin">Business Process Administrator</span> Receives &amp; reviews Emergency Evacuation Assistance Requests</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Decision Flags</div>
+        <div class="flag decision">
+          <span class="flag-icon">⚠️</span>
+          <div><strong>Classified Title Condition Rule</strong>The Pay Hiring Fee step only appears for job profiles with a Classified job classification (e.g. IT, Public Safety, College Assistant) as supplied by the Civil Service team. It is separate from and in addition to the fingerprinting fee, which is handled outside Workday.</div>
+        </div>
+        <div class="flag condition">
+          <span class="flag-icon">🔀</span>
+          <div><strong>Sprintax Is International-Status Only</strong>The Sprintax Summary Page upload step only triggers for workers with International status.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-title" style="font-size:1rem;margin-bottom:18px;">Flowchart — Conditional &amp; Additional Steps</div>
+    <div class="flowchart">
+      <div class="flow-node">
+        <div class="flow-box flow-start">🔀 START — Additional To-Dos Triggered</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee as Self</div>
+        <div class="flow-box flow-action employee">Change Emergency Contact Information<br><small style="opacity:0.65">Relationship field is required for validation to pass</small></div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Decision: Is the worker International status?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ YES — International</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action employee">Upload Sprintax Summary Page</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">⏭ NO</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action employee">Step Does Not Appear</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee as Self</div>
+        <div class="flow-box flow-action employee">Edit Passports &amp; Visas <em>(optional — can skip)</em></div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee as Self</div>
+        <div class="flow-box flow-action employee">Add Education <em>(optional — can skip)</em></div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Decision: Does the worker need Emergency Evacuation Assistance?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ YES — Requested</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot employee"></span> Employee as Self</div>
+            <div class="flow-box flow-action employee">Create Request · Describe Need · Type of Assistance</div>
+          </div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot admin"></span> Business Process Administrator</div>
+            <div class="flow-box flow-action admin">Reviews Request<br><small style="opacity:0.65">Shared only with those responsible for the evacuation plan</small></div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">⏭ NO</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action employee">Step Skipped <em>(optional)</em></div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Decision: Does the job profile carry a Classified job classification?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ YES — Classified Title</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot employee"></span> Employee as Self</div>
+            <div class="flow-box flow-action employee">View Hiring Fee Doc → Pay via Provided Link → Upload Receipt → Submit</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">⏭ NO</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action employee">Step Does Not Appear</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-end">✅ COMPLETE — Applicable Conditional Steps Finished</div>
+      </div>
+    </div>
+
+    <div style="margin-top:28px;">
+      <div class="flag warning">
+        <span class="flag-icon">🚫</span>
+        <div><strong>Excluded</strong>Federal Work Study and State-only position steps are excluded from this dashboard/scope.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ ROLES & PERMISSIONS ══════ -->
+<div id="roles" class="section">
+  <div class="card">
+    <div class="card-title">Master Roles &amp; Permissions Table</div>
+    <div class="card-subtitle">Every Onboarding step, mapped to who initiates, reviews, or is notified — Staff/Faculty · TAM Scope</div>
+    <div style="overflow-x:auto;">
+    <table class="roles-table">
+      <thead>
+        <tr>
+          <th>Onboarding Step</th>
+          <th><span class="role-tag employee">Employee</span></th>
+          <th><span class="role-tag hr">HR Partner</span></th>
+          <th><span class="role-tag admin">Business Process Admin</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Update Contact &amp; Personal Information</strong><br><small>County, address, gender, etc.</small></td>
+          <td><span class="check">✔</span> Initiate &amp; enter</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+        </tr>
+        <tr>
+          <td><strong>Edit Government IDs</strong><br><small>SSN / other ID</small></td>
+          <td><span class="check">✔</span> Enter / edit</td>
+          <td><span class="check">✔</span> May pre-fill SSN before hire</td>
+          <td><span class="dash">–</span></td>
+        </tr>
+        <tr>
+          <td><strong>Change My Photo</strong><br><small>Optional — profile picture</small></td>
+          <td><span class="check">✔</span> Optional</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+        </tr>
+        <tr>
+          <td><strong>New Hire Onboarding Documents</strong><br><small>Oath, IT Security Orientation, Hiring Fee info doc</small></td>
+          <td><span class="check">✔</span> Read &amp; acknowledge</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+        </tr>
+        <tr>
+          <td><strong>Required Training (To Do)</strong></td>
+          <td><span class="check">✔</span> Complete</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+        </tr>
+        <tr>
+          <td><strong>Voluntary Self-ID of Disability</strong><br><small>Optional</small></td>
+          <td><span class="check">✔</span> Submit</td>
+          <td><span class="check">✔</span> Comment &amp; approve</td>
+          <td><span class="dash">–</span></td>
+        </tr>
+        <tr>
+          <td><strong>Change Veteran Status Information</strong><br><small>Optional</small></td>
+          <td><span class="check">✔</span> Submit</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+        </tr>
+        <tr>
+          <td><strong>Change Emergency Contacts</strong></td>
+          <td><span class="check">✔</span> Enter (relationship required)</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+        </tr>
+        <tr>
+          <td><strong>Change Benefit Elections</strong></td>
+          <td><span class="check">✔</span> Enroll, review &amp; sign</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+        </tr>
+        <tr>
+          <td><strong>Submit Tax and Payment Elections</strong></td>
+          <td><span class="check">✔</span> Submit</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+        </tr>
+        <tr>
+          <td><strong>Add Education</strong><br><small>Optional</small></td>
+          <td><span class="check">✔</span> Optional</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+        </tr>
+        <tr>
+          <td><strong>Edit Passports &amp; Visas</strong><br><small>Optional</small></td>
+          <td><span class="check">✔</span> Optional</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+        </tr>
+        <tr>
+          <td><strong>Upload Sprintax Summary Page</strong><br><small>Only if International status</small></td>
+          <td><span class="check">✔</span> Conditional</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+        </tr>
+        <tr>
+          <td><strong>Emergency Evacuation Assistance Request</strong><br><small>Optional</small></td>
+          <td><span class="check">✔</span> Create request</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="check">✔</span> Reviews</td>
+        </tr>
+        <tr>
+          <td><strong>Complete Form I-9</strong><br><small>Section 1 / Section 2</small></td>
+          <td><span class="check">✔</span> Section 1</td>
+          <td><span class="check">✔</span> Section 2, E-Verify, Authorize / Send Back</td>
+          <td><span class="dash">–</span></td>
+        </tr>
+        <tr>
+          <td><strong>Pay Hiring Fee for Classified Titles + Upload Receipt</strong><br><small>Only for Classified job classifications</small></td>
+          <td><span class="check">✔</span> Conditional</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Role Definitions</div>
+    <div class="card-subtitle">Security role descriptions for Onboarding — Staff/Faculty scope</div>
+    <table class="roles-table">
+      <thead>
+        <tr>
+          <th>Role</th>
+          <th>Description</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="role-tag employee">Employee (as Self)</span></td>
+          <td>Covers Employee, Pre-Employee, Contingent Worker, and Pre-Contingent Worker as Self. The initiator of nearly every onboarding step — completes their own tasks from their Workday inbox / My Tasks.</td>
+          <td>Account credentials (SSO) are created upon hire so the worker can log in and complete onboarding.</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag hr">HR Partner</span></td>
+          <td>Reviews and completes Section 2 of Form I-9 in person, may pre-enter government ID/SSN before hire, and reviews/approves the Voluntary Self-ID of Disability submission. Access is scoped to the HR Partner's own supervisory org / campus.</td>
+          <td>Multiple HR Coordinators can be assigned the HR Partner role. Central HR Partners can see across organizations; campus-level HR Partners are limited to their own suborg.</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag admin">Business Process Administrator</span></td>
+          <td>Receives and reviews Emergency Evacuation Assistance Requests submitted by employees. Visibility is limited to those responsible for the emergency evacuation plan.</td>
+          <td>Distinct from general BP configuration/admin access — scoped to this specific step.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="margin-top:24px;">
+      <div class="flag decision">
+        <span class="flag-icon">⚠️</span>
+        <div><strong>Open Item: Classified-Title Condition Rule</strong>The condition rule driving the Hiring Fee step uses job classifications supplied by the Civil Service team. Some edge cases (e.g. specific adjunct titles) still need confirmation/testing per session Q&amp;A.</div>
+      </div>
+      <div class="flag decision">
+        <span class="flag-icon">⚠️</span>
+        <div><strong>Open Item: Medical Clearance Form (Classified Hires)</strong>A campus raised that some classified hires require a separate medical clearance form. This is not currently a configured Workday step — it would need defined trigger timing and applicable roles/conditions before being added.</div>
+      </div>
+      <div class="flag warning">
+        <span class="flag-icon">🚫</span>
+        <div><strong>Excluded: Federal Work Study &amp; State Positions</strong>FWS onboarding and State-specific roles are not included in this dashboard. These operate under a separate scope and process.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const tabs = ['overview','bp1','bp2','bp3','bp4','bp5','roles'];
+  const idx = tabs.indexOf(id);
+  if(idx >= 0) document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
