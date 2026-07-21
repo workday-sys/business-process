@@ -56,6 +56,14 @@
     padding: 3px 10px; border-radius: 20px; margin-bottom: 12px;
   }
 
+    /* BREADCRUMBS in style code */
+
+  .breadcrumb {display: flex; align-items: center; gap: 8px; margin-bottom: 14px; font-size: 0.82rem; min-height: 1.2em; }
+  .breadcrumb a { color: rgba(255, 255, 255, 0.65); text-decoration: none; font-weight: 500;}
+  .breadcrumb a:hover { color: white; text-decoration: underline;}
+  .breadcrumb .sep { color: rgba(255,255,255,0.4); }
+  .breadcrumb .current { color: var(--gold); font-weight: 600;}
+  
   /* TABS */
   .tabs-bar {
     background: var(--white); border-bottom: 2px solid var(--border); padding: 0 48px;
@@ -208,7 +216,8 @@
 
 <div class="header">
   <div class="header-inner">
-    <div class="header-badge">Business Process · TAM Scope</div>
+    <div class="breadcrumb" id="breadcrumb"></div>
+    <div class="header-badge">Business Process</div>
     <h1>Change Job – Staff &amp; Faculty Dashboard</h1>
     <p>Interactive guide to the Change Job workflow — initiators, approvers, to-dos, decision points · Source: Business Process Overview session (Feb 18, 2026) &amp; unit-testing walkthrough · FWS &amp; State positions excluded</p>
   </div>
@@ -1445,6 +1454,25 @@ function showTab(id) {
   if(idx >= 0) document.querySelectorAll('.tab-btn')[idx].classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+
+  // BREADCRUMBS script 
+const BREADCRUMB_TRAIL = [
+    { label: "Business Process Hub", href: "/business-process/index.html" },
+    { label: "Job Information", href: "/business-process/job-information.html"},
+    { label: "Change Job", href: "/business-process/jobinfo/change-job.html"}
+  ];
+
+  (function renderBreadcrumb() {
+    const el = document.getElementById('breadcrumb');
+    el.innerHTML = BREADCRUMB_TRAIL.map((item, i) => {
+      const isLast = i === BREADCRUMB_TRAIL.length - 1;
+      const sep = i > 0 ? '<span class="sep">/</span>' : '';
+      const crumb = (item.href && !isLast)
+        ? `<a href="${item.href}">${item.label}</a>`
+        : `<span class="current">${item.label}</span>`;
+      return sep + crumb;
+    }).join('');
+  })();
 </script>
 </body>
 </html>
