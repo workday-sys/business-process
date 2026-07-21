@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,63 +8,35 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --navy: #0f2040;
-    --navy-mid: #1a3460;
-    --blue: #1e5fa8;
-    --blue-light: #2e7dd1;
-    --gold: #e8a922;
-    --teal: #0e8a7a;
-    --red: #c0392b;
-    --purple: #7c3aed;
-    --slate: #4a5568;
-    --light: #f4f7fb;
-    --white: #ffffff;
-    --border: #dde4ef;
-    --card-shadow: 0 4px 24px rgba(15,32,64,0.10);
-
-    /* Category color tokens — solid banner + text, light tint for row hover */
-    --hiring-solid: #1e5fa8;   --hiring-tint: #e7f0fb;  --hiring-text: #0d3f73;
-    --jobchange-solid: #7c3aed; --jobchange-tint: #efe9fd; --jobchange-text: #4c1d95;
-    --comp-solid: #c8850c;     --comp-tint: #fdf3df;    --comp-text: #7a5800;
-    --separation-solid: #c0392b; --separation-tint: #fbe9e7; --separation-text: #8a2419;
-    --soon-solid: #64748b;     --soon-tint: #eef1f5;    --soon-text: #3f4a5a;
+    --navy: #0f2040; --navy-mid: #1a3460; --blue: #1e5fa8; --blue-light: #2e7dd1;
+    --gold: #e8a922; --teal: #0e8a7a; --red: #c0392b; --purple: #7c3aed; --slate: #4a5568;
+    --light: #f4f7fb; --white: #ffffff; --border: #dde4ef; --card-shadow: 0 4px 24px rgba(15,32,64,0.10);
+    --hiring-solid: #1e5fa8;   --hiring-glow: rgba(30,95,168,0.28);   --hiring-tint: #dfebfa;   --hiring-text: #0d3f73;
+    --jobchange-solid: #7c3aed; --jobchange-glow: rgba(124,58,237,0.28); --jobchange-tint: #ece3fc; --jobchange-text: #4c1d95;
+    --comp-solid: #c8850c;     --comp-glow: rgba(200,133,12,0.28);     --comp-tint: #faedcf;     --comp-text: #7a5800;
+    --separation-solid: #c0392b; --separation-glow: rgba(192,57,43,0.28); --separation-tint: #f9dedb; --separation-text: #8a2419;
+    --soon-solid: #64748b;     --soon-glow: rgba(100,116,139,0.22);     --soon-tint: #e6eaf0;     --soon-text: #3f4a5a;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'DM Sans', Arial, sans-serif; background: var(--light); color: var(--navy); min-height: 100vh; }
 
-  /* ── HEADER ── */
   .header {
     background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, var(--blue) 100%);
     color: white; padding: 36px 48px 28px; position: relative; overflow: hidden;
   }
-  .header::before {
-    content: ''; position: absolute; top: -60px; right: -60px; width: 300px; height: 300px;
-    background: radial-gradient(circle, rgba(232,169,34,0.18) 0%, transparent 70%); border-radius: 50%;
-  }
-  .header::after {
-    content: ''; position: absolute; bottom: -40px; left: 30%; width: 200px; height: 200px;
-    background: radial-gradient(circle, rgba(46,125,209,0.2) 0%, transparent 70%); border-radius: 50%;
-  }
+  .header::before { content:''; position:absolute; top:-60px; right:-60px; width:300px; height:300px; background: radial-gradient(circle, rgba(232,169,34,0.18) 0%, transparent 70%); border-radius:50%; }
+  .header::after { content:''; position:absolute; bottom:-40px; left:30%; width:200px; height:200px; background: radial-gradient(circle, rgba(46,125,209,0.2) 0%, transparent 70%); border-radius:50%; }
   .header-inner { position: relative; z-index: 1; }
-
-  /* Breadcrumb — rendered from the BREADCRUMB_TRAIL config near the bottom of this file */
   .breadcrumb { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; font-size: 0.82rem; min-height: 1.2em; }
   .breadcrumb a { color: rgba(255,255,255,0.65); text-decoration: none; font-weight: 500; }
   .breadcrumb a:hover { color: white; text-decoration: underline; }
   .breadcrumb .sep { color: rgba(255,255,255,0.4); }
   .breadcrumb .current { color: var(--gold); font-weight: 600; }
-
   .header h1 { font-family: 'DM Serif Display', Georgia, serif; font-size: 2.2rem; letter-spacing: -0.5px; margin-bottom: 6px; }
   .header p { color: rgba(255,255,255,0.72); font-size: 0.95rem; font-weight: 400; }
-  .header-badge {
-    display: inline-block; background: var(--gold); color: var(--navy);
-    font-size: 0.72rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
-    padding: 3px 10px; border-radius: 20px; margin-bottom: 12px;
-  }
+  .header-badge { display: inline-block; background: var(--gold); color: var(--navy); font-size: 0.72rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; margin-bottom: 12px; }
 
-  /* ── CONTENT ── */
-  .content { max-width: 1000px; margin: 0 auto; padding: 40px 48px 60px; }
-
+  .content { max-width: 1200px; margin: 0 auto; padding: 40px 48px 60px; }
   .section-intro { margin-bottom: 28px; }
   .section-intro h2 { font-family: 'DM Serif Display', Georgia, serif; font-size: 1.5rem; color: var(--navy); margin-bottom: 6px; }
   .section-intro p { color: var(--slate); font-size: 0.9rem; }
@@ -79,78 +50,85 @@
   .scope-note-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
   .scope-note strong { display: block; color: var(--navy); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
 
-  /* ── CATEGORY CARD ── */
-  .category { margin-bottom: 26px; }
+  /* ── 2-COLUMN CATEGORY GRID ── */
+  .categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; align-items: start; }
+  .category-block.span-2 { grid-column: 1 / -1; }
 
-  .category-card {
-    background: var(--white); border-radius: 16px; box-shadow: var(--card-shadow);
-    border: 1px solid var(--border); overflow: hidden;
+  .category-head {
+    display: inline-flex; align-items: center; gap: 9px; margin-bottom: 16px;
+    padding: 9px 18px 9px 14px; border-radius: 30px; box-shadow: 0 3px 10px rgba(15,32,64,0.08);
   }
+  .head-icon { font-size: 1.05rem; line-height: 1; flex-shrink: 0; }
+  .category-title {
+    font-family: 'DM Sans', Arial, sans-serif; font-size: 0.86rem; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.9px;
+  }
+  .category-count {
+    font-size: 0.68rem; font-weight: 800; padding: 2px 9px; border-radius: 20px; margin-left: 2px;
+    background: rgba(255,255,255,0.6);
+  }
+  .head-hiring     { background: var(--hiring-tint); }
+  .head-hiring .category-title, .head-hiring .category-count { color: var(--hiring-text); }
+  .head-jobchange  { background: var(--jobchange-tint); }
+  .head-jobchange .category-title, .head-jobchange .category-count { color: var(--jobchange-text); }
+  .head-comp       { background: var(--comp-tint); }
+  .head-comp .category-title, .head-comp .category-count { color: var(--comp-text); }
+  .head-separation { background: var(--separation-tint); }
+  .head-separation .category-title, .head-separation .category-count { color: var(--separation-text); }
+  .head-soon       { background: var(--soon-tint); }
+  .head-soon .category-title, .head-soon .category-count { color: var(--soon-text); }
 
-  .category-banner {
-    display: flex; align-items: center; gap: 10px; padding: 13px 24px;
-    color: white; font-family: 'DM Serif Display', Georgia, serif; font-size: 1.05rem;
-  }
-  .category-banner .count {
-    margin-left: auto; font-family: 'DM Sans', Arial, sans-serif; font-size: 0.7rem; font-weight: 700;
-    background: rgba(255,255,255,0.22); padding: 3px 10px; border-radius: 20px; letter-spacing: 0.4px;
-  }
-  .banner-hiring     { background: var(--hiring-solid); }
-  .banner-jobchange  { background: var(--jobchange-solid); }
-  .banner-comp       { background: var(--comp-solid); }
-  .banner-separation { background: var(--separation-solid); }
-  .banner-soon       { background: var(--soon-solid); }
+  /* Elevated glow item cards */
+  .item-stack { display: flex; flex-direction: column; gap: 12px; }
 
-  .directory-row {
-    display: flex; align-items: center; gap: 18px; padding: 17px 24px;
-    border-bottom: 1px solid var(--border); text-decoration: none; color: inherit;
-    transition: background 0.15s;
+  .glow-card {
+    display: flex; align-items: center; gap: 16px; background: var(--white);
+    border-radius: 14px; padding: 16px 20px; text-decoration: none; color: inherit;
+    border: 1px solid var(--border); position: relative; overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   }
-  .directory-row:last-child { border-bottom: none; }
-  .directory-row.placeholder-row { cursor: default; }
+  .glow-card::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+  }
+  .glow-card.placeholder-card { cursor: default; }
 
-  .row-icon {
-    width: 42px; height: 42px; border-radius: 11px; display: flex; align-items: center; justify-content: center;
-    font-size: 1.2rem; flex-shrink: 0; color: white;
-  }
+  .item-hiring::before     { background: var(--hiring-solid); }
+  .item-jobchange::before  { background: var(--jobchange-solid); }
+  .item-comp::before       { background: var(--comp-solid); }
+  .item-separation::before { background: var(--separation-solid); }
+  .item-soon::before       { background: var(--soon-solid); }
+
+  .item-hiring:hover     { transform: translateY(-4px); box-shadow: 0 14px 30px var(--hiring-glow); border-color: var(--hiring-solid); }
+  .item-jobchange:hover  { transform: translateY(-4px); box-shadow: 0 14px 30px var(--jobchange-glow); border-color: var(--jobchange-solid); }
+  .item-comp:hover       { transform: translateY(-4px); box-shadow: 0 14px 30px var(--comp-glow); border-color: var(--comp-solid); }
+  .item-separation:hover { transform: translateY(-4px); box-shadow: 0 14px 30px var(--separation-glow); border-color: var(--separation-solid); }
+
+  .glow-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; color: white; flex-shrink: 0; }
   .icon-hiring     { background: var(--hiring-solid); }
   .icon-jobchange  { background: var(--jobchange-solid); }
   .icon-comp       { background: var(--comp-solid); }
   .icon-separation { background: var(--separation-solid); }
   .icon-soon       { background: var(--soon-solid); }
 
-  .row-text { flex: 1; min-width: 0; }
-  .row-title { font-family: 'DM Serif Display', Georgia, serif; font-size: 1.02rem; color: var(--navy); margin-bottom: 3px; }
-  .row-desc { font-size: 0.82rem; color: var(--slate); line-height: 1.5; }
+  .glow-text { flex: 1; min-width: 0; }
+  .glow-title { font-family: 'DM Serif Display', Georgia, serif; font-size: 1.02rem; color: var(--navy); margin-bottom: 3px; }
+  .glow-desc { font-size: 0.82rem; color: var(--slate); line-height: 1.5; }
 
-  .row-arrow {
-    width: 34px; height: 34px; border-radius: 50%; background: var(--light); color: var(--navy);
-    display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;
-    transition: background 0.15s, color 0.15s, transform 0.15s;
-  }
+  .glow-arrow { font-size: 1.1rem; color: var(--border); flex-shrink: 0; transition: color 0.2s, transform 0.2s; }
+  .glow-card:hover .glow-arrow { transform: translateX(3px); }
+  .item-hiring:hover .glow-arrow     { color: var(--hiring-solid); }
+  .item-jobchange:hover .glow-arrow  { color: var(--jobchange-solid); }
+  .item-comp:hover .glow-arrow       { color: var(--comp-solid); }
+  .item-separation:hover .glow-arrow { color: var(--separation-solid); }
 
-  .category-hiring .directory-row:hover     { background: var(--hiring-tint); }
-  .category-hiring .directory-row:hover .row-arrow     { background: var(--hiring-solid); color: white; transform: translateX(2px); }
-  .category-jobchange .directory-row:hover  { background: var(--jobchange-tint); }
-  .category-jobchange .directory-row:hover .row-arrow  { background: var(--jobchange-solid); color: white; transform: translateX(2px); }
-  .category-comp .directory-row:hover       { background: var(--comp-tint); }
-  .category-comp .directory-row:hover .row-arrow       { background: var(--comp-solid); color: white; transform: translateX(2px); }
-  .category-separation .directory-row:hover { background: var(--separation-tint); }
-  .category-separation .directory-row:hover .row-arrow { background: var(--separation-solid); color: white; transform: translateX(2px); }
-  .category-soon .directory-row:hover       { background: var(--soon-tint); }
+  .badge-soon { font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: var(--soon-tint, #eef1f5); color: var(--slate); padding: 3px 9px; border-radius: 20px; flex-shrink: 0; }
 
-  .badge-soon {
-    font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px;
-    background: var(--soon-tint); color: var(--soon-text); padding: 3px 10px; border-radius: 20px; flex-shrink: 0;
-  }
-
+  @media (max-width: 900px) { .categories-grid { grid-template-columns: 1fr; } }
   @media (max-width: 700px) {
     .content { padding: 28px 20px 48px; }
     .header { padding: 28px 20px 22px; }
     .header h1 { font-size: 1.75rem; }
-    .directory-row { padding: 15px 18px; gap: 14px; }
-    .row-icon { width: 38px; height: 38px; font-size: 1.1rem; }
-    .category-banner { padding: 12px 18px; }
+    .glow-card { padding: 14px 16px; gap: 12px; }
   }
 </style>
 </head>
@@ -181,136 +159,103 @@
     </div>
   </div>
 
-  <!-- Hiring -->
-  <div class="category category-hiring">
-    <div class="category-card">
-      <div class="category-banner banner-hiring">Hiring <span class="count">3</span></div>
-      <a href="/business-process/jobinfo/hire-rehire.html" class="directory-row">
-        <div class="row-icon icon-hiring">&#x1F680;</div>
-        <div class="row-text">
-          <div class="row-title">Hire / Rehire</div>
-          <div class="row-desc">Direct hires and Recruiting-sourced hires, background checks, org assignments, compensation, and budget approvals.</div>
-        </div>
-        <div class="row-arrow">&#x2192;</div>
-      </a>
-      <a href="/business-process/jobinfo/academic-appointments.html" class="directory-row">
-        <div class="row-icon icon-hiring">&#x1F393;</div>
-        <div class="row-text">
-          <div class="row-title">Academic Appointments</div>
-          <div class="row-desc">Faculty appointment creation and renewal for part-time adjunct and academic positions.</div>
-        </div>
-        <div class="row-arrow">&#x2192;</div>
-      </a>
-      <a href="/business-process/jobinfo/onboarding.html" class="directory-row">
-        <div class="row-icon icon-hiring">&#x1F9ED;</div>
-        <div class="row-text">
-          <div class="row-title">Onboarding</div>
-          <div class="row-desc">Self-service onboarding tasks completed by the employee once the Workday account is created.</div>
-        </div>
-        <div class="row-arrow">&#x2192;</div>
-      </a>
-    </div>
-  </div>
+  <div class="categories-grid">
 
-  <!-- Job Changes -->
-  <div class="category category-jobchange">
-    <div class="category-card">
-      <div class="category-banner banner-jobchange">Job Changes <span class="count">2</span></div>
-      <a href="/business-process/jobinfo/additional-job.html" class="directory-row">
-        <div class="row-icon icon-jobchange">&#x1F454;</div>
-        <div class="row-text">
-          <div class="row-title">Additional Job</div>
-          <div class="row-desc">Adding a second concurrent position for an existing worker, with its own org assignment and compensation.</div>
-        </div>
-        <div class="row-arrow">&#x2192;</div>
-      </a>
-      <a href="/business-process/jobinfo/changejob.html" class="directory-row">
-        <div class="row-icon icon-jobchange">&#x1F504;</div>
-        <div class="row-text">
-          <div class="row-title">Change Job</div>
-          <div class="row-desc">Transfers, promotions, and demotions — position, compensation, and organization changes.</div>
-        </div>
-        <div class="row-arrow">&#x2192;</div>
-      </a>
-    </div>
-  </div>
-
-  <!-- Compensation & Configuration -->
-  <div class="category category-comp">
-    <div class="category-card">
-      <div class="category-banner banner-comp">Compensation &amp; Configuration <span class="count">2</span></div>
-      <a href="/business-process/jobinfo/scholarships-honorariums.html" class="directory-row">
-        <div class="row-icon icon-comp">&#x1F396;&#xFE0F;</div>
-        <div class="row-text">
-          <div class="row-title">Scholarships &amp; Honorariums</div>
-          <div class="row-desc">One-time scholarship or honorarium payments — request, approval, and payroll routing.</div>
-        </div>
-        <div class="row-arrow">&#x2192;</div>
-      </a>
-      <a href="/business-process/jobinfo/framework.html" class="directory-row">
-        <div class="row-icon icon-comp">&#x1F4D0;</div>
-        <div class="row-text">
-          <div class="row-title">Request Frameworks</div>
-          <div class="row-desc">Compensation and grade framework requests that establish the pay structures used across hires and job changes.</div>
-        </div>
-        <div class="row-arrow">&#x2192;</div>
-      </a>
-    </div>
-  </div>
-
-  <!-- Separation -->
-  <div class="category category-separation">
-    <div class="category-card">
-      <div class="category-banner banner-separation">Separation <span class="count">1</span></div>
-      <a href="/business-process/jobinfo/termination-faculty.html" class="directory-row">
-        <div class="row-icon icon-separation">&#x1F6AA;</div>
-        <div class="row-text">
-          <div class="row-title">Terminations</div>
-          <div class="row-desc">Voluntary and involuntary terminations, last-day processing, and required approvals.</div>
-        </div>
-        <div class="row-arrow">&#x2192;</div>
-      </a>
-    </div>
-  </div>
-
-  <!-- Coming Soon -->
-  <div class="category category-soon">
-    <div class="category-card">
-      <div class="category-banner banner-soon">Coming Soon <span class="count">1</span></div>
-      <div class="directory-row placeholder-row">
-        <div class="row-icon icon-soon">&#x1F9E9;</div>
-        <div class="row-text">
-          <div class="row-title">Placeholder</div>
-          <div class="row-desc">Reserved for an upcoming Job Information process guide.</div>
-        </div>
-        <span class="badge-soon">Coming Soon</span>
+    <!-- Hiring -->
+    <div class="category-block">
+      <div class="category-head head-hiring"><span class="head-icon">&#x1F680;</span><span class="category-title">Hiring</span><span class="category-count">3</span></div>
+      <div class="item-stack">
+        <a href="hire_rehire_REVIEW.html" class="glow-card item-hiring">
+          <div class="glow-icon icon-hiring">&#x1F680;</div>
+          <div class="glow-text"><div class="glow-title">Hire / Rehire</div><div class="glow-desc">Direct hires and Recruiting-sourced hires, background checks, org assignments, and approvals.</div></div>
+          <div class="glow-arrow">&#x2192;</div>
+        </a>
+        <a href="academic-appointments.html" class="glow-card item-hiring">
+          <div class="glow-icon icon-hiring">&#x1F393;</div>
+          <div class="glow-text"><div class="glow-title">Academic Appointments</div><div class="glow-desc">Faculty appointment creation and renewal for part-time adjunct positions.</div></div>
+          <div class="glow-arrow">&#x2192;</div>
+        </a>
+        <a href="onboarding.html" class="glow-card item-hiring">
+          <div class="glow-icon icon-hiring">&#x1F9ED;</div>
+          <div class="glow-text"><div class="glow-title">Onboarding</div><div class="glow-desc">Self-service onboarding tasks completed once the Workday account is created.</div></div>
+          <div class="glow-arrow">&#x2192;</div>
+        </a>
       </div>
     </div>
-  </div>
+
+    <!-- Job Changes -->
+    <div class="category-block">
+      <div class="category-head head-jobchange"><span class="head-icon">&#x1F504;</span><span class="category-title">Job Changes</span><span class="category-count">2</span></div>
+      <div class="item-stack">
+        <a href="additional-job.html" class="glow-card item-jobchange">
+          <div class="glow-icon icon-jobchange">&#x1F454;</div>
+          <div class="glow-text"><div class="glow-title">Additional Job</div><div class="glow-desc">Adding a second concurrent position with its own org assignment and compensation.</div></div>
+          <div class="glow-arrow">&#x2192;</div>
+        </a>
+        <a href="change-job.html" class="glow-card item-jobchange">
+          <div class="glow-icon icon-jobchange">&#x1F504;</div>
+          <div class="glow-text"><div class="glow-title">Change Job</div><div class="glow-desc">Transfers, promotions, and demotions — position, compensation, and org changes.</div></div>
+          <div class="glow-arrow">&#x2192;</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Compensation & Configuration -->
+    <div class="category-block">
+      <div class="category-head head-comp"><span class="head-icon">&#x1F4B0;</span><span class="category-title">Compensation &amp; Configuration</span><span class="category-count">2</span></div>
+      <div class="item-stack">
+        <a href="scholarships-honorariums.html" class="glow-card item-comp">
+          <div class="glow-icon icon-comp">&#x1F396;&#xFE0F;</div>
+          <div class="glow-text"><div class="glow-title">Scholarships &amp; Honorariums</div><div class="glow-desc">One-time scholarship or honorarium payments — request, approval, and payroll routing.</div></div>
+          <div class="glow-arrow">&#x2192;</div>
+        </a>
+        <a href="request-frameworks.html" class="glow-card item-comp">
+          <div class="glow-icon icon-comp">&#x1F4D0;</div>
+          <div class="glow-text"><div class="glow-title">Request Frameworks</div><div class="glow-desc">Compensation and grade framework requests that establish pay structures.</div></div>
+          <div class="glow-arrow">&#x2192;</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Separation -->
+    <div class="category-block">
+      <div class="category-head head-separation"><span class="head-icon">&#x1F6AA;</span><span class="category-title">Separation</span><span class="category-count">1</span></div>
+      <div class="item-stack">
+        <a href="terminations.html" class="glow-card item-separation">
+          <div class="glow-icon icon-separation">&#x1F6AA;</div>
+          <div class="glow-text"><div class="glow-title">Terminations</div><div class="glow-desc">Voluntary and involuntary terminations, last-day processing, and required approvals.</div></div>
+          <div class="glow-arrow">&#x2192;</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Coming Soon (spans both columns) -->
+    <div class="category-block span-2">
+      <div class="category-head head-soon"><span class="head-icon">&#x1F9E9;</span><span class="category-title">Coming Soon</span><span class="category-count">1</span></div>
+      <div class="item-stack">
+        <div class="glow-card placeholder-card">
+          <div class="glow-icon icon-soon">&#x1F9E9;</div>
+          <div class="glow-text"><div class="glow-title">Placeholder</div><div class="glow-desc">Reserved for an upcoming Job Information process guide.</div></div>
+          <span class="badge-soon">Coming Soon</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /categories-grid -->
 
 </div><!-- /content -->
 
 <script>
-  /* ────────────────────────────────────────────────────────────
-     BREADCRUMB — self-contained, edit this array only.
-     Each entry: { label: "Text shown", href: "link.html" }
-     Set href to null (or omit it) for the current page —
-     it will render as plain highlighted text, not a link.
-     Add or remove entries to change the trail depth.
-  ──────────────────────────────────────────────────────────── */
   const BREADCRUMB_TRAIL = [
     { label: "Business Process Hub", href: "index.html" },
     { label: "Job Information", href: null }
   ];
-
   (function renderBreadcrumb() {
     const el = document.getElementById('breadcrumb');
     el.innerHTML = BREADCRUMB_TRAIL.map((item, i) => {
       const isLast = i === BREADCRUMB_TRAIL.length - 1;
       const sep = i > 0 ? '<span class="sep">/</span>' : '';
-      const crumb = (item.href && !isLast)
-        ? `<a href="${item.href}">${item.label}</a>`
-        : `<span class="current">${item.label}</span>`;
+      const crumb = (item.href && !isLast) ? `<a href="${item.href}">${item.label}</a>` : `<span class="current">${item.label}</span>`;
       return sep + crumb;
     }).join('');
   })();
