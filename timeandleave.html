@@ -55,6 +55,14 @@
     border-radius: 50%;
   }
   .header-inner { position: relative; z-index: 1; }
+  
+/* Breadcrumb — rendered from the BREADCRUMB_TRAIL config near the bottom of this file */
+  .breadcrumb { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; font-size: 0.82rem; min-height: 1.2em; }
+  .breadcrumb a { color: rgba(255,255,255,0.65); text-decoration: none; font-weight: 500; }
+  .breadcrumb a:hover { color: white; text-decoration: underline; }
+  .breadcrumb .sep { color: rgba(255,255,255,0.4); }
+  .breadcrumb .current { color: var(--gold); font-weight: 600; }
+
   .header h1 {
     font-family: 'DM Serif Display', Georgia, serif;
     font-size: 2.2rem;
@@ -279,6 +287,7 @@
 <!-- ── HEADER ── -->
 <div class="header">
   <div class="header-inner">
+    <div class="breadcrumb" id="breadcrumb"></div>
     <div class="header-badge">Business Processes</div>
     <h1>Time &amp; Leave Dashboard</h1>
     <p>Interactive guides for Time &amp; Leave workflows &mdash; roles, steps, decisions, and approvals</p>
@@ -322,7 +331,7 @@
         <span class="pill gold">&#9999;&#65039; Edit / Correct Time</span>
         <span class="pill slate">&#128197; Request Absence</span>
       </div>
-      <a class="open-btn" href="https://workday-sys.github.io/business-process/timeandleave/time_entry.html" target="_blank" rel="noopener noreferrer">
+      <a class="open-btn" href="https://workday-sys.github.io/business-process/timeandleave/time_entry.html" target="_self" rel="noopener noreferrer">
         Open Dashboard
         <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
       </a>
@@ -346,7 +355,7 @@
         <span class="pill gold">&#9999;&#65039; Correct Time Off</span>
         <span class="pill blue">&#128257; Update / Cancel</span>
       </div>
-      <a class="open-btn" href="https://workday-sys.github.io/business-process/timeandleave/request_correct_timeoff.html" target="_blank" rel="noopener noreferrer">
+      <a class="open-btn" href="https://workday-sys.github.io/business-process/timeandleave/request_correct_timeoff.html" target="_self" rel="noopener noreferrer">
         Open Dashboard
         <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
       </a>
@@ -364,6 +373,34 @@
   </div>
 
 </div><!-- /content -->
+
+<script>
+
+/* ────────────────────────────────────────────────────────────
+     BREADCRUMB — self-contained, edit this array only.
+     Each entry: { label: "Text shown", href: "link.html" }
+     Set href to null (or omit it) for the current page —
+     it will render as plain highlighted text, not a link.
+     Add or remove entries to change the trail depth.
+  ──────────────────────────────────────────────────────────── */
+  const BREADCRUMB_TRAIL = [
+    { label: "Business Process Hub", href: "/index.html" },
+    { label: "Time & Leave", href: "/timeandleave.html" }
+  ];
+
+  (function renderBreadcrumb() {
+    const el = document.getElementById('breadcrumb');
+    el.innerHTML = BREADCRUMB_TRAIL.map((item, i) => {
+      const isLast = i === BREADCRUMB_TRAIL.length - 1;
+      const sep = i > 0 ? '<span class="sep">/</span>' : '';
+      const crumb = (item.href && !isLast)
+        ? `<a href="${item.href}">${item.label}</a>`
+        : `<span class="current">${item.label}</span>`;
+      return sep + crumb;
+    }).join('');
+  })();
+
+</script>
 
 </body>
 </html>
