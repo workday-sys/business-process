@@ -61,6 +61,14 @@
     border-radius: 50%;
   }
   .header-inner { position: relative; z-index: 1; }
+  
+    /* Breadcrumb — rendered from the BREADCRUMB_TRAIL config near the bottom of this file */
+  .breadcrumb { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; font-size: 0.82rem; min-height: 1.2em; }
+  .breadcrumb a { color: rgba(255,255,255,0.65); text-decoration: none; font-weight: 500; }
+  .breadcrumb a:hover { color: white; text-decoration: underline; }
+  .breadcrumb .sep { color: rgba(255,255,255,0.4); }
+  .breadcrumb .current { color: var(--gold); font-weight: 600; }
+  
   .header h1 {
     font-family: 'DM Serif Display', serif;
     font-size: 2.2rem;
@@ -448,6 +456,7 @@
 
 <div class="header">
   <div class="header-inner">
+    <div class="breadcrumb" id="breadcrumb"></div>
     <div class="header-badge">Business Process</div>
     <h1>Time &amp; Leave - Request and Correct/Update Time Off Dashboard</h1>
     <p>Interactive guide to Request Time Off and Correct/Update Time Off workflows — roles, steps, decisions, and approvals</p>
@@ -959,6 +968,31 @@ function showTab(id) {
   document.querySelectorAll('.tab-btn')[idx].classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+
+    /* ────────────────────────────────────────────────────────────
+     BREADCRUMB — self-contained, edit this array only.
+     Each entry: { label: "Text shown", href: "link.html" }
+     Set href to null (or omit it) for the current page —
+     it will render as plain highlighted text, not a link.
+     Add or remove entries to change the trail depth.
+  ──────────────────────────────────────────────────────────── */
+  const BREADCRUMB_TRAIL = [
+    { label: "Business Process Hub", href: "/business-process/index.html" },
+    { label: "Job Information", href: "/business-process/timeandleave.html" },
+    { label: "Request Correct Time-off", href: null}
+  ];
+
+  (function renderBreadcrumb() {
+    const el = document.getElementById('breadcrumb');
+    el.innerHTML = BREADCRUMB_TRAIL.map((item, i) => {
+      const isLast = i === BREADCRUMB_TRAIL.length - 1;
+      const sep = i > 0 ? '<span class="sep">/</span>' : '';
+      const crumb = (item.href && !isLast)
+        ? `<a href="${item.href}">${item.label}</a>`
+        : `<span class="current">${item.label}</span>`;
+      return sep + crumb;
+    }).join('');
+  })();
 </script>
 </body>
 </html>
