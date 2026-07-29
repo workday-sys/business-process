@@ -8,277 +8,155 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --navy: #0f2040;
-    --navy-mid: #1a3460;
-    --blue: #1e5fa8;
-    --blue-light: #2e7dd1;
-    --gold: #e8a922;
-    --gold-light: #f5c84a;
-    --teal: #0e8a7a;
-    --red: #c0392b;
-    --green: #1a7a4a;
-    --slate: #4a5568;
-    --light: #f4f7fb;
-    --white: #ffffff;
-    --border: #dde4ef;
-    --card-shadow: 0 4px 24px rgba(15,32,64,0.10);
-    --role-manager: #7c3aed;
+    --navy: #0f2040; --navy-mid: #1a3460; --blue: #1e5fa8; --blue-light: #2e7dd1;
+    --gold: #e8a922; --teal: #0e8a7a; --red: #c0392b; --purple: #7c3aed; --slate: #4a5568;
+    --light: #f4f7fb; --white: #ffffff; --border: #dde4ef; --card-shadow: 0 4px 24px rgba(15,32,64,0.10);
+
+    /* Category color tokens for this page */
+    --entry-solid: #1e5fa8;    --entry-glow: rgba(30,95,168,0.28);   --entry-tint: #dfebfa;   --entry-text: #0d3f73;
+    --requests-solid: #0e8a7a; --requests-glow: rgba(14,138,122,0.28); --requests-tint: #d9f5ef; --requests-text: #065f46;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'DM Sans', Arial, sans-serif;
-    background: var(--light);
-    color: var(--navy);
-    min-height: 100vh;
-  }
+  body { font-family: 'DM Sans', Arial, sans-serif; background: var(--light); color: var(--navy); min-height: 100vh; }
 
   /* ── HEADER ── */
   .header {
     background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, var(--blue) 100%);
-    color: white;
-    padding: 36px 48px 28px;
-    position: relative;
-    overflow: hidden;
+    color: white; padding: 36px 48px 28px; position: relative; overflow: hidden;
   }
-  .header::before {
-    content: '';
-    position: absolute; top: -60px; right: -60px;
-    width: 300px; height: 300px;
-    background: radial-gradient(circle, rgba(232,169,34,0.18) 0%, transparent 70%);
-    border-radius: 50%;
-  }
-  .header::after {
-    content: '';
-    position: absolute; bottom: -40px; left: 30%;
-    width: 200px; height: 200px;
-    background: radial-gradient(circle, rgba(46,125,209,0.2) 0%, transparent 70%);
-    border-radius: 50%;
-  }
+  .header::before { content:''; position:absolute; top:-60px; right:-60px; width:300px; height:300px; background: radial-gradient(circle, rgba(232,169,34,0.18) 0%, transparent 70%); border-radius:50%; }
+  .header::after { content:''; position:absolute; bottom:-40px; left:30%; width:200px; height:200px; background: radial-gradient(circle, rgba(46,125,209,0.2) 0%, transparent 70%); border-radius:50%; }
   .header-inner { position: relative; z-index: 1; }
-  
-/* Breadcrumb — rendered from the BREADCRUMB_TRAIL config near the bottom of this file */
+
+  /* Breadcrumb — rendered from the BREADCRUMB_TRAIL config near the bottom of this file */
   .breadcrumb { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; font-size: 0.82rem; min-height: 1.2em; }
   .breadcrumb a { color: rgba(255,255,255,0.65); text-decoration: none; font-weight: 500; }
   .breadcrumb a:hover { color: white; text-decoration: underline; }
   .breadcrumb .sep { color: rgba(255,255,255,0.4); }
   .breadcrumb .current { color: var(--gold); font-weight: 600; }
 
-  .header h1 {
-    font-family: 'DM Serif Display', Georgia, serif;
-    font-size: 2.2rem;
-    letter-spacing: -0.5px;
-    margin-bottom: 6px;
-  }
+  .header h1 { font-family: 'DM Serif Display', Georgia, serif; font-size: 2.2rem; letter-spacing: -0.5px; margin-bottom: 6px; }
   .header p { color: rgba(255,255,255,0.72); font-size: 0.95rem; font-weight: 400; }
-  .header-badge {
-    display: inline-block;
-    background: var(--gold);
-    color: var(--navy);
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    padding: 3px 10px;
-    border-radius: 20px;
-    margin-bottom: 12px;
-  }
+  .header-badge { display: inline-block; background: var(--gold); color: var(--navy); font-size: 0.72rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; margin-bottom: 12px; }
 
   /* ── CONTENT ── */
-  .content { max-width: 1200px; margin: 0 auto; padding: 36px 48px 60px; }
+  .content { max-width: 1200px; margin: 0 auto; padding: 40px 48px 60px; }
 
-  /* ── SECTION INTRO ── */
   .section-intro { margin-bottom: 28px; }
-  .section-intro h2 {
-    font-family: 'DM Serif Display', Georgia, serif;
-    font-size: 1.5rem;
-    color: var(--navy);
-    margin-bottom: 6px;
-  }
+  .section-intro h2 { font-family: 'DM Serif Display', Georgia, serif; font-size: 1.5rem; color: var(--navy); margin-bottom: 6px; }
   .section-intro p { color: var(--slate); font-size: 0.9rem; }
 
-  /* ── INFO BANNER ── */
+  /* ── INFO BANNER (How to use this hub) — kept from the original page ── */
   .info-banner {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-left: 4px solid var(--blue);
-    border-radius: 10px;
-    padding: 14px 18px;
-    margin-bottom: 28px;
-    font-size: 0.86rem;
-    color: var(--slate);
-    line-height: 1.6;
-    box-shadow: var(--card-shadow);
+    display: flex; align-items: flex-start; gap: 12px; background: var(--white);
+    border: 1px solid var(--border); border-left: 4px solid var(--blue); border-radius: 10px;
+    padding: 16px 20px; margin-bottom: 28px; font-size: 0.87rem; color: var(--slate);
+    line-height: 1.6; box-shadow: var(--card-shadow);
   }
+  .info-banner-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
   .info-banner strong { color: var(--navy); }
 
-  /* ── SCOPE BANNER ── */
+  /* ── SCOPE BANNER — kept from the original page ── */
   .scope-banner {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-left: 4px solid var(--red);
-    border-radius: 10px;
-    padding: 14px 18px;
-    margin-top: 28px;
-    font-size: 0.86rem;
-    color: var(--slate);
-    line-height: 1.6;
-    box-shadow: var(--card-shadow);
+    display: flex; align-items: flex-start; gap: 12px; background: var(--white);
+    border: 1px solid var(--border); border-left: 4px solid var(--red); border-radius: 10px;
+    padding: 16px 20px; margin-top: 32px; font-size: 0.87rem; color: var(--slate);
+    line-height: 1.6; box-shadow: var(--card-shadow);
   }
+  .scope-banner-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
   .scope-banner strong { color: var(--navy); }
 
-  /* ── GRID ── */
-  .dashboards-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 24px;
-  }
+  /* ── 2-COLUMN CATEGORY GRID ── */
+  .categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  .category-block { display: flex; flex-direction: column; height: 100%; }
 
-  /* ── CARD ── */
-  .dashboard-card {
-    background: var(--white);
-    border-radius: 16px;
-    box-shadow: var(--card-shadow);
-    border: 1px solid var(--border);
-    padding: 28px 28px 24px;
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 calc(50% - 12px);
-    min-width: 280px;
-    transition: box-shadow 0.2s, transform 0.2s;
+  .category-head {
+    display: inline-flex; align-items: center; gap: 9px; margin-bottom: 16px;
+    padding: 9px 18px 9px 14px; border-radius: 30px; box-shadow: 0 3px 10px rgba(15,32,64,0.08);
   }
-  .dashboard-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 36px rgba(15,32,64,0.14);
+  .head-icon { font-size: 1.05rem; line-height: 1; flex-shrink: 0; }
+  .category-title {
+    font-family: 'DM Sans', Arial, sans-serif; font-size: 0.86rem; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.9px;
   }
+  .category-count {
+    font-size: 0.68rem; font-weight: 800; padding: 2px 9px; border-radius: 20px; margin-left: 2px;
+    background: rgba(255,255,255,0.6);
+  }
+  .head-entry     { background: var(--entry-tint); }
+  .head-entry .category-title, .head-entry .category-count { color: var(--entry-text); }
+  .head-requests  { background: var(--requests-tint); }
+  .head-requests .category-title, .head-requests .category-count { color: var(--requests-text); }
 
-  /* ── CARD HEADER ── */
-  .card-header {
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    margin-bottom: 14px;
+  /* ── PART NODE (from Option A) ── */
+  .path-node { display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 16px; }
+  .node-badge {
+    width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Serif Display', Georgia, serif; font-size: 1.1rem; font-weight: 700; color: white;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.16); margin-bottom: 8px; border: 3px solid var(--light);
   }
-  .card-icon {
-    width: 48px; height: 48px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.4rem;
-    flex-shrink: 0;
-  }
-  .card-icon.blue   { background: linear-gradient(135deg, var(--navy), var(--blue)); }
-  .card-icon.teal   { background: linear-gradient(135deg, #1a4a2e, var(--teal)); }
-  .card-icon.gold   { background: linear-gradient(135deg, #5b2a00, #c06a10); }
-  .card-icon.purple { background: linear-gradient(135deg, #2d1060, var(--role-manager)); }
+  .badge-entry    { background: var(--entry-solid); }
+  .badge-requests { background: var(--requests-solid); }
+  .node-part { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--slate); }
 
-  .card-title-block { flex: 1; }
-  .card-title {
-    font-family: 'DM Serif Display', Georgia, serif;
-    font-size: 1.2rem;
-    color: var(--navy);
-    margin-bottom: 3px;
-    line-height: 1.3;
-  }
-  .card-subtitle {
-    font-size: 0.78rem;
-    color: var(--slate);
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.7px;
-  }
+  /* ── BENTO-STYLE CARDS (Option B look) ── */
+  .item-stack { display: flex; flex-direction: column; gap: 12px; flex: 1; }
 
-  /* ── DESCRIPTION ── */
-  .card-description {
-    font-size: 0.88rem;
-    color: var(--slate);
-    line-height: 1.65;
-    margin-bottom: 18px;
-    flex: 1;
+  .glow-card {
+    display: flex; border-radius: 20px; overflow: hidden; text-decoration: none; color: inherit;
+    box-shadow: var(--card-shadow); border: 1px solid var(--border); flex: 1;
+    transition: transform 0.2s ease, box-shadow 0.25s ease, border-color 0.25s ease;
   }
+  .glow-card:hover { transform: translateY(-6px); }
+  .item-entry:hover    { box-shadow: 0 20px 44px var(--entry-glow); border-color: var(--entry-solid); }
+  .item-requests:hover { box-shadow: 0 20px 44px var(--requests-glow); border-color: var(--requests-solid); }
 
-  /* ── PILLS ── */
-  .pills-label {
-    font-size: 0.72rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    color: var(--slate);
-    margin-bottom: 8px;
+  .glow-icon {
+    width: 108px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    font-size: 2.6rem; position: relative; overflow: hidden; color: white; border-radius: 0;
   }
-  .pills-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 22px;
+  .icon-entry    { background: linear-gradient(160deg, #0d3f73 0%, var(--entry-solid) 100%); }
+  .icon-requests { background: linear-gradient(160deg, #065f46 0%, var(--requests-solid) 100%); }
+  .glow-icon::after {
+    content: ''; position: absolute; width: 140px; height: 140px; border-radius: 50%;
+    background: rgba(255,255,255,0.12); top: -50px; right: -50px;
   }
+  .glow-icon span { position: relative; z-index: 1; }
+
+  .glow-text { flex: 1; min-width: 0; background: var(--white); padding: 22px 24px 20px; display: flex; flex-direction: column; }
+  .glow-subtitle { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px; }
+  .item-entry .glow-subtitle    { color: var(--entry-text); }
+  .item-requests .glow-subtitle { color: var(--requests-text); }
+
+  .glow-title { font-family: 'DM Serif Display', Georgia, serif; font-size: 1.28rem; color: var(--navy); margin-bottom: 8px; }
+  .glow-desc { font-size: 0.87rem; color: var(--slate); line-height: 1.6; margin-bottom: 16px; }
+
+  .glow-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
   .pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 4px 11px;
-    border-radius: 20px;
-    font-size: 0.76rem;
-    font-weight: 600;
-    white-space: nowrap;
+    display: inline-flex; align-items: center; gap: 5px; padding: 4px 11px;
+    border-radius: 20px; font-size: 0.74rem; font-weight: 700; white-space: nowrap;
   }
-  .pill.blue   { background: #ddeeff; color: var(--blue); }
-  .pill.teal   { background: #d9f5ef; color: var(--teal); }
-  .pill.gold   { background: #fff3cc; color: #7a5800; }
-  .pill.purple { background: #ede9ff; color: #5b21b6; }
-  .pill.red    { background: #fce7e7; color: var(--red); }
-  .pill.slate  { background: #f1f5f9; color: var(--slate); }
-  .pill.navy   { background: #e0e8f5; color: var(--navy); }
+  .pill.blue  { background: #ddeeff; color: var(--blue); }
+  .pill.teal  { background: #d9f5ef; color: var(--teal); }
+  .pill.gold  { background: #fff3cc; color: #7a5800; }
+  .pill.slate { background: #f1f5f9; color: var(--slate); }
 
-  /* ── OPEN BUTTON ── */
-  .open-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    padding: 12px 20px;
-    background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
-    color: white;
-    text-decoration: none;
-    border-radius: 10px;
-    font-family: 'DM Sans', Arial, sans-serif;
-    font-size: 0.88rem;
-    font-weight: 600;
-    letter-spacing: 0.3px;
-    border: none;
-    cursor: pointer;
-    transition: opacity 0.2s, transform 0.15s;
-    margin-top: auto;
+  .glow-arrow {
+    display: none;
   }
-  .open-btn:hover  { opacity: 0.88; transform: translateY(-1px); }
-  .open-btn:active { transform: translateY(0); }
-  .open-btn svg {
-    width: 14px; height: 14px;
-    fill: none;
-    stroke: white;
-    stroke-width: 2.5;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
+  .glow-cta { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 0.85rem; margin-top: auto; }
+  .item-entry .glow-cta    { color: var(--entry-solid); }
+  .item-requests .glow-cta { color: var(--requests-solid); }
+  .glow-card:hover .glow-cta span { transform: translateX(4px); }
+  .glow-cta span { display: inline-block; transition: transform 0.2s; }
 
-  /* ── RESPONSIVE ── */
-  @media (max-width: 860px) {
-    .dashboard-card { flex: 1 1 100%; }
-    .content { padding: 24px 20px 48px; }
-    .header  { padding: 28px 20px 22px; }
-    .header h1 { font-size: 1.7rem; }
-  }
-  @media (max-width: 480px) {
-    .header h1 { font-size: 1.4rem; }
-    .dashboards-grid { gap: 16px; }
-    .dashboard-card  { padding: 22px 20px 20px; }
+  @media (max-width: 900px) { .categories-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 700px) {
+    .content { padding: 28px 20px 48px; }
+    .header { padding: 28px 20px 22px; }
+    .header h1 { font-size: 1.75rem; }
+    .glow-card { flex-direction: column; }
+    .glow-icon { width: 100%; height: 80px; }
   }
 </style>
 </head>
@@ -298,74 +176,63 @@
 <div class="content">
 
   <div class="info-banner">
-    <span style="font-size:1.1rem;flex-shrink:0;">&#128204;</span>
+    <span class="info-banner-icon">&#128204;</span>
     <div>
       <strong>How to use this hub:</strong>
-      Each card below represents a dedicated interactive dashboard. Click <strong>Open Dashboard</strong> to explore the full process &mdash; flowcharts, role breakdowns, decision points, and approvals &mdash; for that topic.
+      Each card below represents a dedicated interactive dashboard. Click a card to explore the full process &mdash; flowcharts, role breakdowns, decision points, and approvals &mdash; for that topic.
     </div>
   </div>
 
-  <div class="section-intro">
-    <h2>Available Dashboards</h2>
-    <p>2 interactive guides covering Time &amp; Leave workflows</p>
-  </div>
+  <div class="categories-grid">
 
-  <div class="dashboards-grid">
-
-    <!-- CARD 1: Time Entry -->
-    <div class="dashboard-card">
-      <div class="card-header">
-        <div class="card-icon blue">&#9201;</div>
-        <div class="card-title-block">
-          <div class="card-title">Time Entry</div>
-          <div class="card-subtitle">Time &amp; Leave &middot; Part 2</div>
-        </div>
+    <!-- Request & Correct Time Off -->
+    <div class="category-block">
+      <div class="category-head head-requests"><span class="head-icon">&#128197;</span><span class="category-title">Time &amp; Leave Part 1</span><span class="category-count">1</span></div>
+      <div class="item-stack">
+        <a href="https://workday-sys.github.io/business-process/timeandleave/request_correct_timeoff.html" class="glow-card item-requests" target="_self" rel="noopener noreferrer">
+          <div class="glow-icon icon-requests"><span>&#128197;</span></div>
+          <div class="glow-text">
+            <div class="glow-title">Request &amp; Correct Time Off</div>
+            <div class="glow-desc">Managing absence requests from start to finish. Submit a request, correct one that&rsquo;s already been approved, or update and cancel a request that&rsquo;s still pending.</div>
+            <div class="glow-pills">
+              <span class="pill teal">&#128197; Request Time Off</span>
+              <span class="pill gold">&#9999;&#65039; Correct Time Off</span>
+              <span class="pill blue">&#128257; Update / Cancel</span>
+            </div>
+            <div class="glow-cta">Open Dashboard <span>&#x2192;</span></div>
+          </div>
+        </a>
       </div>
-      <p class="card-description">
-        How employees enter, submit, approve, and correct timesheets. Covers web clock for non-exempt employees, microblock self-reporting for HEO/HEA, and absence requests.
-      </p>
-      <div class="pills-label">Workflows Covered</div>
-      <div class="pills-row">
-        <span class="pill blue">&#9201; Enter Time</span>
-        <span class="pill teal">&#10003; Approve Time</span>
-        <span class="pill gold">&#9999;&#65039; Edit / Correct Time</span>
-        <span class="pill slate">&#128197; Request Absence</span>
-      </div>
-      <a class="open-btn" href="https://workday-sys.github.io/business-process/timeandleave/time_entry.html" target="_self" rel="noopener noreferrer">
-        Open Dashboard
-        <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-      </a>
     </div>
 
-    <!-- CARD 2: Request & Correct Time Off -->
-    <div class="dashboard-card">
-      <div class="card-header">
-        <div class="card-icon teal">&#128197;</div>
-        <div class="card-title-block">
-          <div class="card-title">Request &amp; Correct Time Off</div>
-          <div class="card-subtitle">Time &amp; Leave &middot; Part 1</div>
-        </div>
+    <!-- Time Entry -->
+    <div class="category-block">
+      <div class="category-head head-entry"><span class="head-icon">&#9201;</span><span class="category-title">Time &amp; Leave Part 2</span><span class="category-count">1</span></div>
+      <div class="item-stack">
+        <a href="https://workday-sys.github.io/business-process/timeandleave/time_entry.html" class="glow-card item-entry" target="_self" rel="noopener noreferrer">
+          <div class="glow-icon icon-entry"><span>&#9201;</span></div>
+          <div class="glow-text">
+            <div class="glow-title">Time Entry</div>
+            <div class="glow-desc">How employees enter, submit, approve, and correct timesheets. Covers web clock for non-exempt employees, microblock self-reporting for HEO/HEA, and absence requests.</div>
+            <div class="glow-pills">
+              <span class="pill blue">&#9201; Enter Time</span>
+              <span class="pill teal">&#10003; Approve Time</span>
+              <span class="pill gold">&#9999;&#65039; Edit / Correct Time</span>
+              <span class="pill slate">&#128197; Request Absence</span>
+            </div>
+            <div class="glow-cta">Open Dashboard <span>&#x2192;</span></div>
+          </div>
+        </a>
       </div>
-      <p class="card-description">
-        Managing absence requests from start to finish. Submit a request, correct one that&rsquo;s already been approved, or update and cancel a request that&rsquo;s still pending.
-      </p>
-      <div class="pills-label">Workflows Covered</div>
-      <div class="pills-row">
-        <span class="pill teal">&#128197; Request Time Off</span>
-        <span class="pill gold">&#9999;&#65039; Correct Time Off</span>
-        <span class="pill blue">&#128257; Update / Cancel</span>
-      </div>
-      <a class="open-btn" href="https://workday-sys.github.io/business-process/timeandleave/request_correct_timeoff.html" target="_self" rel="noopener noreferrer">
-        Open Dashboard
-        <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-      </a>
     </div>
 
-  </div><!-- /grid -->
+
+
+  </div><!-- /categories-grid -->
 
   <!-- SCOPE NOTE -->
   <div class="scope-banner">
-    <span style="font-size:1.1rem;flex-shrink:0;">&#128683;</span>
+    <span class="scope-banner-icon">&#128683;</span>
     <div>
       <strong>Scope:</strong>
       All processes shown apply to City positions only. Federal Work Study positions and State-specific steps are excluded from these dashboards.
