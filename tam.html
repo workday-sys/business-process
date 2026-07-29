@@ -79,6 +79,15 @@
     position: relative;
     z-index: 1;
   }
+
+    /* Breadcrumb — rendered from the BREADCRUMB_TRAIL config near the bottom of this file */
+  .breadcrumb { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; font-size: 0.82rem; min-height: 1.2em; }
+  .breadcrumb a { color: rgba(255,255,255,0.65); text-decoration: none; font-weight: 500; }
+  .breadcrumb a:hover { color: white; text-decoration: underline; }
+  .breadcrumb .sep { color: rgba(255,255,255,0.4); }
+  .breadcrumb .current { color: var(--gold); font-weight: 600; }
+
+  
   .header h1 {
     font-family: 'DM Serif Display', Georgia, serif;
     font-size: 2.2rem;
@@ -408,6 +417,7 @@
 <!-- ══ HEADER ══ -->
 <div class="header">
   <div class="header-inner">
+    <div class="breadcrumb" id="breadcrumb"></div>
     <div class="header-badge">Business Process</div>
     <h1>TAM Dashboard</h1>
     <p>Select a dashboard below to explore detailed workflows, roles, and approval steps</p>
@@ -454,7 +464,7 @@
           <span class="pill pill-slate">&#128100; Role Routing</span>
         </div>
         <div class="card-footer">
-          <a class="open-btn" href="https://workday-sys.github.io/business-process/tam/job_requisition.html" target="_blank" rel="noopener noreferrer">
+          <a class="open-btn" href="https://workday-sys.github.io/business-process/tam/job_requisition.html" target="_self' rel="noopener noreferrer">
             Open Dashboard <span class="btn-arrow">&#x2192;</span>
           </a>
         </div>
@@ -483,7 +493,7 @@
           <span class="pill pill-red">&#128683; Disposition</span>
         </div>
         <div class="card-footer">
-          <a class="open-btn" href="https://workday-sys.github.io/business-process/tam/job_application.html" target="_blank" rel="noopener noreferrer">
+          <a class="open-btn" href="https://workday-sys.github.io/business-process/tam/job_application.html" target="_self" rel="noopener noreferrer">
             Open Dashboard <span class="btn-arrow">&#x2192;</span>
           </a>
         </div>
@@ -512,7 +522,7 @@
           <span class="pill pill-teal">&#128260; Applicant Movement</span>
         </div>
         <div class="card-footer">
-          <a class="open-btn" href="https://workday-sys.github.io/business-process/tam/evergreen.html" target="_blank" rel="noopener noreferrer">
+          <a class="open-btn" href="https://workday-sys.github.io/business-process/tam/evergreen.html" target="_self" rel="noopener noreferrer">
             Open Dashboard <span class="btn-arrow">&#x2192;</span>
           </a>
         </div>
@@ -541,7 +551,7 @@
           <span class="pill pill-teal">&#127942; Hiring Decision</span>
         </div>
         <div class="card-footer">
-          <a class="open-btn" href="https://workday-sys.github.io/business-process/tam/recruiting.html" target="_blank" rel="noopener noreferrer">
+          <a class="open-btn" href="https://workday-sys.github.io/business-process/tam/recruiting.html" target="_self" rel="noopener noreferrer">
             Open Dashboard <span class="btn-arrow">&#x2192;</span>
           </a>
         </div>
@@ -552,5 +562,31 @@
 
 </div><!-- /content -->
 
+<script>
+  /* ────────────────────────────────────────────────────────────
+     BREADCRUMB — self-contained, edit this array only.
+     Each entry: { label: "Text shown", href: "link.html" }
+     Set href to null (or omit it) for the current page —
+     it will render as plain highlighted text, not a link.
+     Add or remove entries to change the trail depth.
+  ──────────────────────────────────────────────────────────── */
+  const BREADCRUMB_TRAIL = [
+    { label: "Business Process Hub", href: "index.html" },
+    { label: "TAM", href: null }
+  ];
+
+  (function renderBreadcrumb() {
+    const el = document.getElementById('breadcrumb');
+    el.innerHTML = BREADCRUMB_TRAIL.map((item, i) => {
+      const isLast = i === BREADCRUMB_TRAIL.length - 1;
+      const sep = i > 0 ? '<span class="sep">/</span>' : '';
+      const crumb = (item.href && !isLast)
+        ? `<a href="${item.href}">${item.label}</a>`
+        : `<span class="current">${item.label}</span>`;
+      return sep + crumb;
+    }).join('');
+  })();
+  
+</script>
 </body>
 </html>
