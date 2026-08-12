@@ -362,6 +362,15 @@
     flex-wrap: wrap;
     gap: 6px;
     margin-bottom: 22px;
+    max-height: 64px;      /* clamps to ~2 lines of pills */
+    overflow: hidden;
+    -webkit-box-align: start;
+    -ms-flex-align: start;
+    align-content: flex-start;
+  }
+  .pills-row.expanded {
+    max-height: none;
+    overflow: visible;
   }
   .pill {
     display: -webkit-inline-box;
@@ -384,11 +393,36 @@
   .pill-red    { background: #fce7e7; color: var(--red); }
   .pill-slate  { background: #f1f5f9; color: var(--slate); }
 
-  /* Open button */
+  /* "see more / show less" toggle for pill rows */
+  .see-more-link {
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 2px;
+    font-family: 'DM Sans', Arial, sans-serif;
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: var(--blue);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .see-more-link:hover { color: var(--navy); }
+
+  /* Open button — pill-shaped gradient */
   .card-footer {
     padding-top: 16px;
     border-top: 1px solid var(--border);
     margin-top: auto;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
   }
   .open-btn {
     display: -webkit-box;
@@ -401,28 +435,31 @@
     -ms-flex-pack: center;
     justify-content: center;
     gap: 8px;
-    width: 100%;
-    padding: 12px 20px;
+    padding: 11px 28px;
     background: -webkit-linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
     background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
     color: white;
     font-family: 'DM Sans', Arial, sans-serif;
-    font-size: 0.87rem;
+    font-size: 0.85rem;
     font-weight: 700;
     letter-spacing: 0.3px;
-    border: none;
-    border-radius: 10px;
+    border: 1.5px solid transparent;
+    border-radius: 30px;
     cursor: pointer;
     text-decoration: none;
-    -webkit-transition: opacity 0.2s, -webkit-transform 0.15s;
-    -moz-transition: opacity 0.2s, transform 0.15s;
-    transition: opacity 0.2s, transform 0.15s;
+    -webkit-box-shadow: 0 2px 10px rgba(15,32,64,0.18);
+    box-shadow: 0 2px 10px rgba(15,32,64,0.18);
+    -webkit-transition: transform 0.15s, -webkit-box-shadow 0.2s, border-color 0.2s;
+    -moz-transition: transform 0.15s, box-shadow 0.2s, border-color 0.2s;
+    transition: transform 0.15s, box-shadow 0.2s, border-color 0.2s;
   }
   .open-btn:hover {
-    opacity: 0.9;
     -webkit-transform: translateY(-1px);
     -ms-transform: translateY(-1px);
     transform: translateY(-1px);
+    -webkit-box-shadow: 0 6px 20px rgba(30,95,168,0.35);
+    box-shadow: 0 6px 20px rgba(30,95,168,0.35);
+    border-color: rgba(255,255,255,0.45);
   }
   .btn-arrow {
     -webkit-transition: -webkit-transform 0.2s;
@@ -534,7 +571,7 @@
           Includes a master roles and permissions table for all 6 processes.
         </p>
         <div class="pills-label">Workflows covered</div>
-        <div class="pills-row">
+        <div class="pills-row" data-pills>
           <span class="pill pill-blue">&#x2795; Create Position</span>
           <span class="pill pill-gold">&#x270F;&#xFE0F; Edit Restrictions</span>
           <span class="pill pill-teal">&#x1F4CA; Edit Add&#x27;l Data</span>
@@ -570,7 +607,7 @@
           the full request and correction workflow for time off.
         </p>
         <div class="pills-label">Workflows covered</div>
-        <div class="pills-row">
+        <div class="pills-row" data-pills>
           <span class="pill pill-teal">&#x23F1; Enter Time</span>
           <span class="pill pill-blue">&#x2705; Approve Time</span>
           <span class="pill pill-gold">&#x270F;&#xFE0F; Edit / Correct Time</span>
@@ -606,7 +643,7 @@
           Replaces the previous paper-based and NYCAPS/PMS manual entry process.
         </p>
         <div class="pills-label">Workflows covered</div>
-        <div class="pills-row">
+        <div class="pills-row" data-pills>
           <span class="pill pill-blue">&#x1F504; Change Benefits</span>
           <span class="pill pill-gold">&#x1F49B; Change Benefits for Life</span>
           <span class="pill pill-teal">&#x1F46A; Dependent Event</span>
@@ -640,7 +677,7 @@
           line changes, and related approvals.
         </p>
         <div class="pills-label">Workflows covered</div>
-        <div class="pills-row">
+        <div class="pills-row" data-pills>
           <span class="pill pill-slate">&#x1F6A7; Coming Soon</span>
         </div>
         <div class="card-footer">
@@ -669,7 +706,7 @@
           Guide to sourcing, hiring, and requisition workflows for city positions. Covers job requisition creation and budget approval, application review through offer and disposition, evergreen requisitions and candidate pools, and full recruiting pipeline management with role-based approval paths.
         </p>
         <div class="pills-label">Workflows covered</div>
-        <div class="pills-row">
+        <div class="pills-row" data-pills>
           <span class="pill pill-purple">&#x1F4DD; Job Requisition</span>
           <span class="pill pill-blue">&#x1F4CB; Job Application</span>
           <span class="pill pill-teal">&#x1F33F; Evergreen Requisition</span>
@@ -701,7 +738,7 @@
           
         </p>
         <div class="pills-label">Workflows covered</div>
-        <div class="pills-row">
+        <div class="pills-row" data-pills>
           <span class="pill pill-slate">&#x1F6A7; Coming Soon</span>
         </div>
         <div class="card-footer">
@@ -729,6 +766,119 @@
   </div>
 
 </div><!-- /content -->
+
+<script>
+// Clamps each "Workflows covered" pill row to two lines, appending a
+// "+N more" link that expands the row in place. Clicking it again
+// ("Show less") re-clamps back to two lines.
+//
+// Approach: measure ONCE how many pills naturally fit in the first two
+// lines (and leave room for the link itself), store that count on the
+// row, then toggling just flips display on/off against that stored
+// count. Nothing is re-derived while pills are hidden, which is what
+// caused the "everything vanishes" bug in the previous version.
+
+function measureVisibleCount(row, pills) {
+  // make sure every pill is visible and un-clamped so natural
+  // flex-wrap positions can be read
+  pills.forEach(function (p) { p.style.display = ''; });
+  row.classList.add('expanded'); // remove max-height/overflow while measuring
+
+  const tops = Array.from(new Set(pills.map(function (p) { return p.offsetTop; })));
+  row.classList.remove('expanded');
+
+  if (tops.length <= 2) return pills.length; // everything already fits
+
+  const line2Top = tops[1];
+
+  // last pill whose row starts within the first two lines
+  let idx = pills.length - 1;
+  for (let i = pills.length - 1; i >= 0; i--) {
+    if (pills[i].offsetTop <= line2Top) { idx = i; break; }
+  }
+
+  // shrink until a "+N more" link of this length would also fit on line 2
+  const probe = document.createElement('button');
+  probe.type = 'button';
+  probe.className = 'see-more-link';
+  probe.style.visibility = 'hidden';
+
+  while (idx >= 0) {
+    pills.forEach(function (p, i) { p.style.display = i <= idx ? '' : 'none'; });
+    probe.textContent = '+' + (pills.length - (idx + 1)) + ' more';
+    row.appendChild(probe);
+    const fits = probe.offsetTop <= line2Top;
+    row.removeChild(probe);
+    if (fits) break;
+    idx--;
+  }
+
+  pills.forEach(function (p) { p.style.display = ''; }); // restore for now
+  return Math.max(idx + 1, 1); // always show at least one pill
+}
+
+function applyCollapsed(row, pills, visibleCount) {
+  row.classList.remove('expanded');
+  pills.forEach(function (p, i) { p.style.display = i < visibleCount ? '' : 'none'; });
+  let link = row.querySelector('.see-more-link');
+  if (!link) {
+    link = document.createElement('button');
+    link.type = 'button';
+    link.className = 'see-more-link';
+    row.appendChild(link);
+  }
+  link.textContent = '+' + (pills.length - visibleCount) + ' more';
+  link.onclick = function () { applyExpanded(row, pills); };
+}
+
+function applyExpanded(row, pills) {
+  row.classList.add('expanded');
+  pills.forEach(function (p) { p.style.display = ''; });
+  let link = row.querySelector('.see-more-link');
+  if (!link) {
+    link = document.createElement('button');
+    link.type = 'button';
+    link.className = 'see-more-link';
+    row.appendChild(link);
+  }
+  link.textContent = 'Show less';
+  link.onclick = function () { applyCollapsed(row, pills, row._visibleCount); };
+}
+
+function setupPillsRow(row) {
+  const pills = Array.from(row.querySelectorAll('.pill'));
+  if (!pills.length) return;
+
+  const existingLink = row.querySelector('.see-more-link');
+  if (existingLink) existingLink.remove();
+
+  const visibleCount = measureVisibleCount(row, pills);
+  row._visibleCount = visibleCount;
+
+  if (visibleCount >= pills.length) {
+    // nothing overflows — plain row, no link needed
+    row.classList.remove('expanded');
+    pills.forEach(function (p) { p.style.display = ''; });
+    return;
+  }
+
+  applyCollapsed(row, pills, visibleCount);
+}
+
+function initAllPillsRows() {
+  document.querySelectorAll('[data-pills]').forEach(setupPillsRow);
+}
+
+window.addEventListener('load', initAllPillsRows);
+window.addEventListener('resize', function () {
+  clearTimeout(window._pillsResizeTimer);
+  window._pillsResizeTimer = setTimeout(function () {
+    // only re-measure rows that are currently collapsed, so an open
+    // "Show less" row doesn't snap shut while someone is reading it
+    document.querySelectorAll('[data-pills]:not(.expanded)').forEach(setupPillsRow);
+  }, 120);
+});
+</script>
 
 </body>
 </html>
