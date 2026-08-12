@@ -67,8 +67,7 @@
   .scope-banner strong { color: var(--navy); }
 
   /* ── 2-COLUMN CATEGORY GRID ── */
-  .categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
-  .category-block { display: flex; flex-direction: column; height: 100%; }
+  .categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; align-items: start; }
 
   .category-head {
     display: inline-flex; align-items: center; gap: 9px; margin-bottom: 16px;
@@ -88,75 +87,43 @@
   .head-requests  { background: var(--requests-tint); }
   .head-requests .category-title, .head-requests .category-count { color: var(--requests-text); }
 
-  /* ── PART NODE (from Option A) ── */
-  .path-node { display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 16px; }
-  .node-badge {
-    width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    font-family: 'DM Serif Display', Georgia, serif; font-size: 1.1rem; font-weight: 700; color: white;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.16); margin-bottom: 8px; border: 3px solid var(--light);
-  }
-  .badge-entry    { background: var(--entry-solid); }
-  .badge-requests { background: var(--requests-solid); }
-  .node-part { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--slate); }
-
-  /* ── BENTO-STYLE CARDS (Option B look) ── */
-  .item-stack { display: flex; flex-direction: column; gap: 12px; flex: 1; }
+  /* Elevated glow item cards */
+  .item-stack { display: flex; flex-direction: column; gap: 12px; }
 
   .glow-card {
-    display: flex; border-radius: 20px; overflow: hidden; text-decoration: none; color: inherit;
-    box-shadow: var(--card-shadow); border: 1px solid var(--border); flex: 1;
-    transition: transform 0.2s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    display: flex; align-items: center; gap: 16px; background: var(--white);
+    border-radius: 14px; padding: 16px 20px; text-decoration: none; color: inherit;
+    border: 1px solid var(--border); position: relative; overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   }
-  .glow-card:hover { transform: translateY(-6px); }
-  .item-entry:hover    { box-shadow: 0 20px 44px var(--entry-glow); border-color: var(--entry-solid); }
-  .item-requests:hover { box-shadow: 0 20px 44px var(--requests-glow); border-color: var(--requests-solid); }
-
-  .glow-icon {
-    width: 108px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-    font-size: 2.6rem; position: relative; overflow: hidden; color: white; border-radius: 0;
+  .glow-card::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
   }
-  .icon-entry    { background: linear-gradient(160deg, #0d3f73 0%, var(--entry-solid) 100%); }
-  .icon-requests { background: linear-gradient(160deg, #065f46 0%, var(--requests-solid) 100%); }
-  .glow-icon::after {
-    content: ''; position: absolute; width: 140px; height: 140px; border-radius: 50%;
-    background: rgba(255,255,255,0.12); top: -50px; right: -50px;
-  }
-  .glow-icon span { position: relative; z-index: 1; }
+  .item-entry::before    { background: var(--entry-solid); }
+  .item-requests::before { background: var(--requests-solid); }
 
-  .glow-text { flex: 1; min-width: 0; background: var(--white); padding: 22px 24px 20px; display: flex; flex-direction: column; }
-  .glow-subtitle { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px; }
-  .item-entry .glow-subtitle    { color: var(--entry-text); }
-  .item-requests .glow-subtitle { color: var(--requests-text); }
+  .item-entry:hover    { transform: translateY(-4px); box-shadow: 0 14px 30px var(--entry-glow); border-color: var(--entry-solid); }
+  .item-requests:hover { transform: translateY(-4px); box-shadow: 0 14px 30px var(--requests-glow); border-color: var(--requests-solid); }
 
-  .glow-title { font-family: 'DM Serif Display', Georgia, serif; font-size: 1.28rem; color: var(--navy); margin-bottom: 8px; }
-  .glow-desc { font-size: 0.87rem; color: var(--slate); line-height: 1.6; margin-bottom: 16px; }
+  .glow-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; color: white; flex-shrink: 0; }
+  .icon-entry    { background: var(--entry-solid); }
+  .icon-requests { background: var(--requests-solid); }
 
-  .glow-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
-  .pill {
-    display: inline-flex; align-items: center; gap: 5px; padding: 4px 11px;
-    border-radius: 20px; font-size: 0.74rem; font-weight: 700; white-space: nowrap;
-  }
-  .pill.blue  { background: #ddeeff; color: var(--blue); }
-  .pill.teal  { background: #d9f5ef; color: var(--teal); }
-  .pill.gold  { background: #fff3cc; color: #7a5800; }
-  .pill.slate { background: #f1f5f9; color: var(--slate); }
+  .glow-text { flex: 1; min-width: 0; }
+  .glow-title { font-family: 'DM Serif Display', Georgia, serif; font-size: 1.02rem; color: var(--navy); margin-bottom: 3px; }
+  .glow-desc { font-size: 0.82rem; color: var(--slate); line-height: 1.5; }
 
-  .glow-arrow {
-    display: none;
-  }
-  .glow-cta { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 0.85rem; margin-top: auto; }
-  .item-entry .glow-cta    { color: var(--entry-solid); }
-  .item-requests .glow-cta { color: var(--requests-solid); }
-  .glow-card:hover .glow-cta span { transform: translateX(4px); }
-  .glow-cta span { display: inline-block; transition: transform 0.2s; }
+  .glow-arrow { font-size: 1.1rem; color: var(--border); flex-shrink: 0; transition: color 0.2s, transform 0.2s; }
+  .glow-card:hover .glow-arrow { transform: translateX(3px); }
+  .item-entry:hover .glow-arrow    { color: var(--entry-solid); }
+  .item-requests:hover .glow-arrow { color: var(--requests-solid); }
 
   @media (max-width: 900px) { .categories-grid { grid-template-columns: 1fr; } }
   @media (max-width: 700px) {
     .content { padding: 28px 20px 48px; }
     .header { padding: 28px 20px 22px; }
     .header h1 { font-size: 1.75rem; }
-    .glow-card { flex-direction: column; }
-    .glow-icon { width: 100%; height: 80px; }
+    .glow-card { padding: 14px 16px; gap: 12px; }
   }
 </style>
 </head>
@@ -190,17 +157,9 @@
       <div class="category-head head-requests"><span class="head-icon">&#128197;</span><span class="category-title">Time &amp; Leave Part 1</span><span class="category-count">1</span></div>
       <div class="item-stack">
         <a href="https://workday-sys.github.io/business-process/timeandleave/request_correct_timeoff.html" class="glow-card item-requests" target="_self" rel="noopener noreferrer">
-          <div class="glow-icon icon-requests"><span>&#128197;</span></div>
-          <div class="glow-text">
-            <div class="glow-title">Request &amp; Correct Time Off</div>
-            <div class="glow-desc">Managing absence requests from start to finish. Submit a request, correct one that&rsquo;s already been approved, or update and cancel a request that&rsquo;s still pending.</div>
-            <div class="glow-pills">
-              <span class="pill teal">&#128197; Request Time Off</span>
-              <span class="pill gold">&#9999;&#65039; Correct Time Off</span>
-              <span class="pill blue">&#128257; Update / Cancel</span>
-            </div>
-            <div class="glow-cta">Open Dashboard <span>&#x2192;</span></div>
-          </div>
+          <div class="glow-icon icon-requests">&#128197;</div>
+          <div class="glow-text"><div class="glow-title">Request &amp; Correct Time Off</div><div class="glow-desc">Managing absence requests from start to finish. Submit a request, correct one that&rsquo;s already been approved, or update and cancel a request that&rsquo;s still pending.</div></div>
+          <div class="glow-arrow">&#x2192;</div>
         </a>
       </div>
     </div>
@@ -210,18 +169,9 @@
       <div class="category-head head-entry"><span class="head-icon">&#9201;</span><span class="category-title">Time &amp; Leave Part 2</span><span class="category-count">1</span></div>
       <div class="item-stack">
         <a href="https://workday-sys.github.io/business-process/timeandleave/time_entry.html" class="glow-card item-entry" target="_self" rel="noopener noreferrer">
-          <div class="glow-icon icon-entry"><span>&#9201;</span></div>
-          <div class="glow-text">
-            <div class="glow-title">Time Entry</div>
-            <div class="glow-desc">How employees enter, submit, approve, and correct timesheets. Covers web clock for non-exempt employees, microblock self-reporting for HEO/HEA, and absence requests.</div>
-            <div class="glow-pills">
-              <span class="pill blue">&#9201; Enter Time</span>
-              <span class="pill teal">&#10003; Approve Time</span>
-              <span class="pill gold">&#9999;&#65039; Edit / Correct Time</span>
-              <span class="pill slate">&#128197; Request Absence</span>
-            </div>
-            <div class="glow-cta">Open Dashboard <span>&#x2192;</span></div>
-          </div>
+          <div class="glow-icon icon-entry">&#9201;</div>
+          <div class="glow-text"><div class="glow-title">Time Entry</div><div class="glow-desc">How employees enter, submit, approve, and correct timesheets. Covers web clock for non-exempt employees, microblock self-reporting for HEO/HEA, and absence requests.</div></div>
+          <div class="glow-arrow">&#x2192;</div>
         </a>
       </div>
     </div>
