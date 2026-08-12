@@ -67,7 +67,8 @@
   .scope-banner strong { color: var(--navy); }
 
   /* ── 2-COLUMN CATEGORY GRID ── */
-  .categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; align-items: start; }
+  .categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  .category-block { display: flex; flex-direction: column; height: 100%; }
 
   .category-head {
     display: inline-flex; align-items: center; gap: 9px; margin-bottom: 16px;
@@ -88,12 +89,12 @@
   .head-requests .category-title, .head-requests .category-count { color: var(--requests-text); }
 
   /* Elevated glow item cards */
-  .item-stack { display: flex; flex-direction: column; gap: 12px; }
+  .item-stack { display: flex; flex-direction: column; gap: 12px; flex: 1; }
 
   .glow-card {
     display: flex; align-items: center; gap: 16px; background: var(--white);
     border-radius: 14px; padding: 16px 20px; text-decoration: none; color: inherit;
-    border: 1px solid var(--border); position: relative; overflow: hidden;
+    border: 1px solid var(--border); position: relative; overflow: hidden; flex: 1;
     transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   }
   .glow-card::before {
@@ -110,8 +111,30 @@
   .icon-requests { background: var(--requests-solid); }
 
   .glow-text { flex: 1; min-width: 0; }
-  .glow-title { font-family: 'DM Serif Display', Georgia, serif; font-size: 1.02rem; color: var(--navy); margin-bottom: 3px; }
-  .glow-desc { font-size: 0.82rem; color: var(--slate); line-height: 1.5; }
+  .glow-title { font-family: 'DM Serif Display', Georgia, serif; font-size: 1.3rem; color: var(--navy); margin-bottom: 3px; }
+  .glow-desc { font-size: 0.87rem; color: var(--slate); line-height: 1.5; margin-bottom: 8px; }
+
+  .glow-pills-label {
+    font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.9px;
+    color: var(--slate); margin-bottom: 8px;
+  }
+  .glow-pills { display: flex; flex-wrap: wrap; gap: 5px; }
+  .pill {
+    display: inline-flex; 
+    align-items: center; 
+    gap: 5px; 
+    padding: 4px 11px;
+    border-radius: 20px; 
+    font-size: 0.76rem; 
+    font-weight: 600; 
+    white-space: nowrap;
+  }
+  .pill-blue   { background: #ddeeff; color: var(--blue); }
+  .pill-teal   { background: #d9f5ef; color: var(--teal); }
+  .pill-gold   { background: #fff3cc; color: #7a5800; }
+  .pill-purple { background: #ede9ff; color: #5b21b6; }
+  .pill-red    { background: #fce7e7; color: var(--red); }
+  .pill-slate  { background: #f1f5f9; color: var(--slate); }
 
   .glow-arrow { font-size: 1.1rem; color: var(--border); flex-shrink: 0; transition: color 0.2s, transform 0.2s; }
   .glow-card:hover .glow-arrow { transform: translateX(3px); }
@@ -158,7 +181,17 @@
       <div class="item-stack">
         <a href="https://workday-sys.github.io/business-process/timeandleave/request_correct_timeoff.html" class="glow-card item-requests" target="_self" rel="noopener noreferrer">
           <div class="glow-icon icon-requests">&#128197;</div>
-          <div class="glow-text"><div class="glow-title">Request &amp; Correct Time Off</div><div class="glow-desc">Managing absence requests from start to finish. Submit a request, correct one that&rsquo;s already been approved, or update and cancel a request that&rsquo;s still pending.</div></div>
+          <div class="glow-text">
+            <div class="glow-title">Request &amp; Correct Time Off</div>
+            <div class="glow-desc">Managing absence requests from start to finish. Submit a request, correct one that&rsquo;s already been approved, or update and cancel a request that&rsquo;s still pending.</div>
+            <br/>
+            <div class="glow-pills-label">Workflows Covered</div>
+            <div class="glow-pills">
+              <span class="pill pill-teal">&#128197; Request Time Off</span>
+              <span class="pill pill-gold">&#9999;&#65039; Correct Time Off</span>
+              <span class="pill pill-blue">&#128257; Update / Cancel</span>
+            </div>
+          </div>
           <div class="glow-arrow">&#x2192;</div>
         </a>
       </div>
@@ -170,7 +203,18 @@
       <div class="item-stack">
         <a href="https://workday-sys.github.io/business-process/timeandleave/time_entry.html" class="glow-card item-entry" target="_self" rel="noopener noreferrer">
           <div class="glow-icon icon-entry">&#9201;</div>
-          <div class="glow-text"><div class="glow-title">Time Entry</div><div class="glow-desc">How employees enter, submit, approve, and correct timesheets. Covers web clock for non-exempt employees, microblock self-reporting for HEO/HEA, and absence requests.</div></div>
+          <div class="glow-text">
+            <div class="glow-title">Time Entry</div>
+            <div class="glow-desc">How employees enter, submit, approve, and correct timesheets. Covers web clock for non-exempt employees, microblock self-reporting for HEO/HEA, and absence requests.</div>
+            <br/>
+            <div class="glow-pills-label">Workflows Covered</div>
+            <div class="glow-pills">
+              <span class="pill pill-blue">&#9201; Enter Time</span>
+              <span class="pill pill-teal">&#10003; Approve Time</span>
+              <span class="pill pill-gold">&#9999;&#65039; Edit / Correct Time</span>
+              <span class="pill pill-slate">&#128197; Request Absence</span>
+            </div>
+          </div>
           <div class="glow-arrow">&#x2192;</div>
         </a>
       </div>
