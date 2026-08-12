@@ -8,77 +8,28 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --navy: #0f2040;
-    --navy-mid: #1a3460;
-    --blue: #1e5fa8;
-    --blue-light: #2e7dd1;
-    --gold: #e8a922;
-    --teal: #0e8a7a;
-    --red: #c0392b;
-    --green: #1a7a4a;
-    --slate: #4a5568;
-    --light: #f4f7fb;
-    --white: #ffffff;
-    --border: #dde4ef;
-    --card-shadow: 0 4px 24px rgba(15,32,64,0.10);
-    --role-hr: #2e7dd1;
-    --role-budget: #e8a922;
-    --role-payroll: #0e8a7a;
+    --navy: #0f2040; --navy-mid: #1a3460; --blue: #1e5fa8; --blue-light: #2e7dd1;
+    --gold: #e8a922; --teal: #0e8a7a; --red: #c0392b; --slate: #4a5568;
+    --light: #f4f7fb; --white: #ffffff; --border: #dde4ef; --card-shadow: 0 4px 24px rgba(15,32,64,0.10);
     --role-manager: #7c3aed;
-    --role-admin: #64748b;
-  }
 
-  * {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+    /* Category color tokens for this page (reusing tam's existing 4-color palette) */
+    --jobreq-solid: #1e5fa8;    --jobreq-glow: rgba(30,95,168,0.28);    --jobreq-tint: #dfebfa;   --jobreq-text: #0d3f73;
+    --jobapp-solid: #0e8a7a;    --jobapp-glow: rgba(14,138,122,0.28);   --jobapp-tint: #d9f5ef;   --jobapp-text: #065f46;
+    --evergreen-solid: #c8850c; --evergreen-glow: rgba(200,133,12,0.28); --evergreen-tint: #faedcf; --evergreen-text: #7a5800;
+    --recruit-solid: #7c3aed;   --recruit-glow: rgba(124,58,237,0.28);  --recruit-tint: #ece3fc;  --recruit-text: #4c1d95;
   }
-
-  body {
-    font-family: 'DM Sans', Arial, sans-serif;
-    background: var(--light);
-    color: var(--navy);
-    min-height: 100vh;
-  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', Arial, sans-serif; background: var(--light); color: var(--navy); min-height: 100vh; }
 
   /* ── HEADER ── */
   .header {
-    background: -webkit-linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, var(--blue) 100%);
-    background: -moz-linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, var(--blue) 100%);
     background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, var(--blue) 100%);
-    color: white;
-    padding: 36px 48px 28px;
-    position: relative;
-    overflow: hidden;
+    color: white; padding: 36px 48px 28px; position: relative; overflow: hidden;
   }
-  .header::before {
-    content: '';
-    position: absolute;
-    top: -60px;
-    right: -60px;
-    width: 300px;
-    height: 300px;
-    background: -webkit-radial-gradient(circle, rgba(232,169,34,0.18) 0%, transparent 70%);
-    background: radial-gradient(circle, rgba(232,169,34,0.18) 0%, transparent 70%);
-    border-radius: 50%;
-  }
-  .header::after {
-    content: '';
-    position: absolute;
-    bottom: -40px;
-    left: 30%;
-    width: 200px;
-    height: 200px;
-    background: -webkit-radial-gradient(circle, rgba(46,125,209,0.2) 0%, transparent 70%);
-    background: radial-gradient(circle, rgba(46,125,209,0.2) 0%, transparent 70%);
-    border-radius: 50%;
-  }
-  .header-inner {
-    position: relative;
-    z-index: 1;
-  }
+  .header::before { content:''; position:absolute; top:-60px; right:-60px; width:300px; height:300px; background: radial-gradient(circle, rgba(232,169,34,0.18) 0%, transparent 70%); border-radius:50%; }
+  .header::after { content:''; position:absolute; bottom:-40px; left:30%; width:200px; height:200px; background: radial-gradient(circle, rgba(46,125,209,0.2) 0%, transparent 70%); border-radius:50%; }
+  .header-inner { position: relative; z-index: 1; }
 
     /* Breadcrumb — rendered from the BREADCRUMB_TRAIL config near the bottom of this file */
   .breadcrumb { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; font-size: 0.82rem; min-height: 1.2em; }
@@ -86,258 +37,86 @@
   .breadcrumb a:hover { color: white; text-decoration: underline; }
   .breadcrumb .sep { color: rgba(255,255,255,0.4); }
   .breadcrumb .current { color: var(--gold); font-weight: 600; }
-
-  
-  .header h1 {
-    font-family: 'DM Serif Display', Georgia, serif;
-    font-size: 2.2rem;
-    letter-spacing: -0.5px;
-    margin-bottom: 6px;
-  }
-  .header p {
-    color: rgba(255,255,255,0.72);
-    font-size: 0.95rem;
-    font-weight: 400;
-  }
-  .header-badge {
-    display: inline-block;
-    background: var(--gold);
-    color: var(--navy);
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    padding: 3px 10px;
-    border-radius: 20px;
-    margin-bottom: 12px;
-  }
+  .header h1 { font-family: 'DM Serif Display', Georgia, serif; font-size: 2.2rem; letter-spacing: -0.5px; margin-bottom: 6px; }
+  .header p { color: rgba(255,255,255,0.72); font-size: 0.95rem; font-weight: 400; }
+  .header-badge { display: inline-block; background: var(--gold); color: var(--navy); font-size: 0.72rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; margin-bottom: 12px; }
 
   /* ── CONTENT ── */
-  .content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 40px 48px 60px;
-  }
+  .content { max-width: 1200px; margin: 0 auto; padding: 40px 48px 60px; }
 
-  /* ── SECTION INTRO ── */
-  .section-intro {
-    margin-bottom: 28px;
-  }
-  .section-intro h2 {
-    font-family: 'DM Serif Display', Georgia, serif;
-    font-size: 1.5rem;
-    color: var(--navy);
-    margin-bottom: 6px;
-  }
-  .section-intro p {
-    color: var(--slate);
-    font-size: 0.9rem;
-  }
+  .section-intro { margin-bottom: 28px; }
+  .section-intro h2 { font-family: 'DM Serif Display', Georgia, serif; font-size: 1.5rem; color: var(--navy); margin-bottom: 6px; }
+  .section-intro p { color: var(--slate); font-size: 0.9rem; }
 
-  /* ── INFO BANNER ── */
   .info-banner {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: flex-start;
-    -ms-flex-align: flex-start;
-    align-items: flex-start;
-    gap: 12px;
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-left: 4px solid var(--blue);
-    border-radius: 10px;
-    padding: 14px 18px;
-    margin-bottom: 28px;
-    font-size: 0.86rem;
-    color: var(--slate);
-    line-height: 1.6;
-    -webkit-box-shadow: var(--card-shadow);
-    box-shadow: var(--card-shadow);
+    display: flex; align-items: flex-start; gap: 12px; background: var(--white);
+    border: 1px solid var(--border); border-left: 4px solid var(--blue); border-radius: 10px;
+    padding: 14px 18px; margin-bottom: 28px; font-size: 0.86rem; color: var(--slate);
+    line-height: 1.6; box-shadow: var(--card-shadow);
   }
   .info-banner strong { color: var(--navy); }
 
-  /* ── MODULE GRID ── */
-  .module-grid {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
-    gap: 24px;
-    margin-bottom: 32px;
+  /* ── CATEGORY GRID (single category, spans full width) ── */
+  .categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; align-items: start; }
+  .category-block.span-2 { grid-column: 1 / -1; }
+
+  .category-head {
+    display: inline-flex; align-items: center; gap: 9px; margin-bottom: 16px;
+    padding: 9px 18px 9px 14px; border-radius: 30px; box-shadow: 0 3px 10px rgba(15,32,64,0.08);
+    background: var(--jobreq-tint); color: var(--jobreq-text);
+  }
+  .head-icon { font-size: 1.05rem; line-height: 1; flex-shrink: 0; }
+  .category-title {
+    font-family: 'DM Sans', Arial, sans-serif; font-size: 0.86rem; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.9px;
+  }
+  .category-count {
+    font-size: 0.68rem; font-weight: 800; padding: 2px 9px; border-radius: 20px; margin-left: 2px;
+    background: rgba(255,255,255,0.6);
   }
 
-  /* ── MODULE CARD ── */
-  .module-card {
-    background: var(--white);
-    border-radius: 16px;
-    -webkit-box-shadow: var(--card-shadow);
-    box-shadow: var(--card-shadow);
-    border: 1px solid var(--border);
-    overflow: hidden;
-    -webkit-box-flex: 1;
-    -ms-flex: 1 1 calc(50% - 12px);
-    flex: 1 1 calc(50% - 12px);
-    min-width: 280px;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    -webkit-transition: -webkit-transform 0.2s, -webkit-box-shadow 0.2s;
-    -moz-transition: transform 0.2s, box-shadow 0.2s;
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-  .module-card:hover {
-    -webkit-transform: translateY(-3px);
-    -ms-transform: translateY(-3px);
-    transform: translateY(-3px);
-    -webkit-box-shadow: 0 10px 36px rgba(15,32,64,0.16);
-    box-shadow: 0 10px 36px rgba(15,32,64,0.16);
+  /* Elevated glow item cards — arranged 2-per-row to preserve the original flat grid feel */
+  .item-stack {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
   }
 
-  /* ── ACCENT BARS ── */
-  .card-accent {
-    height: 5px;
-    width: 100%;
+  .glow-card {
+    display: flex; align-items: center; gap: 16px; background: var(--white);
+    border-radius: 14px; padding: 16px 20px; text-decoration: none; color: inherit;
+    border: 1px solid var(--border); position: relative; overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   }
-  .accent-blue {
-    background: -webkit-linear-gradient(90deg, var(--navy), var(--blue-light));
-    background: linear-gradient(90deg, var(--navy), var(--blue-light));
+  .glow-card::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
   }
-  .accent-teal {
-    background: -webkit-linear-gradient(90deg, #0a5a50, var(--teal));
-    background: linear-gradient(90deg, #0a5a50, var(--teal));
-  }
-  .accent-gold {
-    background: -webkit-linear-gradient(90deg, #5b2a00, #e8a922);
-    background: linear-gradient(90deg, #5b2a00, #e8a922);
-  }
-  .accent-purple {
-    background: -webkit-linear-gradient(90deg, #2d1060, var(--role-manager));
-    background: linear-gradient(90deg, #2d1060, var(--role-manager));
-  }
+  .item-jobreq::before    { background: var(--jobreq-solid); }
+  .item-jobapp::before    { background: var(--jobapp-solid); }
+  .item-evergreen::before { background: var(--evergreen-solid); }
+  .item-recruit::before   { background: var(--recruit-solid); }
 
-  /* ── CARD BODY ── */
-  .card-body {
-    padding: 28px 28px 22px;
-    -webkit-box-flex: 1;
-    -ms-flex: 1;
-    flex: 1;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
-    flex-direction: column;
-  }
+  .item-jobreq:hover    { transform: translateY(-4px); box-shadow: 0 14px 30px var(--jobreq-glow); border-color: var(--jobreq-solid); }
+  .item-jobapp:hover    { transform: translateY(-4px); box-shadow: 0 14px 30px var(--jobapp-glow); border-color: var(--jobapp-solid); }
+  .item-evergreen:hover { transform: translateY(-4px); box-shadow: 0 14px 30px var(--evergreen-glow); border-color: var(--evergreen-solid); }
+  .item-recruit:hover   { transform: translateY(-4px); box-shadow: 0 14px 30px var(--recruit-glow); border-color: var(--recruit-solid); }
 
-  .card-header-row {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: flex-start;
-    -ms-flex-align: flex-start;
-    align-items: flex-start;
-    gap: 14px;
-    margin-bottom: 14px;
-  }
+  .glow-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; color: white; flex-shrink: 0; }
+  .icon-jobreq    { background: var(--jobreq-solid); }
+  .icon-jobapp    { background: var(--jobapp-solid); }
+  .icon-evergreen { background: var(--evergreen-solid); }
+  .icon-recruit   { background: var(--recruit-solid); }
 
-  .card-icon {
-    width: 50px;
-    height: 50px;
-    border-radius: 12px;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    -ms-flex-negative: 0;
-    flex-shrink: 0;
-  }
-  .icon-blue {
-    background: -webkit-linear-gradient(135deg, var(--navy), var(--blue));
-    background: linear-gradient(135deg, var(--navy), var(--blue));
-  }
-  .icon-teal {
-    background: -webkit-linear-gradient(135deg, #1a4a2e, var(--teal));
-    background: linear-gradient(135deg, #1a4a2e, var(--teal));
-  }
-  .icon-gold {
-    background: -webkit-linear-gradient(135deg, #5b2a00, #c06a10);
-    background: linear-gradient(135deg, #5b2a00, #c06a10);
-  }
-  .icon-purple {
-    background: -webkit-linear-gradient(135deg, #2d1060, var(--role-manager));
-    background: linear-gradient(135deg, #2d1060, var(--role-manager));
-  }
+  .glow-text { flex: 1; min-width: 0; }
+  .glow-title { font-family: 'DM Serif Display', Georgia, serif; font-size: 1.02rem; color: var(--navy); margin-bottom: 3px; }
+  .glow-desc { font-size: 0.82rem; color: var(--slate); line-height: 1.5; margin-bottom: 8px; }
 
-  .card-title-group { -webkit-box-flex: 1; -ms-flex: 1; flex: 1; }
-  .card-eyebrow {
-    font-size: 0.7rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1.2px;
-    color: var(--slate);
-    margin-bottom: 4px;
+  .glow-pills-label {
+    font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px;
+    color: var(--slate); margin-bottom: 6px;
   }
-  .card-title {
-    font-family: 'DM Serif Display', Georgia, serif;
-    font-size: 1.3rem;
-    color: var(--navy);
-    line-height: 1.25;
-  }
-
-  .card-desc {
-    font-size: 0.87rem;
-    color: var(--slate);
-    line-height: 1.65;
-    margin-bottom: 18px;
-    -webkit-box-flex: 1;
-    -ms-flex: 1;
-    flex: 1;
-  }
-
-  /* ── PILLS ── */
-  .pills-label {
-    font-size: 0.7rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.9px;
-    color: var(--slate);
-    margin-bottom: 8px;
-  }
-  .pills-row {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 22px;
-  }
+  .glow-pills { display: flex; flex-wrap: wrap; gap: 5px; }
   .pill {
-    display: -webkit-inline-box;
-    display: -ms-inline-flexbox;
-    display: inline-flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    gap: 5px;
-    padding: 4px 11px;
-    border-radius: 20px;
-    font-size: 0.76rem;
-    font-weight: 600;
-    white-space: nowrap;
+    display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px;
+    border-radius: 20px; font-size: 0.7rem; font-weight: 600; white-space: nowrap;
   }
   .pill-blue   { background: #ddeeff; color: var(--blue); }
   .pill-teal   { background: #d9f5ef; color: var(--teal); }
@@ -345,70 +124,20 @@
   .pill-purple { background: #ede9ff; color: #5b21b6; }
   .pill-red    { background: #fce7e7; color: var(--red); }
   .pill-slate  { background: #f1f5f9; color: var(--slate); }
-  .pill-navy   { background: #e0e8f5; color: var(--navy); }
 
-  /* ── CARD FOOTER / BUTTON ── */
-  .card-footer {
-    padding-top: 16px;
-    border-top: 1px solid var(--border);
-    margin-top: auto;
-  }
-  .open-btn {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    padding: 12px 20px;
-    background: -webkit-linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
-    background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
-    color: white;
-    font-family: 'DM Sans', Arial, sans-serif;
-    font-size: 0.87rem;
-    font-weight: 700;
-    letter-spacing: 0.3px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    text-decoration: none;
-    -webkit-transition: opacity 0.2s, -webkit-transform 0.15s;
-    -moz-transition: opacity 0.2s, transform 0.15s;
-    transition: opacity 0.2s, transform 0.15s;
-  }
-  .open-btn:hover {
-    opacity: 0.9;
-    -webkit-transform: translateY(-1px);
-    -ms-transform: translateY(-1px);
-    transform: translateY(-1px);
-  }
-  .btn-arrow {
-    -webkit-transition: -webkit-transform 0.2s;
-    -moz-transition: transform 0.2s;
-    transition: transform 0.2s;
-  }
-  .open-btn:hover .btn-arrow {
-    -webkit-transform: translateX(3px);
-    -ms-transform: translateX(3px);
-    transform: translateX(3px);
-  }
+  .glow-arrow { font-size: 1.1rem; color: var(--border); flex-shrink: 0; transition: color 0.2s, transform 0.2s; }
+  .glow-card:hover .glow-arrow { transform: translateX(3px); }
+  .item-jobreq:hover .glow-arrow    { color: var(--jobreq-solid); }
+  .item-jobapp:hover .glow-arrow    { color: var(--jobapp-solid); }
+  .item-evergreen:hover .glow-arrow { color: var(--evergreen-solid); }
+  .item-recruit:hover .glow-arrow   { color: var(--recruit-solid); }
 
-  /* ── RESPONSIVE ── */
-  @media (max-width: 860px) {
-    .content { padding: 28px 24px 48px; }
-    .header  { padding: 28px 24px 22px; }
+  @media (max-width: 900px) { .categories-grid { grid-template-columns: 1fr; } .item-stack { grid-template-columns: 1fr; } }
+  @media (max-width: 700px) {
+    .content { padding: 28px 20px 48px; }
+    .header { padding: 28px 20px 22px; }
     .header h1 { font-size: 1.75rem; }
-    .module-card { -webkit-box-flex: 1; -ms-flex: 1 1 100%; flex: 1 1 100%; min-width: 0; }
-  }
-  @media (max-width: 480px) {
-    .content { padding: 20px 16px 40px; }
-    .header  { padding: 22px 16px 18px; }
-    .card-body { padding: 20px 18px 16px; }
+    .glow-card { padding: 14px 16px; gap: 12px; }
   }
 </style>
 </head>
@@ -431,7 +160,7 @@
     <span style="font-size:1.1rem;flex-shrink:0;">&#128204;</span>
     <div>
       <strong>How to use this hub:</strong>
-      Each card below represents a dedicated interactive dashboard. Click <strong>Open Dashboard</strong> to explore the full process &#8212; flowcharts, role breakdowns, decision points, and approvals &#8212; for that topic.
+      Each card below represents a dedicated interactive dashboard. Click a card to explore the full process &#8212; flowcharts, role breakdowns, decision points, and approvals &#8212; for that topic.
     </div>
   </div>
 
@@ -440,125 +169,85 @@
     <p>4 interactive guides covering Talent Acquisition &amp; Management workflows</p>
   </div>
 
-  <div class="module-grid">
+  <div class="categories-grid">
 
-    <!-- Card 1: Job Requisition -->
-    <div class="module-card">
-      <div class="card-accent accent-blue"></div>
-      <div class="card-body">
-        <div class="card-header-row">
-          <div class="card-icon icon-blue">&#128221;</div>
-          <div class="card-title-group">
-            <div class="card-eyebrow">Talent Acquisition</div>
-            <div class="card-title">Job Requisition</div>
+    <!-- Talent Acquisition & Management -->
+    <div class="category-block span-2">
+      <div class="category-head"><span class="head-icon">&#128188;</span><span class="category-title">Talent Acquisition &amp; Management</span><span class="category-count">4</span></div>
+      <div class="item-stack">
+
+        <a href="https://workday-sys.github.io/business-process/tam/job_requisition.html" class="glow-card item-jobreq" target="_blank" rel="noopener noreferrer">
+          <div class="glow-icon icon-jobreq">&#128221;</div>
+          <div class="glow-text">
+            <div class="glow-title">Job Requisition</div>
+            <div class="glow-desc">Full lifecycle for creating and managing job requisitions &#8212; initiation, org assignments, and budget approval.</div>
+            <br/>
+            <div class="glow-pills-label">Workflows Covered</div>
+            <div class="glow-pills">
+              <span class="pill pill-blue">&#43; Create Requisition</span>
+              <span class="pill pill-gold">&#10003; Budget Approval</span>
+              <span class="pill pill-teal">&#128196; Org Assignments</span>
+              <span class="pill pill-slate">&#128100; Role Routing</span>
+            </div>
           </div>
-        </div>
-        <p class="card-desc">
-          Full lifecycle for creating and managing job requisitions &#8212; from initiation through budget approval. Covers who initiates, org assignments, compensation defaults, and approval routing by role.
-        </p>
-        <div class="pills-label">Workflows Covered</div>
-        <div class="pills-row">
-          <span class="pill pill-blue">&#43; Create Requisition</span>
-          <span class="pill pill-gold">&#10003; Budget Approval</span>
-          <span class="pill pill-teal">&#128196; Org Assignments</span>
-          <span class="pill pill-slate">&#128100; Role Routing</span>
-        </div>
-        <div class="card-footer">
-          <a class="open-btn" href="https://workday-sys.github.io/business-process/tam/job_requisition.html" target="_self" rel="noopener noreferrer">
-            Open Dashboard <span class="btn-arrow">&#x2192;</span>
-          </a>
-        </div>
+          <div class="glow-arrow">&#x2192;</div>
+        </a>
+
+        <a href="https://workday-sys.github.io/business-process/tam/job_application.html" class="glow-card item-jobapp" target="_blank" rel="noopener noreferrer">
+          <div class="glow-icon icon-jobapp">&#128203;</div>
+          <div class="glow-text">
+            <div class="glow-title">Job Application</div>
+            <div class="glow-desc">End-to-end review process &#8212; screening, interview stages, disposition, and offer routing.</div>
+            <br/>
+            <div class="glow-pills-label">Workflows Covered</div>
+            <div class="glow-pills">
+              <span class="pill pill-teal">&#128203; Application Review</span>
+              <span class="pill pill-blue">&#127775; Interview Stages</span>
+              <span class="pill pill-gold">&#128220; Offer Routing</span>
+              <span class="pill pill-red">&#128683; Disposition</span>
+            </div>
+          </div>
+          <div class="glow-arrow">&#x2192;</div>
+        </a>
+
+        <a href="https://workday-sys.github.io/business-process/tam/evergreen.html" class="glow-card item-evergreen" target="_blank" rel="noopener noreferrer">
+          <div class="glow-icon icon-evergreen">&#127807;</div>
+          <div class="glow-text">
+            <div class="glow-title">Evergreen Requisition</div>
+            <div class="glow-desc">Managing always-open requisitions for ongoing or high-volume hiring and candidate pools.</div>
+            <br/>
+            <div class="glow-pills-label">Workflows Covered</div>
+            <div class="glow-pills">
+              <span class="pill pill-gold">&#127807; Evergreen Setup</span>
+              <span class="pill pill-slate">&#128101; Candidate Pools</span>
+              <span class="pill pill-blue">&#128257; Linked Requisitions</span>
+              <span class="pill pill-teal">&#128260; Applicant Movement</span>
+            </div>
+          </div>
+          <div class="glow-arrow">&#x2192;</div>
+        </a>
+
+        <a href="https://workday-sys.github.io/business-process/tam/recruiting.html" class="glow-card item-recruit" target="_blank" rel="noopener noreferrer">
+          <div class="glow-icon icon-recruit">&#128269;</div>
+          <div class="glow-text">
+            <div class="glow-title">Recruiting</div>
+            <div class="glow-desc">Sourcing, pipeline management, assessments, and final hiring decisions with role-based approvals.</div>
+            <br/>
+            <div class="glow-pills-label">Workflows Covered</div>
+            <div class="glow-pills">
+              <span class="pill pill-purple">&#128269; Sourcing</span>
+              <span class="pill pill-blue">&#9989; Assessments</span>
+              <span class="pill pill-gold">&#128313; Pipeline Mgmt</span>
+              <span class="pill pill-teal">&#127942; Hiring Decision</span>
+            </div>
+          </div>
+          <div class="glow-arrow">&#x2192;</div>
+        </a>
+
       </div>
     </div>
 
-    <!-- Card 2: Job Application -->
-    <div class="module-card">
-      <div class="card-accent accent-teal"></div>
-      <div class="card-body">
-        <div class="card-header-row">
-          <div class="card-icon icon-teal">&#128203;</div>
-          <div class="card-title-group">
-            <div class="card-eyebrow">Talent Acquisition</div>
-            <div class="card-title">Job Application</div>
-          </div>
-        </div>
-        <p class="card-desc">
-          End-to-end guide for the job application review process &#8212; screening, interview stages, disposition decisions, and offer routing. Includes decision points for each stage of the candidate pipeline.
-        </p>
-        <div class="pills-label">Workflows Covered</div>
-        <div class="pills-row">
-          <span class="pill pill-teal">&#128203; Application Review</span>
-          <span class="pill pill-blue">&#127775; Interview Stages</span>
-          <span class="pill pill-gold">&#128220; Offer Routing</span>
-          <span class="pill pill-red">&#128683; Disposition</span>
-        </div>
-        <div class="card-footer">
-          <a class="open-btn" href="https://workday-sys.github.io/business-process/tam/job_application.html" target="_self" rel="noopener noreferrer">
-            Open Dashboard <span class="btn-arrow">&#x2192;</span>
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <!-- Card 3: Evergreen Requisition -->
-    <div class="module-card">
-      <div class="card-accent accent-gold"></div>
-      <div class="card-body">
-        <div class="card-header-row">
-          <div class="card-icon icon-gold">&#127807;</div>
-          <div class="card-title-group">
-            <div class="card-eyebrow">Talent Acquisition</div>
-            <div class="card-title">Evergreen Requisition</div>
-          </div>
-        </div>
-        <p class="card-desc">
-          Workflows for managing evergreen (always-open) requisitions &#8212; used for ongoing or high-volume hiring. Covers the link between primary reqs, candidate pools, and how applicants move between them.
-        </p>
-        <div class="pills-label">Workflows Covered</div>
-        <div class="pills-row">
-          <span class="pill pill-gold">&#127807; Evergreen Setup</span>
-          <span class="pill pill-navy">&#128101; Candidate Pools</span>
-          <span class="pill pill-blue">&#128257; Linked Requisitions</span>
-          <span class="pill pill-teal">&#128260; Applicant Movement</span>
-        </div>
-        <div class="card-footer">
-          <a class="open-btn" href="https://workday-sys.github.io/business-process/tam/evergreen.html" target="_self" rel="noopener noreferrer">
-            Open Dashboard <span class="btn-arrow">&#x2192;</span>
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <!-- Card 4: Recruiting -->
-    <div class="module-card">
-      <div class="card-accent accent-purple"></div>
-      <div class="card-body">
-        <div class="card-header-row">
-          <div class="card-icon icon-purple">&#128269;</div>
-          <div class="card-title-group">
-            <div class="card-eyebrow">Talent Acquisition &amp; Management</div>
-            <div class="card-title">Recruiting</div>
-          </div>
-        </div>
-        <p class="card-desc">
-          Comprehensive recruiting process guide covering sourcing, pipeline management, assessments, and final hiring decisions. Includes role-based approval paths and key decision flags throughout the process.
-        </p>
-        <div class="pills-label">Workflows Covered</div>
-        <div class="pills-row">
-          <span class="pill pill-purple">&#128269; Sourcing</span>
-          <span class="pill pill-blue">&#9989; Assessments</span>
-          <span class="pill pill-gold">&#128313; Pipeline Mgmt</span>
-          <span class="pill pill-teal">&#127942; Hiring Decision</span>
-        </div>
-        <div class="card-footer">
-          <a class="open-btn" href="https://workday-sys.github.io/business-process/tam/recruiting.html" target="_self" rel="noopener noreferrer">
-            Open Dashboard <span class="btn-arrow">&#x2192;</span>
-          </a>
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /module-grid -->
+  </div><!-- /categories-grid -->
 
 </div><!-- /content -->
 
@@ -586,7 +275,7 @@
       return sep + crumb;
     }).join('');
   })();
-  
 </script>
+
 </body>
 </html>
