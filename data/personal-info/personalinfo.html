@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Personal Information Changes Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0f2040; --navy-mid: #1a3460; --blue: #1e5fa8; --blue-light: #2e7dd1;
+    --gold: #e8a922; --teal: #0e8a7a; --red: #c0392b; --slate: #4a5568;
+    --light: #f4f7fb; --white: #ffffff; --border: #dde4ef; --card-shadow: 0 4px 24px rgba(15,32,64,0.10);
+    --role-manager: #7c3aed;
+
+    /* Category color tokens for this page — one per Personal Information Changes dashboard */
+    --pi1-solid: #1e5fa8;    --pi1-glow: rgba(30,95,168,0.28);    --pi1-tint: #dfebfa;   --pi1-text: #0d3f73;
+    --pi2-solid: #0e8a7a;    --pi2-glow: rgba(14,138,122,0.28);   --pi2-tint: #d9f5ef;   --pi2-text: #065f46;
+    --pi3-solid: #c8850c;    --pi3-glow: rgba(200,133,12,0.28);   --pi3-tint: #faedcf;   --pi3-text: #7a5800;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', Arial, sans-serif; background: var(--light); color: var(--navy); min-height: 100vh; }
+
+  /* ── HEADER ── */
+  .header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, var(--blue) 100%);
+    color: white; padding: 36px 48px 28px; position: relative; overflow: hidden;
+  }
+  .header::before { content:''; position:absolute; top:-60px; right:-60px; width:300px; height:300px; background: radial-gradient(circle, rgba(232,169,34,0.18) 0%, transparent 70%); border-radius:50%; }
+  .header::after { content:''; position:absolute; bottom:-40px; left:30%; width:200px; height:200px; background: radial-gradient(circle, rgba(46,125,209,0.2) 0%, transparent 70%); border-radius:50%; }
+  .header-inner { position: relative; z-index: 1; }
+
+    /* Breadcrumb — rendered from the BREADCRUMB_TRAIL config near the bottom of this file */
+  .breadcrumb { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; font-size: 0.82rem; min-height: 1.2em; }
+  .breadcrumb a { color: rgba(255,255,255,0.65); text-decoration: none; font-weight: 500; }
+  .breadcrumb a:hover { color: white; text-decoration: underline; }
+  .breadcrumb .sep { color: rgba(255,255,255,0.4); }
+  .breadcrumb .current { color: var(--gold); font-weight: 600; }
+  .header h1 { font-family: 'DM Serif Display', Georgia, serif; font-size: 2.2rem; letter-spacing: -0.5px; margin-bottom: 6px; }
+  .header p { color: rgba(255,255,255,0.72); font-size: 0.95rem; font-weight: 400; }
+  .header-badge { display: inline-block; background: var(--gold); color: var(--navy); font-size: 0.72rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; margin-bottom: 12px; }
+
+  /* ── CONTENT ── */
+  .content { max-width: 1200px; margin: 0 auto; padding: 40px 48px 60px; }
+
+  .section-intro { margin-bottom: 28px; }
+  .section-intro h2 { font-family: 'DM Serif Display', Georgia, serif; font-size: 1.5rem; color: var(--navy); margin-bottom: 6px; }
+  .section-intro p { color: var(--slate); font-size: 0.9rem; }
+
+  .info-banner {
+    display: flex; align-items: flex-start; gap: 12px; background: var(--white);
+    border: 1px solid var(--border); border-left: 4px solid var(--blue); border-radius: 10px;
+    padding: 14px 18px; margin-bottom: 28px; font-size: 0.86rem; color: var(--slate);
+    line-height: 1.6; box-shadow: var(--card-shadow);
+  }
+  .info-banner strong { color: var(--navy); }
+
+  .scope-banner {
+    display: flex; align-items: flex-start; gap: 12px; background: var(--white);
+    border: 1px solid var(--border); border-left: 4px solid var(--red); border-radius: 10px;
+    padding: 16px 20px; margin-top: 32px; font-size: 0.87rem; color: var(--slate);
+    line-height: 1.6; box-shadow: var(--card-shadow);
+  }
+  .scope-banner-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+  .scope-banner strong { color: var(--navy); }
+
+  /* ── CATEGORY GRID (single category, spans full width) ── */
+  .categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; align-items: start; }
+  .category-block.span-2 { grid-column: 1 / -1; }
+
+  .category-head {
+    display: inline-flex; align-items: center; gap: 9px; margin-bottom: 16px;
+    padding: 9px 18px 9px 14px; border-radius: 30px; box-shadow: 0 3px 10px rgba(15,32,64,0.08);
+    background: var(--pi1-tint); color: var(--pi1-text);
+  }
+  .head-icon { font-size: 1.05rem; line-height: 1; flex-shrink: 0; }
+  .category-title {
+    font-family: 'DM Sans', Arial, sans-serif; font-size: 0.86rem; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.9px;
+  }
+  .category-count {
+    font-size: 0.68rem; font-weight: 800; padding: 2px 9px; border-radius: 20px; margin-left: 2px;
+    background: rgba(255,255,255,0.6);
+  }
+
+  /* Elevated glow item cards — arranged 2-per-row to preserve the original flat grid feel */
+  .item-stack {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
+  }
+
+  .glow-card {
+    display: flex; align-items: center; gap: 16px; background: var(--white);
+    border-radius: 14px; padding: 16px 20px; text-decoration: none; color: inherit;
+    border: 1px solid var(--border); position: relative; overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+  .glow-card::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+  }
+  .item-pi1::before { background: var(--pi1-solid); }
+  .item-pi2::before { background: var(--pi2-solid); }
+  .item-pi3::before { background: var(--pi3-solid); }
+
+  .item-pi1:hover { transform: translateY(-4px); box-shadow: 0 14px 30px var(--pi1-glow); border-color: var(--pi1-solid); }
+  .item-pi2:hover { transform: translateY(-4px); box-shadow: 0 14px 30px var(--pi2-glow); border-color: var(--pi2-solid); }
+  .item-pi3:hover { transform: translateY(-4px); box-shadow: 0 14px 30px var(--pi3-glow); border-color: var(--pi3-solid); }
+
+  .glow-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; color: white; flex-shrink: 0; }
+  .icon-pi1 { background: var(--pi1-solid); }
+  .icon-pi2 { background: var(--pi2-solid); }
+  .icon-pi3 { background: var(--pi3-solid); }
+
+  .glow-text { flex: 1; min-width: 0; }
+  .glow-title { font-family: 'DM Serif Display', Georgia, serif; font-size: 1.3rem; color: var(--navy); margin-bottom: 3px; }
+  .glow-desc { font-size: 0.87rem; color: var(--slate); line-height: 1.25; margin-bottom: 8px; }
+
+  .glow-pills-label {
+    font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px;
+    color: var(--slate); margin-bottom: 6px;
+  }
+  .glow-pills { display: flex; flex-wrap: wrap; gap: 5px; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px;
+    border-radius: 20px; font-size: 0.7rem; font-weight: 600; white-space: nowrap;
+  }
+  .pill-blue   { background: #ddeeff; color: var(--blue); }
+  .pill-teal   { background: #d9f5ef; color: var(--teal); }
+  .pill-gold   { background: #fff3cc; color: #7a5800; }
+  .pill-purple { background: #ede9ff; color: #5b21b6; }
+  .pill-red    { background: #fce7e7; color: var(--red); }
+  .pill-slate  { background: #f1f5f9; color: var(--slate); }
+
+  .glow-arrow { font-size: 1.1rem; color: var(--border); flex-shrink: 0; transition: color 0.2s, transform 0.2s; }
+  .glow-card:hover .glow-arrow { transform: translateX(3px); }
+  .item-pi1:hover .glow-arrow { color: var(--pi1-solid); }
+  .item-pi2:hover .glow-arrow { color: var(--pi2-solid); }
+  .item-pi3:hover .glow-arrow { color: var(--pi3-solid); }
+
+  @media (max-width: 900px) { .categories-grid { grid-template-columns: 1fr; } .item-stack { grid-template-columns: 1fr; } }
+  @media (max-width: 700px) {
+    .content { padding: 28px 20px 48px; }
+    .header { padding: 28px 20px 22px; }
+    .header h1 { font-size: 1.75rem; }
+    .glow-card { padding: 14px 16px; gap: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<div class="header">
+  <div class="header-inner">
+    <div class="breadcrumb" id="breadcrumb"></div>
+    <div class="header-badge">Business Process</div>
+    <h1>Personal Information Changes</h1>
+    <p>Select a dashboard below to explore detailed workflows, roles, and approval steps</p>
+  </div>
+</div>
+
+<!-- ══ MAIN CONTENT ══ -->
+<div class="content">
+
+  <div class="info-banner">
+    <span style="font-size:1.1rem;flex-shrink:0;">&#128204;</span>
+    <div>
+      <strong>How to use this hub:</strong>
+      Each card below represents a dedicated interactive dashboard. Click a card to explore the full process &#8212; flowcharts, role breakdowns, decision points, and approvals &#8212; for that topic.
+    </div>
+  </div>
+
+  <div class="section-intro">
+    <h2>Available Dashboards</h2>
+    <p>3 interactive guides covering Personal Information Changes workflows</p>
+  </div>
+
+  <div class="categories-grid">
+
+    <!-- Personal Information Changes -->
+    <div class="category-block span-2">
+      <div class="category-head"><span class="head-icon">&#128100;</span><span class="category-title">Personal Information Changes</span><span class="category-count">3</span></div>
+      <div class="item-stack">
+
+        <a href="/data/personal-info/personal-info1.html" class="glow-card item-pi1" target="_self" rel="noopener noreferrer">
+          <div class="glow-icon icon-pi1">&#128273;</div>
+          <div class="glow-text">
+            <div class="glow-title">Personal Information Changes I</div>
+            <div class="glow-desc">ID &amp; Passport/Visa change workflows &#8212; Government IDs, all-in-one ID updates, Other IDs, and Passport &amp; Visa changes.</div>
+            <br/>
+            <div class="glow-pills-label">Workflows Covered</div>
+            <div class="glow-pills">
+              <span class="pill pill-blue">&#128273; Government IDs</span>
+              <span class="pill pill-teal">&#128203; ID Information</span>
+              <span class="pill pill-gold">&#128194; Other IDs</span>
+              <span class="pill pill-slate">&#128196; Passports &amp; Visa</span>
+            </div>
+          </div>
+          <div class="glow-arrow">&#x2192;</div>
+        </a>
+
+        <a href="/data/personal-info/personal-info2.html" class="glow-card item-pi2" target="_self" rel="noopener noreferrer">
+          <div class="glow-icon icon-pi2">&#128222;</div>
+          <div class="glow-text">
+            <div class="glow-title">Personal Information Changes II</div>
+            <div class="glow-desc">Home Contact, Work Contact, Personal Information, and Veteran Status Identification workflows for City positions.</div>
+            <br/>
+            <div class="glow-pills-label">Workflows Covered</div>
+            <div class="glow-pills">
+              <span class="pill pill-teal">&#127968; Home Contact</span>
+              <span class="pill pill-blue">&#128222; Work Contact</span>
+              <span class="pill pill-gold">&#128100; Personal Info</span>
+              <span class="pill pill-slate">&#127894; Veteran Status</span>
+            </div>
+          </div>
+          <div class="glow-arrow">&#x2192;</div>
+        </a>
+
+        <a href="\data\personal-info\personal-info3.html" class="glow-card item-pi3" target="_self" rel="noopener noreferrer">
+          <div class="glow-icon icon-pi3">&#128100;</div>
+          <div class="glow-text">
+            <div class="glow-title">Personal Information Changes III</div>
+            <div class="glow-desc">Legal Name, Photo, Preferred Name, and Public Profile Preferences workflows &#8212; self-service &amp; HR-initiated updates.</div>
+            <br/>
+            <div class="glow-pills-label">Workflows Covered</div>
+            <div class="glow-pills">
+              <span class="pill pill-gold">&#9999;&#65039; Legal Name</span>
+              <span class="pill pill-blue">&#128248; Photo</span>
+              <span class="pill pill-teal">&#128100; Preferred Name</span>
+              <span class="pill pill-slate">&#128065;&#65039; Public Profile</span>
+            </div>
+          </div>
+          <div class="glow-arrow">&#x2192;</div>
+        </a>
+
+      </div>
+    </div>
+
+  </div><!-- /categories-grid -->
+    <!-- SCOPE NOTE -->
+    <div class="scope-banner">
+      <span class="scope-banner-icon">&#128683;</span>
+      <div>
+        <strong>Scope:</strong>
+        All processes shown apply to Faculty &amp; Staff (City) positions only. Federal Work Study positions and State-specific steps are excluded from these dashboards.
+      </div>
+    </div>
+
+</div><!-- /content -->
+
+<script>
+  /* ────────────────────────────────────────────────────────────
+     BREADCRUMB — self-contained, edit this array only.
+     Each entry: { label: "Text shown", href: "link.html" }
+     Set href to null (or omit it) for the current page —
+     it will render as plain highlighted text, not a link.
+     Add or remove entries to change the trail depth.
+  ──────────────────────────────────────────────────────────── */
+  const BREADCRUMB_TRAIL = [
+    { label: "Business Process Hub", href: "/business-process/index.html" },
+    { label: "Data", href: "/business-process/data.html" },
+    { label: "Personal Information", href: null },
+
+  ];
+
+  (function renderBreadcrumb() {
+    const el = document.getElementById('breadcrumb');
+    el.innerHTML = BREADCRUMB_TRAIL.map((item, i) => {
+      const isLast = i === BREADCRUMB_TRAIL.length - 1;
+      const sep = i > 0 ? '<span class="sep">/</span>' : '';
+      const crumb = (item.href && !isLast)
+        ? `<a href="${item.href}">${item.label}</a>`
+        : `<span class="current">${item.label}</span>`;
+      return sep + crumb;
+    }).join('');
+  })();
+</script>
+
+</body>
+</html>
