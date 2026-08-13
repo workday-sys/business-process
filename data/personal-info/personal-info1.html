@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Personal Information Changes I – Business Process Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0f2040;
+    --navy-mid: #1a3460;
+    --blue: #1e5fa8;
+    --blue-light: #2e7dd1;
+    --gold: #e8a922;
+    --gold-light: #f5c84a;
+    --teal: #0e8a7a;
+    --red: #c0392b;
+    --green: #1a7a4a;
+    --slate: #4a5568;
+    --light: #f4f7fb;
+    --white: #ffffff;
+    --border: #dde4ef;
+    --card-shadow: 0 4px 24px rgba(15,32,64,0.10);
+    --role-hr: #2e7dd1;
+    --role-budget: #e8a922;
+    --role-payroll: #0e8a7a;
+    --role-manager: #7c3aed;
+    --role-tk: #d97706;
+    --role-admin: #64748b;
+    --role-employee: #c0392b;
+    --role-tta: #0e6060;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--light); color: var(--navy); min-height: 100vh; }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, var(--blue) 100%);
+    color: white; padding: 36px 48px 28px; position: relative; overflow: hidden;
+  }
+  .header::before {
+    content: ''; position: absolute; top: -60px; right: -60px; width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(232,169,34,0.18) 0%, transparent 70%); border-radius: 50%;
+  }
+  .header::after {
+    content: ''; position: absolute; bottom: -40px; left: 30%; width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(46,125,209,0.2) 0%, transparent 70%); border-radius: 50%;
+  }
+  .header-inner { position: relative; z-index: 1; }
+
+  /* Breadcrumb — rendered from the BREADCRUMB_TRAIL config near the bottom of this file */
+  .breadcrumb { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; font-size: 0.82rem; min-height: 1.2em; }
+  .breadcrumb a { color: rgba(255,255,255,0.65); text-decoration: none; font-weight: 500; }
+  .breadcrumb a:hover { color: white; text-decoration: underline; }
+  .breadcrumb .sep { color: rgba(255,255,255,0.4); }
+  .breadcrumb .current { color: var(--gold); font-weight: 600; }
+
+  .header h1 { font-family: 'DM Serif Display', serif; font-size: 2.2rem; letter-spacing: -0.5px; margin-bottom: 6px; }
+  .header p { color: rgba(255,255,255,0.72); font-size: 0.95rem; font-weight: 400; }
+  .header-badge {
+    display: inline-block; background: var(--gold); color: var(--navy);
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 3px 10px; border-radius: 20px; margin-bottom: 12px;
+  }
+
+  /* TABS */
+  .tabs-bar {
+    background: var(--white); border-bottom: 2px solid var(--border); padding: 0 48px;
+    display: flex; gap: 4px; overflow-x: auto; position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 12px rgba(15,32,64,0.07);
+  }
+  .tab-btn {
+    padding: 16px 18px; font-family: 'DM Sans', sans-serif; font-size: 0.83rem; font-weight: 600;
+    color: var(--slate); background: none; border: none; border-bottom: 3px solid transparent;
+    cursor: pointer; white-space: nowrap; transition: all 0.2s; position: relative; top: 2px;
+  }
+  .tab-btn:hover { color: var(--blue); }
+  .tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+  /* CONTENT */
+  .content { max-width: 1200px; margin: 0 auto; padding: 36px 48px 60px; }
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* CARDS */
+  .card { background: var(--white); border-radius: 16px; box-shadow: var(--card-shadow); padding: 32px; margin-bottom: 28px; border: 1px solid var(--border); }
+  .card-title { font-family: 'DM Serif Display', serif; font-size: 1.35rem; color: var(--navy); margin-bottom: 6px; }
+  .card-subtitle { font-size: 0.82rem; color: var(--slate); margin-bottom: 22px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.8px; }
+
+  /* OVERVIEW GRID */
+  .overview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; margin-bottom: 28px; }
+  .overview-tile {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+    color: white; border-radius: 14px; padding: 22px 20px; cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s; border: 2px solid transparent;
+    position: relative; overflow: hidden;
+  }
+  .overview-tile::after { content: ''; position: absolute; bottom: -20px; right: -20px; width: 80px; height: 80px; background: rgba(255,255,255,0.06); border-radius: 50%; }
+  .overview-tile:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(15,32,64,0.18); }
+  .overview-tile:nth-child(2) { background: linear-gradient(135deg, #1a4a2e 0%, var(--teal) 100%); }
+  .overview-tile:nth-child(3) { background: linear-gradient(135deg, #5b2a00 0%, #c06a10 100%); }
+  .overview-tile:nth-child(4) { background: linear-gradient(135deg, #2d1060 0%, var(--role-manager) 100%); }
+  .tile-icon { font-size: 1.8rem; margin-bottom: 10px; }
+  .tile-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
+  .tile-desc { font-size: 0.78rem; opacity: 0.8; line-height: 1.5; }
+
+  /* FLOWCHART */
+  .flowchart { display: flex; flex-direction: column; align-items: center; gap: 0; padding: 10px 0; }
+  .flow-node { position: relative; width: 100%; max-width: 600px; }
+  .flow-box {
+    border-radius: 10px; padding: 14px 22px; font-size: 0.88rem; font-weight: 500;
+    text-align: center; position: relative; border: 2px solid transparent; transition: transform 0.15s;
+  }
+  .flow-box:hover { transform: scale(1.02); }
+  .flow-start { background: var(--navy); color: white; border-radius: 30px; font-weight: 700; letter-spacing: 0.5px; padding: 12px 32px; }
+  .flow-end { background: var(--teal); color: white; border-radius: 30px; font-weight: 700; letter-spacing: 0.5px; padding: 12px 32px; }
+  .flow-end.denied { background: var(--red); }
+  .flow-action { background: #eef3fb; border-color: var(--role-hr); color: var(--navy); }
+  .flow-action.budget { background: #fef8ec; border-color: var(--gold); }
+  .flow-action.payroll { background: #edfaf7; border-color: var(--teal); }
+  .flow-action.manager { background: #f5f0ff; border-color: var(--role-manager); }
+  .flow-action.employee { background: #fef2f2; border-color: var(--role-employee); }
+  .flow-action.tk { background: #fff7ed; border-color: var(--role-tk); }
+  .flow-action.tta { background: #ecfdfb; border-color: var(--role-tta); }
+  .flow-action.admin { background: #f1f5f9; border-color: var(--role-admin); }
+  .flow-decision { background: #fff8e1; border: 2px dashed var(--gold); border-radius: 8px; color: var(--navy); font-style: italic; font-size: 0.84rem; padding: 12px 20px; }
+  .flow-connector { display: flex; flex-direction: column; align-items: center; height: 36px; justify-content: center; color: var(--slate); font-size: 1.3rem; position: relative; }
+  .flow-connector::before { content: ''; width: 2px; height: 100%; background: var(--border); position: absolute; }
+  .flow-connector span { background: white; padding: 0 4px; position: relative; z-index: 1; font-size: 1.1rem; color: var(--slate); }
+  .flow-label { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; font-size: 0.75rem; color: var(--slate); font-weight: 600; text-transform: uppercase; letter-spacing: 0.7px; justify-content: center; }
+  .role-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+  .role-dot.hr { background: var(--role-hr); }
+  .role-dot.budget { background: var(--role-budget); }
+  .role-dot.payroll { background: var(--role-payroll); }
+  .role-dot.manager { background: var(--role-manager); }
+  .role-dot.admin { background: var(--role-admin); }
+  .role-dot.employee { background: var(--role-employee); }
+  .role-dot.tk { background: var(--role-tk); }
+  .role-dot.tta { background: var(--role-tta); }
+
+  /* DECISION BRANCH */
+  .decision-branch { display: flex; gap: 18px; width: 100%; max-width: 780px; justify-content: center; }
+  .branch-side { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0; }
+  .branch-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--slate); margin-bottom: 6px; background: var(--light); padding: 2px 10px; border-radius: 20px; }
+
+  /* ROLES TABLE */
+  .roles-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  .roles-table th { background: var(--navy); color: white; padding: 12px 14px; text-align: left; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.8px; }
+  .roles-table th:first-child { border-radius: 8px 0 0 0; }
+  .roles-table th:last-child { border-radius: 0 8px 0 0; }
+  .roles-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; font-size: 0.82rem; }
+  .roles-table tr:hover td { background: #f8faff; }
+  .roles-table tr:last-child td { border-bottom: none; }
+  .check { color: var(--green); font-size: 1rem; }
+  .dash { color: #ccc; font-size: 1rem; }
+
+  .role-tag { display: inline-block; font-size: 0.71rem; font-weight: 700; padding: 2px 9px; border-radius: 20px; margin: 2px; white-space: nowrap; }
+  .role-tag.hr { background: #ddeeff; color: var(--blue); }
+  .role-tag.budget { background: #fff3cc; color: #7a5800; }
+  .role-tag.payroll { background: #d9f5ef; color: var(--teal); }
+  .role-tag.manager { background: #ede9ff; color: #5b21b6; }
+  .role-tag.admin { background: #f1f5f9; color: var(--slate); }
+  .role-tag.employee { background: #fee2e2; color: #991b1b; }
+  .role-tag.tk { background: #fef3c7; color: #92400e; }
+  .role-tag.tta { background: #d1faf4; color: #065f46; }
+
+  /* FLAGS */
+  .flag { display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; border-radius: 10px; margin-bottom: 12px; font-size: 0.87rem; line-height: 1.6; }
+  .flag.decision { background: #fff8e1; border-left: 4px solid var(--gold); }
+  .flag.condition { background: #edfaf7; border-left: 4px solid var(--teal); }
+  .flag.warning { background: #fef2f2; border-left: 4px solid #ef4444; }
+  .flag.info { background: #eff6ff; border-left: 4px solid var(--blue); }
+  .flag-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+  .flag strong { color: var(--navy); display: block; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+
+  /* TWO-COL */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-bottom: 24px; }
+  @media (max-width: 800px) { .two-col { grid-template-columns: 1fr; } }
+  .section-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--slate); margin-bottom: 12px; }
+  .who-list { list-style: none; }
+  .who-list li { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.87rem; }
+  .who-list li:last-child { border-bottom: none; }
+
+  /* PROCESS HEADER */
+  .process-header { display: flex; align-items: flex-start; gap: 20px; margin-bottom: 28px; padding-bottom: 22px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+  .process-icon-big { width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; flex-shrink: 0; }
+  .process-icon-big.blue { background: linear-gradient(135deg, var(--navy), var(--blue)); }
+  .process-icon-big.teal { background: linear-gradient(135deg, #065f46, var(--teal)); }
+  .process-icon-big.orange { background: linear-gradient(135deg, #7c2d12, #ea580c); }
+  .process-icon-big.purple { background: linear-gradient(135deg, #3b0764, var(--role-manager)); }
+  .process-meta { flex: 1; }
+  .process-meta h2 { font-family: 'DM Serif Display', serif; font-size: 1.5rem; color: var(--navy); margin-bottom: 4px; }
+  .process-meta p { font-size: 0.85rem; color: var(--slate); }
+  .completion-badge { background: var(--light); border: 1px solid var(--border); border-radius: 10px; padding: 10px 16px; font-size: 0.78rem; color: var(--slate); text-align: center; flex-shrink: 0; }
+  .completion-badge strong { display: block; font-size: 0.92rem; color: var(--navy); margin-top: 4px; }
+
+  /* PRINT */
+  @media print {
+    .tabs-bar { display: none !important; }
+    .section { display: block !important; page-break-before: always; }
+    .section:first-of-type { page-break-before: auto; }
+  }
+  @media (max-width: 700px) {
+    .header { padding: 24px 20px 18px; }
+    .tabs-bar { padding: 0 8px; }
+    .content { padding: 20px 16px 40px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="breadcrumb" id="breadcrumb"></div>
+    <div class="header-badge">Business Process</div>
+    <h1>Personal Information Changes I – Dashboard</h1>
+    <p>Interactive guide to ID &amp; Passport/Visa change workflows — roles, steps, decisions, and approvals · Federal Work Study &amp; State positions excluded</p>
+  </div>
+</div>
+
+<div class="tabs-bar">
+  <button class="tab-btn active" onclick="showTab('overview')">📋 Overview</button>
+  <button class="tab-btn" onclick="showTab('bp1')">🪪 Edit Government IDs</button>
+  <button class="tab-btn" onclick="showTab('bp2')">🗂️ Edit ID Information</button>
+  <button class="tab-btn" onclick="showTab('bp3')">🧾 Edit Other IDs</button>
+  <button class="tab-btn" onclick="showTab('bp4')">🛂 Passports &amp; Visa Change</button>
+  <button class="tab-btn" onclick="showTab('roles')">👥 Roles &amp; Permissions</button>
+</div>
+
+<div class="content">
+
+<!-- ══════ OVERVIEW ══════ -->
+<div id="overview" class="section active">
+  <div class="card">
+    <div class="card-title">Personal Information Changes I — At a Glance</div>
+    <div class="card-subtitle">4 Core Business Processes · Faculty/Staff Scope · Excluding Federal Work Study &amp; State-Only Steps</div>
+    <div class="overview-grid">
+      <div class="overview-tile" onclick="showTab('bp1')">
+        <div class="tile-icon">🪪</div>
+        <div class="tile-name">Edit Government IDs</div>
+        <div class="tile-desc">Employee, Pre-Employee, HR Partner, or HR Administrator submits/updates a Social Security Number or ITIN.</div>
+      </div>
+      <div class="overview-tile" onclick="showTab('bp2')">
+        <div class="tile-icon">🗂️</div>
+        <div class="tile-name">Edit ID Information</div>
+        <div class="tile-desc">HR Partner makes a one-step, all-in-one update across Government IDs, Passports, Visas, Licenses, and Other IDs.</div>
+      </div>
+      <div class="overview-tile" onclick="showTab('bp3')">
+        <div class="tile-icon">🧾</div>
+        <div class="tile-name">Edit Other IDs</div>
+        <div class="tile-desc">HR Partner or Payroll Administrator updates custom payroll-integration IDs (e.g. NYC Employee ID).</div>
+      </div>
+      <div class="overview-tile" onclick="showTab('bp4')">
+        <div class="tile-icon">🛂</div>
+        <div class="tile-name">Passports &amp; Visa Change</div>
+        <div class="tile-desc">Employee, Pre-Employee, Contingent Worker, or HR staff submits a passport/visa update with supporting document.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Security Roles Legend</div>
+    <div class="card-subtitle">Who participates across all Personal Information Changes I processes</div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px;">
+      <span class="role-tag employee">🔴 Employee / Pre-Employee (Self)</span>
+      <span class="role-tag tk">🟠 Contingent Worker / Pre-Contingent Worker (Self)</span>
+      <span class="role-tag hr">🔵 HR Partner</span>
+      <span class="role-tag admin">⚫ HR Administrator</span>
+      <span class="role-tag payroll">🌊 Payroll Administrator</span>
+    </div>
+    <div class="flag info">
+      <span class="flag-icon">ℹ️</span>
+      <div><strong>One Task, Many ID Types</strong>Edit ID Information gives HR Partners (and, where security allows, HR Administrators) an all-in-one page to update Government IDs, Passports, Visas, Licenses, and Other IDs in a single submission — instead of running each business process separately.</div>
+    </div>
+    <div class="flag decision">
+      <span class="flag-icon">⚠️</span>
+      <div><strong>Auto-Approval When Initiator = Approver</strong>If the person submitting the change is themselves an HR Partner for that organization, the approval step is skipped and the process auto-completes. This is the "No Current Assignee was Initiator or Prior Approver" condition rule seen on every approval step.</div>
+    </div>
+    <div class="flag condition">
+      <span class="flag-icon">🔀</span>
+      <div><strong>Job Family Routing — Student vs. Non-Student</strong>Every approval step checks whether the worker's Job Family is Student Employee. Non-student (Faculty/Staff) changes route to the HR Partner, shown in this dashboard. Student Employee changes route to the Federal Work Study Coordinator, which is out of scope here.</div>
+    </div>
+    <div class="flag condition">
+      <span class="flag-icon">🔒</span>
+      <div><strong>Access Is Security-Driven</strong>Each task is only visible to the security roles assigned to it. If a step doesn't appear for someone who expects it, that usually means their security role mapping needs to be requested/updated rather than a system error.</div>
+    </div>
+    <div class="flag warning">
+      <span class="flag-icon">🚫</span>
+      <div><strong>Excluded: Federal Work Study &amp; State Positions</strong>Federal Work Study routing (Federal Work Study Coordinator) and State-specific steps are not included in this dashboard. These operate under a separate scope and process.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ BP1: EDIT GOVERNMENT IDS ══════ -->
+<div id="bp1" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big blue">🪪</div>
+      <div class="process-meta">
+        <h2>Edit Government IDs</h2>
+        <p>Initiated by Employee (Self) · Pre-Employee (Self) · HR Partner · HR Administrator</p>
+      </div>
+      <div class="completion-badge">Completes When<strong>HR Partner Approves</strong></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot employee"></span><span class="role-tag employee">Employee (Self)</span> Initiator only — submits their own SSN/ITIN</li>
+          <li><span class="role-dot employee"></span><span class="role-tag employee">Pre-Employee (Self)</span> Initiator only</li>
+          <li><span class="role-dot hr"></span><span class="role-tag hr">HR Partner</span> Initiator &amp; approver</li>
+          <li><span class="role-dot admin"></span><span class="role-tag admin">HR Administrator</span> Initiator only</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Decision Flags</div>
+        <div class="flag decision">
+          <span class="flag-icon">⚠️</span>
+          <div><strong>Critical SSN Validation Rules</strong>Multiple validations block impossible Social Security Number combinations (e.g. certain digit patterns are rejected) before the record can be submitted.</div>
+        </div>
+        <div class="flag condition">
+          <span class="flag-icon">🔀</span>
+          <div><strong>Not Used by Contingent Workers</strong>This task is not part of the security scope for Contingent Workers — that population is handled under a separate contingent worker/POI process covered elsewhere.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-title" style="font-size:1rem;margin-bottom:18px;">Flowchart — Edit Government IDs</div>
+    <div class="flowchart">
+      <div class="flow-node">
+        <div class="flow-box flow-start">🪪 START — Ad Hoc Government ID Change Needed</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee / Pre-Employee / HR Partner / HR Administrator</div>
+        <div class="flow-box flow-action employee">Step A — Initiation: Enters SSN or ITIN, Issue/Expiration/Verification Dates<br><small style="opacity:0.65">Blocked by critical SSN validation rules</small></div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Decision: Is the initiator already the HR Partner of record (current assignee / prior approver)?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ YES — HR Partner Self-Submitted</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action" style="background:#e8f8f0;border-color:#1a7a4a;">Approval Step Skipped — Auto-Complete</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">⏭ NO — Different Initiator</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot hr"></span> HR Partner</div>
+            <div class="flow-box flow-action hr">Step BA — Approval: Reviews &amp; Approves SSN/ITIN Change</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-end">✅ COMPLETE — SSN/ITIN Updated on Worker Profile</div>
+      </div>
+    </div>
+
+    <div style="margin-top:28px;">
+      <div class="flag info">
+        <span class="flag-icon">📅</span>
+        <div><strong>Timing</strong>Change is reflected in the Workday tenant as soon as the HR Partner approves (or immediately if the HR Partner was the initiator).</div>
+      </div>
+      <div class="flag warning">
+        <span class="flag-icon">🔒</span>
+        <div><strong>Document Handling Caution</strong>Avoid uploading the actual Social Security card or passport image into Workday as an attachment — keep physical proof/verification offline as done today.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ BP2: EDIT ID INFORMATION ══════ -->
+<div id="bp2" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big teal">🗂️</div>
+      <div class="process-meta">
+        <h2>Edit ID Information</h2>
+        <p>Initiated by HR Partner (single-step, all-in-one ID update)</p>
+      </div>
+      <div class="completion-badge">Completes When<strong>HR Partner Submits</strong></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot hr"></span><span class="role-tag hr">HR Partner</span> Sole initiator — only security group on this process</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Decision Flags</div>
+        <div class="flag decision">
+          <span class="flag-icon">⚠️</span>
+          <div><strong>Full-Time Student Flag</strong>The initiator must enter Yes or No for Full-Time Student under Other IDs. This flag is used for payroll integration purposes.</div>
+        </div>
+        <div class="flag condition">
+          <span class="flag-icon">🔀</span>
+          <div><strong>Single Step — No Separate Approval</strong>Because HR Partner is the only security group on this business process, submission auto-completes; there is no routed approval step.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-title" style="font-size:1rem;margin-bottom:18px;">Flowchart — Edit ID Information</div>
+    <div class="flowchart">
+      <div class="flow-node">
+        <div class="flow-box flow-start">🗂️ START — Multiple ID Types Need Updating</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot hr"></span> HR Partner</div>
+        <div class="flow-box flow-action hr">Step A — Initiation: Updates Government IDs, Passports, Visas, Licenses &amp; Other IDs in One Page<br><small style="opacity:0.65">Critical SSN validation rules apply</small></div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Enter Y / N — Full-Time Student (Other IDs)</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot hr"></span> HR Partner</div>
+        <div class="flow-box flow-action hr">Clicks Submit</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-end">✅ COMPLETE — Auto-Approved, All ID Changes Reflected</div>
+      </div>
+    </div>
+
+    <div style="margin-top:28px;">
+      <div class="flag info">
+        <span class="flag-icon">📅</span>
+        <div><strong>Timing</strong>Reflected in the Workday tenant immediately upon HR Partner submission.</div>
+      </div>
+      <div class="flag condition">
+        <span class="flag-icon">🔀</span>
+        <div><strong>Why Use This Instead of the Individual Tasks?</strong>Edit ID Information consolidates what would otherwise be three separate submissions (Government IDs, Other IDs, Passports &amp; Visas) into one page for eligible HR staff.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ BP3: EDIT OTHER IDS ══════ -->
+<div id="bp3" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big orange">🧾</div>
+      <div class="process-meta">
+        <h2>Edit Other IDs</h2>
+        <p>Initiated by HR Partner · Payroll Administrator</p>
+      </div>
+      <div class="completion-badge">Completes When<strong>HR Partner Approves</strong></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot hr"></span><span class="role-tag hr">HR Partner</span> Initiator &amp; approver</li>
+          <li><span class="role-dot payroll"></span><span class="role-tag payroll">Payroll Administrator</span> Initiator only — cannot approve</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Decision Flags</div>
+        <div class="flag decision">
+          <span class="flag-icon">⚠️</span>
+          <div><strong>Critical Work Permit Validation Rules</strong>Entries are checked against work permit validation rules before submission is accepted.</div>
+        </div>
+        <div class="flag condition">
+          <span class="flag-icon">🔀</span>
+          <div><strong>Custom Payroll IDs</strong>This is where organization-specific IDs used for payroll integration (e.g. NYC Employee ID, ID type/duration) are entered.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-title" style="font-size:1rem;margin-bottom:18px;">Flowchart — Edit Other IDs</div>
+    <div class="flowchart">
+      <div class="flow-node">
+        <div class="flow-box flow-start">🧾 START — Custom/Payroll ID Needs Adding or Updating</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot hr"></span> HR Partner or <span class="role-dot payroll"></span> Payroll Administrator</div>
+        <div class="flow-box flow-action payroll">Step A — Initiation: Enters Custom ID (e.g. NYC Employee ID)<br><small style="opacity:0.65">Critical Work Permit validation rules apply</small></div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Decision: Is the initiator already the HR Partner of record (current assignee / prior approver)?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ YES — HR Partner Self-Submitted</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action" style="background:#e8f8f0;border-color:#1a7a4a;">Approval Step Skipped — Auto-Complete</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">⏭ NO — Payroll Administrator (or Other) Initiated</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot hr"></span> HR Partner</div>
+            <div class="flow-box flow-action hr">Step BA — Approval: Reviews &amp; Approves Custom ID Change</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-end">✅ COMPLETE — Custom ID Updated on Worker Profile</div>
+      </div>
+    </div>
+
+    <div style="margin-top:28px;">
+      <div class="flag info">
+        <span class="flag-icon">📅</span>
+        <div><strong>Timing</strong>Reflected in the Workday tenant as soon as the HR Partner approves (or immediately if the HR Partner was the initiator).</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ BP4: PASSPORTS & VISA CHANGE ══════ -->
+<div id="bp4" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big purple">🛂</div>
+      <div class="process-meta">
+        <h2>Passports &amp; Visa Change</h2>
+        <p>Initiated by Employee (Self) · Pre-Employee (Self) · Contingent Worker (Self) · Pre-Contingent Worker (Self) · HR Partner · HR Administrator</p>
+      </div>
+      <div class="completion-badge">Completes When<strong>HR Partner Approves</strong></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot employee"></span><span class="role-tag employee">Employee (Self)</span> Initiator only</li>
+          <li><span class="role-dot employee"></span><span class="role-tag employee">Pre-Employee (Self)</span> Initiator only</li>
+          <li><span class="role-dot tk"></span><span class="role-tag tk">Contingent Worker (Self)</span> Initiator only — can start, cannot approve/submit further</li>
+          <li><span class="role-dot tk"></span><span class="role-tag tk">Pre-Contingent Worker (Self)</span> Initiator only</li>
+          <li><span class="role-dot hr"></span><span class="role-tag hr">HR Partner</span> Initiator &amp; approver</li>
+          <li><span class="role-dot admin"></span><span class="role-tag admin">HR Administrator</span> Initiator only</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Decision Flags</div>
+        <div class="flag decision">
+          <span class="flag-icon">⚠️</span>
+          <div><strong>Document Required Before Submitting</strong>A supporting document must be attached to the passport/visa change, or the critical validation will block submission.</div>
+        </div>
+        <div class="flag decision">
+          <span class="flag-icon">⚠️</span>
+          <div><strong>Cannot Hold a Passport and F-1 Visa at the Same Time</strong>The validation is date-driven — a worker cannot have an active (US) passport and an active F-1 visa recorded simultaneously. Currently only the US passport type is covered by this rule.</div>
+        </div>
+        <div class="flag condition">
+          <span class="flag-icon">🔀</span>
+          <div><strong>Contingent Workers Are Initiators Only</strong>This is the one process in this scope where Contingent Workers and Pre-Contingent Workers participate — as self-service initiators only.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-title" style="font-size:1rem;margin-bottom:18px;">Flowchart — Passports &amp; Visa Change</div>
+    <div class="flowchart">
+      <div class="flow-node">
+        <div class="flow-box flow-start">🛂 START — Passport or Visa Change Needed</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee / Pre-Employee / Contingent Worker / Pre-Contingent Worker / HR Partner / HR Administrator</div>
+        <div class="flow-box flow-action employee">Step A — Initiation: Enters Passport or Visa Details &amp; Attaches Supporting Document</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Validation: Document attached AND not holding a passport + F-1 visa at the same time?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">⚠️ NO — Validation Fails</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action tk">Submission Blocked — Initiator Must Attach Document / Correct Dates</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">✅ YES — Validation Passes</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-decision" style="font-size:0.8rem;">Is initiator already the HR Partner of record?</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ YES — HR Partner Self-Submitted</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action" style="background:#e8f8f0;border-color:#1a7a4a;">Approval Step Skipped — Auto-Complete</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">⏭ NO — Different Initiator</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot hr"></span> HR Partner</div>
+            <div class="flow-box flow-action hr">Step BA — Approval: Reviews Document &amp; Approves</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-end">✅ COMPLETE — Passport/Visa Record Updated</div>
+      </div>
+    </div>
+
+    <div style="margin-top:28px;">
+      <div class="flag info">
+        <span class="flag-icon">📅</span>
+        <div><strong>Timing</strong>Reflected in the Workday tenant as soon as the HR Partner approves (or immediately if the HR Partner was the initiator).</div>
+      </div>
+      <div class="flag warning">
+        <span class="flag-icon">🔒</span>
+        <div><strong>Document Handling Caution</strong>Avoid uploading the actual passport image as the attachment — keep the physical document verification offline; attach only what's genuinely needed as supporting proof.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ ROLES & PERMISSIONS ══════ -->
+<div id="roles" class="section">
+  <div class="card">
+    <div class="card-title">Master Roles &amp; Permissions Table</div>
+    <div class="card-subtitle">Who can initiate and approve across all 4 Personal Information Changes I processes</div>
+    <div style="overflow-x:auto;">
+    <table class="roles-table">
+      <thead>
+        <tr>
+          <th>Business Process</th>
+          <th><span class="role-tag employee">Employee / Pre-Employee</span></th>
+          <th><span class="role-tag tk">Contingent / Pre-Contingent Worker</span></th>
+          <th><span class="role-tag hr">HR Partner</span></th>
+          <th><span class="role-tag admin">HR Administrator</span></th>
+          <th><span class="role-tag payroll">Payroll Administrator</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Edit Government IDs</strong><br><small>SSN / ITIN entry</small></td>
+          <td><span class="check">✔</span> Initiate own</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="check">✔</span> Initiate &amp; approve</td>
+          <td><span class="check">✔</span> Initiate on behalf</td>
+          <td><span class="dash">–</span></td>
+        </tr>
+        <tr>
+          <td><strong>Edit ID Information</strong><br><small>All-in-one ID update, single step</small></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="check">✔</span> Sole initiator</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+        </tr>
+        <tr>
+          <td><strong>Edit Other IDs</strong><br><small>Custom / payroll-integration IDs</small></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="check">✔</span> Initiate &amp; approve</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="check">✔</span> Initiate only</td>
+        </tr>
+        <tr>
+          <td><strong>Passports &amp; Visa Change</strong><br><small>Requires supporting document</small></td>
+          <td><span class="check">✔</span> Initiate own</td>
+          <td><span class="check">✔</span> Initiate own</td>
+          <td><span class="check">✔</span> Initiate &amp; approve</td>
+          <td><span class="check">✔</span> Initiate on behalf</td>
+          <td><span class="dash">–</span></td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Role Definitions</div>
+    <div class="card-subtitle">Security role descriptions for Personal Information Changes I scope</div>
+    <table class="roles-table">
+      <thead>
+        <tr>
+          <th>Role</th>
+          <th>Description</th>
+          <th>Approval Authority</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="role-tag employee">Employee (Self)</span></td>
+          <td>The worker updating their own information through self-service. Covers Government IDs and Passports &amp; Visa Change only.</td>
+          <td><span class="dash">–</span> Initiator only</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag employee">Pre-Employee (Self)</span></td>
+          <td>A not-yet-started worker completing the same self-service ID tasks ahead of their start date.</td>
+          <td><span class="dash">–</span> Initiator only</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag tk">Contingent / Pre-Contingent Worker (Self)</span></td>
+          <td>Non-employee workers (and pre-hire contingent workers). Only participate in Passports &amp; Visa Change, as self-service initiators — not part of Government IDs, ID Information, or Other IDs in this scope.</td>
+          <td><span class="dash">–</span> Initiator only</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag hr">HR Partner</span></td>
+          <td>Primary approver across all four processes. Can also initiate on behalf of a worker; when the HR Partner is both initiator and would-be approver, the process auto-completes.</td>
+          <td><span class="check">✔</span> Primary approver</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag admin">HR Administrator</span></td>
+          <td>Administrative initiator on Government IDs and Passports &amp; Visa Change; does not approve. Access is user-based, so notification/visibility can be scoped down by campus/org.</td>
+          <td><span class="dash">–</span> Initiator only</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag payroll">Payroll Administrator</span></td>
+          <td>Initiates changes to custom/payroll-integration IDs under Edit Other IDs. Approval routes to the HR Partner.</td>
+          <td><span class="dash">–</span> Initiator only</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="margin-top:24px;">
+      <div class="flag decision">
+        <span class="flag-icon">⚠️</span>
+        <div><strong>Common Condition Rule</strong>"No Current Assignee was Initiator or Prior Approver" appears on every approval step in this scope — it prevents an HR Partner from having to approve a change they just submitted themselves.</div>
+      </div>
+      <div class="flag condition">
+        <span class="flag-icon">🗂️</span>
+        <div><strong>Data Quality Note</strong>Because some worker types (e.g. certain contingent/volunteer records) may not initially capture an SSN or TIN, duplicate worker records are a known risk when that person later becomes a CUNY employee. Search carefully before creating a new record.</div>
+      </div>
+      <div class="flag warning">
+        <span class="flag-icon">🚫</span>
+        <div><strong>Excluded: Federal Work Study &amp; State Positions</strong>Federal Work Study Coordinator routing and State-specific steps are not included in this dashboard. These operate under a separate scope and process.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const tabs = ['overview','bp1','bp2','bp3','bp4','roles'];
+  const idx = tabs.indexOf(id);
+  if(idx >= 0) document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ────────────────────────────────────────────────────────────
+     BREADCRUMB — self-contained, edit this array only.
+     Each entry: { label: "Text shown", href: "link.html" }
+     Set href to null (or omit it) for the current page —
+     it will render as plain highlighted text, not a link.
+     Add or remove entries to change the trail depth.
+  ──────────────────────────────────────────────────────────── */
+  const BREADCRUMB_TRAIL = [
+    { label: "Business Process Hub", href: "index.html" },
+    { label: "Data", href: "index.html" },
+    { label: "Personal Information", href: "index.html" },
+    { label: "Personal Information Changes #1", href: null }
+  ];
+
+  (function renderBreadcrumb() {
+    const el = document.getElementById('breadcrumb');
+    el.innerHTML = BREADCRUMB_TRAIL.map((item, i) => {
+      const isLast = i === BREADCRUMB_TRAIL.length - 1;
+      const sep = i > 0 ? '<span class="sep">/</span>' : '';
+      const crumb = (item.href && !isLast)
+        ? `<a href="${item.href}">${item.label}</a>`
+        : `<span class="current">${item.label}</span>`;
+      return sep + crumb;
+    }).join('');
+  })();
+
+</script>
+</body>
+</html>
