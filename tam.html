@@ -56,6 +56,15 @@
   }
   .info-banner strong { color: var(--navy); }
 
+  .scope-banner {
+    display: flex; align-items: flex-start; gap: 12px; background: var(--white);
+    border: 1px solid var(--border); border-left: 4px solid var(--red); border-radius: 10px;
+    padding: 16px 20px; margin-top: 32px; font-size: 0.87rem; color: var(--slate);
+    line-height: 1.6; box-shadow: var(--card-shadow);
+  }
+  .scope-banner-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+  .scope-banner strong { color: var(--navy); }
+
   /* ── CATEGORY GRID (single category, spans full width) ── */
   .categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; align-items: start; }
   .category-block.span-2 { grid-column: 1 / -1; }
@@ -106,8 +115,8 @@
   .icon-recruit   { background: var(--recruit-solid); }
 
   .glow-text { flex: 1; min-width: 0; }
-  .glow-title { font-family: 'DM Serif Display', Georgia, serif; font-size: 1.02rem; color: var(--navy); margin-bottom: 3px; }
-  .glow-desc { font-size: 0.82rem; color: var(--slate); line-height: 1.5; margin-bottom: 8px; }
+  .glow-title { font-family: 'DM Serif Display', Georgia, serif; font-size: 1.3rem; color: var(--navy); margin-bottom: 3px; }
+  .glow-desc { font-size: 0.87rem; color: var(--slate); line-height: 1.25; margin-bottom: 8px; }
 
   .glow-pills-label {
     font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px;
@@ -176,7 +185,7 @@
       <div class="category-head"><span class="head-icon">&#128188;</span><span class="category-title">Talent Acquisition &amp; Management</span><span class="category-count">4</span></div>
       <div class="item-stack">
 
-        <a href="https://workday-sys.github.io/business-process/tam/job_requisition.html" class="glow-card item-jobreq" target="_blank" rel="noopener noreferrer">
+        <a href="https://workday-sys.github.io/business-process/tam/job_requisition.html" class="glow-card item-jobreq" target="_self" rel="noopener noreferrer">
           <div class="glow-icon icon-jobreq">&#128221;</div>
           <div class="glow-text">
             <div class="glow-title">Job Requisition</div>
@@ -193,7 +202,7 @@
           <div class="glow-arrow">&#x2192;</div>
         </a>
 
-        <a href="https://workday-sys.github.io/business-process/tam/job_application.html" class="glow-card item-jobapp" target="_blank" rel="noopener noreferrer">
+        <a href="https://workday-sys.github.io/business-process/tam/job_application.html" class="glow-card item-jobapp" target="_self" rel="noopener noreferrer">
           <div class="glow-icon icon-jobapp">&#128203;</div>
           <div class="glow-text">
             <div class="glow-title">Job Application</div>
@@ -210,7 +219,7 @@
           <div class="glow-arrow">&#x2192;</div>
         </a>
 
-        <a href="https://workday-sys.github.io/business-process/tam/evergreen.html" class="glow-card item-evergreen" target="_blank" rel="noopener noreferrer">
+        <a href="https://workday-sys.github.io/business-process/tam/evergreen.html" class="glow-card item-evergreen" target="_self" rel="noopener noreferrer">
           <div class="glow-icon icon-evergreen">&#127807;</div>
           <div class="glow-text">
             <div class="glow-title">Evergreen Requisition</div>
@@ -248,6 +257,14 @@
     </div>
 
   </div><!-- /categories-grid -->
+    <!-- SCOPE NOTE -->
+    <div class="scope-banner">
+      <span class="scope-banner-icon">&#128683;</span>
+      <div>
+        <strong>Scope:</strong>
+        All processes shown apply to City positions only. Federal Work Study positions and State-specific steps are excluded from these dashboards.
+      </div>
+    </div>
 
 </div><!-- /content -->
 
