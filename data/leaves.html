@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leave of Absence – Business Process Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0f2040;
+    --navy-mid: #1a3460;
+    --blue: #1e5fa8;
+    --blue-light: #2e7dd1;
+    --gold: #e8a922;
+    --gold-light: #f5c84a;
+    --teal: #0e8a7a;
+    --red: #c0392b;
+    --green: #1a7a4a;
+    --slate: #4a5568;
+    --light: #f4f7fb;
+    --white: #ffffff;
+    --border: #dde4ef;
+    --card-shadow: 0 4px 24px rgba(15,32,64,0.10);
+    --role-hr: #2e7dd1;
+    --role-budget: #e8a922;
+    --role-payroll: #0e8a7a;
+    --role-manager: #7c3aed;
+    --role-tk: #d97706;
+    --role-admin: #64748b;
+    --role-employee: #c0392b;
+    --role-tta: #0e6060;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--light); color: var(--navy); min-height: 100vh; }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, var(--blue) 100%);
+    color: white; padding: 36px 48px 28px; position: relative; overflow: hidden;
+  }
+  .header::before {
+    content: ''; position: absolute; top: -60px; right: -60px; width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(232,169,34,0.18) 0%, transparent 70%); border-radius: 50%;
+  }
+  .header::after {
+    content: ''; position: absolute; bottom: -40px; left: 30%; width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(46,125,209,0.2) 0%, transparent 70%); border-radius: 50%;
+  }
+  .header-inner { position: relative; z-index: 1; }
+    
+    /* Breadcrumb — rendered from the BREADCRUMB_TRAIL config near the bottom of this file */
+    .breadcrumb { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; font-size: 0.82rem; min-height: 1.2em; }
+    .breadcrumb a { color: rgba(255,255,255,0.65); text-decoration: none; font-weight: 500; }
+    .breadcrumb a:hover { color: white; text-decoration: underline; }
+    .breadcrumb .sep { color: rgba(255,255,255,0.4); }
+    .breadcrumb .current { color: var(--gold); font-weight: 600; }
+
+  .header h1 { font-family: 'DM Serif Display', serif; font-size: 2.2rem; letter-spacing: -0.5px; margin-bottom: 6px; }
+  .header p { color: rgba(255,255,255,0.72); font-size: 0.95rem; font-weight: 400; }
+  .header-badge {
+    display: inline-block; background: var(--gold); color: var(--navy);
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 3px 10px; border-radius: 20px; margin-bottom: 12px;
+  }
+
+  /* TABS */
+  .tabs-bar {
+    background: var(--white); border-bottom: 2px solid var(--border); padding: 0 48px;
+    display: flex; gap: 4px; overflow-x: auto; position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 12px rgba(15,32,64,0.07);
+  }
+  .tab-btn {
+    padding: 16px 18px; font-family: 'DM Sans', sans-serif; font-size: 0.83rem; font-weight: 600;
+    color: var(--slate); background: none; border: none; border-bottom: 3px solid transparent;
+    cursor: pointer; white-space: nowrap; transition: all 0.2s; position: relative; top: 2px;
+  }
+  .tab-btn:hover { color: var(--blue); }
+  .tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+  /* CONTENT */
+  .content { max-width: 1200px; margin: 0 auto; padding: 36px 48px 60px; }
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* CARDS */
+  .card { background: var(--white); border-radius: 16px; box-shadow: var(--card-shadow); padding: 32px; margin-bottom: 28px; border: 1px solid var(--border); }
+  .card-title { font-family: 'DM Serif Display', serif; font-size: 1.35rem; color: var(--navy); margin-bottom: 6px; }
+  .card-subtitle { font-size: 0.82rem; color: var(--slate); margin-bottom: 22px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.8px; }
+
+  /* OVERVIEW GRID */
+  .overview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; margin-bottom: 28px; }
+  .overview-tile {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+    color: white; border-radius: 14px; padding: 22px 20px; cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s; border: 2px solid transparent;
+    position: relative; overflow: hidden;
+  }
+  .overview-tile::after { content: ''; position: absolute; bottom: -20px; right: -20px; width: 80px; height: 80px; background: rgba(255,255,255,0.06); border-radius: 50%; }
+  .overview-tile:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(15,32,64,0.18); }
+  .overview-tile:nth-child(2) { background: linear-gradient(135deg, #1a4a2e 0%, var(--teal) 100%); }
+  .overview-tile:nth-child(3) { background: linear-gradient(135deg, #5b2a00 0%, #c06a10 100%); }
+  .overview-tile:nth-child(4) { background: linear-gradient(135deg, #2d1060 0%, var(--role-manager) 100%); }
+  .tile-icon { font-size: 1.8rem; margin-bottom: 10px; }
+  .tile-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
+  .tile-desc { font-size: 0.78rem; opacity: 0.8; line-height: 1.5; }
+
+  /* FLOWCHART */
+  .flowchart { display: flex; flex-direction: column; align-items: center; gap: 0; padding: 10px 0; }
+  .flow-node { position: relative; width: 100%; max-width: 600px; }
+  .flow-box {
+    border-radius: 10px; padding: 14px 22px; font-size: 0.88rem; font-weight: 500;
+    text-align: center; position: relative; border: 2px solid transparent; transition: transform 0.15s;
+  }
+  .flow-box:hover { transform: scale(1.02); }
+  .flow-start { background: var(--navy); color: white; border-radius: 30px; font-weight: 700; letter-spacing: 0.5px; padding: 12px 32px; }
+  .flow-end { background: var(--teal); color: white; border-radius: 30px; font-weight: 700; letter-spacing: 0.5px; padding: 12px 32px; }
+  .flow-end.denied { background: var(--red); }
+  .flow-action { background: #eef3fb; border-color: var(--role-hr); color: var(--navy); }
+  .flow-action.budget { background: #fef8ec; border-color: var(--gold); }
+  .flow-action.payroll { background: #edfaf7; border-color: var(--teal); }
+  .flow-action.manager { background: #f5f0ff; border-color: var(--role-manager); }
+  .flow-action.employee { background: #fef2f2; border-color: var(--role-employee); }
+  .flow-action.tk { background: #fff7ed; border-color: var(--role-tk); }
+  .flow-action.tta { background: #ecfdfb; border-color: var(--role-tta); }
+  .flow-action.admin { background: #f4f6f8; border-color: var(--role-admin); }
+  .flow-decision { background: #fff8e1; border: 2px dashed var(--gold); border-radius: 8px; color: var(--navy); font-style: italic; font-size: 0.84rem; padding: 12px 20px; }
+  .flow-connector { display: flex; flex-direction: column; align-items: center; height: 36px; justify-content: center; color: var(--slate); font-size: 1.3rem; position: relative; }
+  .flow-connector::before { content: ''; width: 2px; height: 100%; background: var(--border); position: absolute; }
+  .flow-connector span { background: white; padding: 0 4px; position: relative; z-index: 1; font-size: 1.1rem; color: var(--slate); }
+  .flow-label { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; font-size: 0.75rem; color: var(--slate); font-weight: 600; text-transform: uppercase; letter-spacing: 0.7px; justify-content: center; }
+  .role-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+  .role-dot.hr { background: var(--role-hr); }
+  .role-dot.budget { background: var(--role-budget); }
+  .role-dot.payroll { background: var(--role-payroll); }
+  .role-dot.manager { background: var(--role-manager); }
+  .role-dot.admin { background: var(--role-admin); }
+  .role-dot.employee { background: var(--role-employee); }
+  .role-dot.tk { background: var(--role-tk); }
+  .role-dot.tta { background: var(--role-tta); }
+
+  /* DECISION BRANCH */
+  .decision-branch { display: flex; gap: 18px; width: 100%; max-width: 780px; justify-content: center; }
+  .branch-side { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0; }
+  .branch-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--slate); margin-bottom: 6px; background: var(--light); padding: 2px 10px; border-radius: 20px; }
+
+  /* ROLES TABLE */
+  .roles-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  .roles-table th { background: var(--navy); color: white; padding: 12px 14px; text-align: left; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.8px; }
+  .roles-table th:first-child { border-radius: 8px 0 0 0; }
+  .roles-table th:last-child { border-radius: 0 8px 0 0; }
+  .roles-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; font-size: 0.82rem; }
+  .roles-table tr:hover td { background: #f8faff; }
+  .roles-table tr:last-child td { border-bottom: none; }
+  .check { color: var(--green); font-size: 1rem; }
+  .dash { color: #ccc; font-size: 1rem; }
+
+  .role-tag { display: inline-block; font-size: 0.71rem; font-weight: 700; padding: 2px 9px; border-radius: 20px; margin: 2px; white-space: nowrap; }
+  .role-tag.hr { background: #ddeeff; color: var(--blue); }
+  .role-tag.budget { background: #fff3cc; color: #7a5800; }
+  .role-tag.payroll { background: #d9f5ef; color: var(--teal); }
+  .role-tag.manager { background: #ede9ff; color: #5b21b6; }
+  .role-tag.admin { background: #f1f5f9; color: var(--slate); }
+  .role-tag.employee { background: #fee2e2; color: #991b1b; }
+  .role-tag.tk { background: #fef3c7; color: #92400e; }
+  .role-tag.tta { background: #d1faf4; color: #065f46; }
+
+  /* FLAGS */
+  .flag { display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; border-radius: 10px; margin-bottom: 12px; font-size: 0.87rem; line-height: 1.6; }
+  .flag.decision { background: #fff8e1; border-left: 4px solid var(--gold); }
+  .flag.condition { background: #edfaf7; border-left: 4px solid var(--teal); }
+  .flag.warning { background: #fef2f2; border-left: 4px solid #ef4444; }
+  .flag.info { background: #eff6ff; border-left: 4px solid var(--blue); }
+  .flag-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+  .flag strong { color: var(--navy); display: block; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+
+  /* TWO-COL */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-bottom: 24px; }
+  @media (max-width: 800px) { .two-col { grid-template-columns: 1fr; } }
+  .section-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--slate); margin-bottom: 12px; }
+  .who-list { list-style: none; }
+  .who-list li { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.87rem; }
+  .who-list li:last-child { border-bottom: none; }
+
+  /* PROCESS HEADER */
+  .process-header { display: flex; align-items: flex-start; gap: 20px; margin-bottom: 28px; padding-bottom: 22px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+  .process-icon-big { width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; flex-shrink: 0; }
+  .process-icon-big.blue { background: linear-gradient(135deg, var(--navy), var(--blue)); }
+  .process-icon-big.teal { background: linear-gradient(135deg, #065f46, var(--teal)); }
+  .process-icon-big.orange { background: linear-gradient(135deg, #7c2d12, #ea580c); }
+  .process-icon-big.purple { background: linear-gradient(135deg, #3b0764, var(--role-manager)); }
+  .process-meta { flex: 1; }
+  .process-meta h2 { font-family: 'DM Serif Display', serif; font-size: 1.5rem; color: var(--navy); margin-bottom: 4px; }
+  .process-meta p { font-size: 0.85rem; color: var(--slate); }
+  .completion-badge { background: var(--light); border: 1px solid var(--border); border-radius: 10px; padding: 10px 16px; font-size: 0.78rem; color: var(--slate); text-align: center; flex-shrink: 0; }
+  .completion-badge strong { display: block; font-size: 0.92rem; color: var(--navy); margin-top: 4px; }
+
+  /* PRINT */
+  @media print {
+    .tabs-bar { display: none !important; }
+    .section { display: block !important; page-break-before: always; }
+    .section:first-of-type { page-break-before: auto; }
+  }
+  @media (max-width: 700px) {
+    .header { padding: 24px 20px 18px; }
+    .tabs-bar { padding: 0 8px; }
+    .content { padding: 20px 16px 40px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="breadcrumb" id="breadcrumb"></div>
+    <div class="header-badge">Business Process</div>
+    <h1>Leave of Absence Dashboard</h1>
+    <p>Interactive guide to Leave of Absence workflows — roles, steps, decisions, and approvals · FWS &amp; State positions excluded</p>
+  </div>
+</div>
+
+<div class="tabs-bar">
+  <button class="tab-btn active" onclick="showTab('overview')">📋 Overview</button>
+  <button class="tab-btn" onclick="showTab('bp1')">🏖 Request Leave</button>
+  <button class="tab-btn" onclick="showTab('bp2')">🔙 Return from Leave</button>
+  <button class="tab-btn" onclick="showTab('bp3')">✏️ Correct / Extend</button>
+  <button class="tab-btn" onclick="showTab('roles')">👥 Roles &amp; Permissions</button>
+</div>
+
+<div class="content">
+
+<!-- ══════ OVERVIEW ══════ -->
+<div id="overview" class="section active">
+  <div class="card">
+    <div class="card-title">Leave of Absence at a Glance</div>
+    <div class="card-subtitle">3 Core Business Processes · City Positions · Excluding Federal Work Study &amp; State-Only Steps</div>
+    <div class="overview-grid">
+      <div class="overview-tile" onclick="showTab('bp1')">
+        <div class="tile-icon">🏖</div>
+        <div class="tile-name">Request Leave of Absence</div>
+        <div class="tile-desc">Employee, Manager, HR Partner, Faculty Relations Partner, or Civil Service Director initiates a leave request that routes through review and approval.</div>
+      </div>
+      <div class="overview-tile" onclick="showTab('bp2')">
+        <div class="tile-icon">🔙</div>
+        <div class="tile-name">Request Return from Leave</div>
+        <div class="tile-desc">Employee or an HR/absence role initiates the return, entering the actual last day of absence, then routes for review.</div>
+      </div>
+      <div class="overview-tile" onclick="showTab('bp3')">
+        <div class="tile-icon">✏️</div>
+        <div class="tile-name">Correct / Extend Leave</div>
+        <div class="tile-desc">Standalone admin task (not a full approval flow) used to fix dates or push out an estimated end date on an existing leave.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Security Roles Legend</div>
+    <div class="card-subtitle">Who participates across all Leave of Absence processes</div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px;">
+      <span class="role-tag employee">🔴 Employee</span>
+      <span class="role-tag manager">🟣 Manager</span>
+      <span class="role-tag budget">🟡 Absence Partner / Administrator</span>
+      <span class="role-tag hr">🔵 HR Partner / Administrator / Specialist</span>
+      <span class="role-tag admin">⚪ Benefits Partner</span>
+      <span class="role-tag payroll">🌊 Payroll Partner (Central)</span>
+      <span class="role-tag tk">🟠 Timekeeper</span>
+      <span class="role-tag tta">🟢 Faculty Relations Partner / Civil Service Director</span>
+    </div>
+    <div class="flag info">
+      <span class="flag-icon">ℹ️</span>
+      <div><strong>Multiple Roles Per Person</strong>A person can wear multiple hats — an Absence Partner is very often the same person as the HR Partner at a campus. Roles are assigned per leave type, not exclusive.</div>
+    </div>
+    <div class="flag decision">
+      <span class="flag-icon">⚠️</span>
+      <div><strong>Two Separate Security Controls Per Leave Type</strong>Each leave type controls (1) which employees are <em>eligible</em> to see/select it, and (2) which security groups can <em>initiate</em> it. Both are configured through leave type security segments — not every group listed can act on every leave type.</div>
+    </div>
+    <div class="flag condition">
+      <span class="flag-icon">🔀</span>
+      <div><strong>Leave of Absence vs. Time Off — Related but Separate</strong>Leave of Absence covers longer, extended time away (medical, FMLA, fellowship, childcare, etc.). Short-term time off (vacation, sick days) is a separate process. Both live under the Absence umbrella in the system.</div>
+    </div>
+    <div class="flag warning">
+      <span class="flag-icon">🚫</span>
+      <div><strong>Excluded from this Dashboard</strong>Federal Work Study positions and State-specific steps have been excluded. All flows shown apply to City positions only.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════ BP1: REQUEST LEAVE OF ABSENCE ══════ -->
+<div id="bp1" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big blue">🏖</div>
+      <div class="process-meta">
+        <h2>Request Leave of Absence</h2>
+        <p>Initiated by Employee · Manager · HR Partner · Faculty Relations Partner · Civil Service Director</p>
+      </div>
+      <div class="completion-badge">Approved<strong>After All Reviews</strong></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot employee"></span><span class="role-tag employee">Employee</span> Requests own leave (if eligible to self-initiate)</li>
+          <li><span class="role-dot manager"></span><span class="role-tag manager">Manager</span> Can initiate on behalf; notified of outcome</li>
+          <li><span class="role-dot tta"></span><span class="role-tag tta">Faculty Relations / Civil Service</span> Can initiate for applicable populations</li>
+          <li><span class="role-dot budget"></span><span class="role-tag budget">Absence Partner</span> Reviews / approves</li>
+          <li><span class="role-dot hr"></span><span class="role-tag hr">HR Partner</span> Reviews / approves · assigns roles</li>
+          <li><span class="role-dot admin"></span><span class="role-tag admin">Benefits Partner</span> Changes benefit elections if flagged</li>
+          <li><span class="role-dot payroll"></span><span class="role-tag payroll">Payroll Partner</span> Final review when leave affects pay</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Decision Flags</div>
+        <div class="flag decision">
+          <span class="flag-icon">⚠️</span>
+          <div><strong>Eligibility Drives the Dropdown</strong>The leave type list only shows types the employee is eligible for based on position — plus only the types that security allows the initiator to start.</div>
+        </div>
+        <div class="flag condition">
+          <span class="flag-icon">🔀</span>
+          <div><strong>Attachment May Be a Hard Block</strong>If a leave type requires documentation, submitting without an attachment throws a critical error. The system checks only that a file exists — reviewers validate the actual contents.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-title" style="font-size:1rem;margin-bottom:18px;">Flowchart — Request Leave of Absence</div>
+    <div class="flowchart">
+      <div class="flow-node">
+        <div class="flow-box flow-start">🏖 START — Employee Needs Extended Leave</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee / Manager / HR Partner / Faculty Relations / Civil Service</div>
+        <div class="flow-box flow-action employee">Opens Request Absence (micro-calendar) or Manage Absence (full screen)<br><small style="opacity:0.65">Only initiators allowed by leave type security can start this</small></div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Decision: Which leave type is the employee eligible for?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Initiator</div>
+        <div class="flow-box flow-action employee">Selects Leave Type (e.g. Education, FMLA, Fellowship, Childcare)<br>Enters First Day of Absence &amp; Estimated Last Day of Absence</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> System</div>
+        <div class="flow-box flow-action employee">Auto-Calculates Requested Hours/Days<br><small style="opacity:0.65">Based on work schedule + leave type's calendar counting rules (7-day / workdays only / workdays excl. holidays)</small></div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Decision: Does this leave type require an attachment?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ YES — Required</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action employee">Attaches Supporting Document<br><small style="opacity:0.65">Hard block error if missing — content not validated by system</small></div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">⏭ NO — Optional</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action employee">Proceeds Without Attachment</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Initiator</div>
+        <div class="flow-box flow-action employee">Submits Request — Status: Submitted (Pending)</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot budget"></span> Absence Partner</div>
+        <div class="flow-box flow-action budget">Reviews Request &amp; Attachments · Views Leave Impact Flags<br><small style="opacity:0.65">Inactivate worker · payroll effect · accrual effect · benefit effect</small></div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Decision: Approve, Send Back, Deny, or Cancel?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ Approve</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action budget">Continues to Next Reviewer</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">↩ Send Back</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action employee">Returned to Initiator with Comment for Correction</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">❌ Deny</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-end denied">⛔ DENIED — Employee Notified<br><small style="opacity:0.85">Cannot be switched back to Approve once actioned</small></div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-decision">🔀 Condition: Is Absence Partner the same person as HR Partner?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ YES — Same Person</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action" style="background:#e8f8f0;border-color:#1a7a4a;">HR Partner Step Auto-Skipped</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">⏭ NO — Different People</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot hr"></span> HR Partner</div>
+            <div class="flow-box flow-action hr">Reviews &amp; Approves · Assigns Any Needed Security Roles</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-decision">🔀 Condition: Is there a benefit impact on this leave?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ YES — Benefit Impact</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot admin"></span> Benefits Partner</div>
+            <div class="flow-box flow-action admin">Changes Benefit Elections</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">⏭ NO — No Impact</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action admin">Step Skipped</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot manager"></span> Manager</div>
+        <div class="flow-box flow-action manager">Reviews / Acknowledges<br><small style="opacity:0.65">Medical &amp; FMLA leaves: approval step being reconfigured to skip or acknowledge-only</small></div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-decision">🔀 Condition: Does this leave type affect pay?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ YES — Pay Affected</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot payroll"></span> Payroll Partner (Central)</div>
+            <div class="flow-box flow-action payroll">Processes Action/Reason for Reduced or Unpaid Status<br><small style="opacity:0.65">e.g. unpaid leave, fellowship 80%, FMLA without pay</small></div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">⏭ NO — Full Pay Continues</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action payroll">Payroll Step Not Required<br><small style="opacity:0.65">e.g. full-pay parental leave, full-pay FMLA</small></div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-end">✅ COMPLETE — Employee Officially on Leave</div>
+      </div>
+    </div>
+
+    <div style="margin-top:28px;">
+      <div class="flag info">
+        <span class="flag-icon">👁️</span>
+        <div><strong>"On Leave" Visibility</strong>Only users secured to the leave event see the "on leave" flag next to the employee's name. The specific leave type stays private. Visibility rules are configurable (broader, or hidden entirely).</div>
+      </div>
+      <div class="flag condition">
+        <span class="flag-icon">🎓</span>
+        <div><strong>Faculty Scholarly / Fellowship Leave</strong>Committee and presidential approval for sabbatical/fellowship leave happens outside the system (paper process). Workday is used only after full approval — HR Partner records the leave and it triggers the payroll percentage action (80%/100%, half-year/full-year).</div>
+      </div>
+      <div class="flag condition">
+        <span class="flag-icon">🩺</span>
+        <div><strong>Paid Family Leave / Long-Term Disability</strong>These leave types depend on a third-party carrier's eligibility decision before the benefit payment is confirmed. Exact placement of that step in the approval sequence is still being finalized.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ BP2: REQUEST RETURN FROM LEAVE OF ABSENCE ══════ -->
+<div id="bp2" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big teal">🔙</div>
+      <div class="process-meta">
+        <h2>Request Return from Leave of Absence</h2>
+        <p>Initiated by Employee · Manager · Absence Administrator · Absence Partner · HR Administrator · HR Partner · HR Specialist · Timekeeper</p>
+      </div>
+      <div class="completion-badge">Approved<strong>After All Reviews</strong></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot employee"></span><span class="role-tag employee">Employee</span> Can initiate own return</li>
+          <li><span class="role-dot manager"></span><span class="role-tag manager">Manager</span> Can initiate on behalf</li>
+          <li><span class="role-dot budget"></span><span class="role-tag budget">Absence Partner / Administrator</span> Can initiate; reviews</li>
+          <li><span class="role-dot hr"></span><span class="role-tag hr">HR Partner / Administrator / Specialist</span> Can initiate; assigns roles</li>
+          <li><span class="role-dot tk"></span><span class="role-tag tk">Timekeeper</span> Can initiate on behalf</li>
+          <li><span class="role-dot admin"></span><span class="role-tag admin">Benefits Partner</span> Changes benefits if flagged</li>
+          <li><span class="role-dot payroll"></span><span class="role-tag payroll">Payroll Partner</span> Reviews; reinstates pay</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Decision Flags</div>
+        <div class="flag decision">
+          <span class="flag-icon">⚠️</span>
+          <div><strong>No Automatic Return</strong>If no return is entered, the employee stays "on leave" indefinitely past the estimated last day — the system will not auto-return them unless specifically configured to.</div>
+        </div>
+        <div class="flag condition">
+          <span class="flag-icon">🔀</span>
+          <div><strong>Attachment Rules Are Independent</strong>The return action has its own, separate attachment rule from the original request — e.g. a doctor's note or FMLA return-to-work form can be required here even if it wasn't required going out on leave.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-title" style="font-size:1rem;margin-bottom:18px;">Flowchart — Request Return from Leave of Absence</div>
+    <div class="flowchart">
+      <div class="flow-node">
+        <div class="flow-box flow-start">🔔 TRIGGER — Employee Ready to Return / Leave Ending</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Employee / Manager / Absence or HR Role / Timekeeper</div>
+        <div class="flow-box flow-action employee">Opens Request Return from Leave of Absence<br><small style="opacity:0.65">Pre-populates from the active leave: first day of absence, estimated last day</small></div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Initiator</div>
+        <div class="flow-box flow-action employee">Enters Actual Last Day of Absence (required)<br>First Day Back at Work (optional — reporting only)</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Decision: Does this leave type require an attachment on return?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ YES — Required</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action employee">Attaches Return Documentation<br><small style="opacity:0.65">e.g. doctor's note, FMLA return form</small></div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">⏭ NO — Optional</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action employee">Proceeds Without Attachment</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot employee"></span> Initiator</div>
+        <div class="flow-box flow-action employee">Submits Return Request</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot budget"></span> Absence Partner</div>
+        <div class="flow-box flow-action budget">Reviews Return Request &amp; Attachments</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot hr"></span> HR Partner &amp; <span class="role-dot payroll"></span> Payroll Partner</div>
+        <div class="flow-box flow-action hr">Review in Sequence · Payroll Reinstates Pay if Applicable</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Decision: Approve, Send Back, or Deny?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✅ Approve</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-end">✅ COMPLETE — Employee Returned · On-Leave Flag Removed</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">↩ Send Back / Deny</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-end denied">⛔ RETURNED FOR CORRECTION</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:28px;">
+      <div class="flag warning">
+        <span class="flag-icon">🚫</span>
+        <div><strong>Cannot Reverse a Final Action</strong>Once an approver clicks Deny (or Approve), it cannot be switched. The employee must resubmit before it can be actioned again.</div>
+      </div>
+      <div class="flag condition">
+        <span class="flag-icon">📅</span>
+        <div><strong>Extending a Leave</strong>An extension is not a brand-new request — it's handled either as a Correction to the estimated last day (admin task, see Correct / Extend tab) or by entering a later actual/estimated date directly on the return. An audit trail tracks the change either way.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ BP3: CORRECT / EXTEND LEAVE ══════ -->
+<div id="bp3" class="section">
+  <div class="card">
+    <div class="process-header">
+      <div class="process-icon-big orange">✏️</div>
+      <div class="process-meta">
+        <h2>Correct / Extend Leave</h2>
+        <p>Standalone admin task — not part of an approval business process</p>
+      </div>
+      <div class="completion-badge">Triggered by<strong>Incorrect Entry or Extension</strong></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-label">Who is Involved</div>
+        <ul class="who-list">
+          <li><span class="role-dot budget"></span><span class="role-tag budget">Absence Partner / Administrator</span> Can correct</li>
+          <li><span class="role-dot hr"></span><span class="role-tag hr">HR Partner / Administrator</span> Can correct</li>
+          <li><span class="role-dot tk"></span><span class="role-tag tk">Timekeeper</span> Can correct (where scoped)</li>
+          <li><span class="role-dot manager"></span><span class="role-tag manager">Manager</span> No access — admin task only</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Decision Flags</div>
+        <div class="flag warning">
+          <span class="flag-icon">🚫</span>
+          <div><strong>Not an Approval Flow</strong>Correction is a direct edit, not a reviewed business process — there is no second set of eyes. Access should be tightly scoped through security since it bypasses approval.</div>
+        </div>
+        <div class="flag condition">
+          <span class="flag-icon">🔀</span>
+          <div><strong>Full Audit Trail Retained</strong>Even though there's no approval step, every correction is tracked — the original and updated dates remain visible for later review.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-title" style="font-size:1rem;margin-bottom:18px;">Flowchart — Correct / Extend Leave</div>
+    <div class="flowchart">
+      <div class="flow-node">
+        <div class="flow-box flow-start">🔔 TRIGGER — Error Found or Leave Needs Extension</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-label"><span class="role-dot budget"></span> Absence Partner / HR Partner / Timekeeper</div>
+        <div class="flow-box flow-action budget">Opens Employee's Leave Record via Related Actions → Correct</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Decision: Correcting a date/field, or extending the leave?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">✏️ Correction</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action budget">Updates Field Directly (e.g. wrong start date)</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">📅 Extension</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-action budget">Pushes Out Estimated Last Day of Absence<br><small style="opacity:0.65">May require additional medical documentation, attached separately</small></div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-end">✅ COMPLETE — Record Updated · Audit Trail Logged</div>
+      </div>
+    </div>
+
+    <div style="margin-top:28px;">
+      <div class="flag info">
+        <span class="flag-icon">ℹ️</span>
+        <div><strong>Continuous Leave, Not a New Request</strong>An extension (e.g. FMLA re-evaluated for 3 more weeks) continues from the original start date rather than restarting the process from scratch.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ ROLES TABLE ══════ -->
+<div id="roles" class="section">
+  <div class="card">
+    <div class="card-title">Master Roles &amp; Permissions Table</div>
+    <div class="card-subtitle">Leave of Absence · City Positions Only · FWS &amp; State Excluded</div>
+    <div style="overflow-x:auto;">
+    <table class="roles-table">
+      <thead>
+        <tr>
+          <th>Business Process / Step</th>
+          <th><span class="role-tag employee">Employee</span></th>
+          <th><span class="role-tag manager">Manager</span></th>
+          <th><span class="role-tag budget">Absence Partner / Admin</span></th>
+          <th><span class="role-tag hr">HR Partner / Admin / Specialist</span></th>
+          <th><span class="role-tag admin">Benefits Partner</span></th>
+          <th><span class="role-tag payroll">Payroll Partner</span></th>
+          <th><span class="role-tag tk">Timekeeper</span></th>
+          <th><span class="role-tag tta">Faculty Relations / Civil Service</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Request Leave of Absence</strong><br><small>Initiate</small></td>
+          <td><span class="check">✔</span> Self (if eligible)</td>
+          <td><span class="check">✔</span> On behalf</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="check">✔</span> On behalf</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span> (pending fix)</td>
+          <td><span class="check">✔</span> For applicable population</td>
+        </tr>
+        <tr>
+          <td><strong>Request Leave of Absence</strong><br><small>Review / Approve</small></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="check">✔</span> Ack. or approve (medical: TBD)</td>
+          <td><span class="check">✔</span> Reviewer</td>
+          <td><span class="check">✔</span> Reviewer / approver</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="check">✔</span> When pay is affected</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+        </tr>
+        <tr>
+          <td><strong>Change Benefit Elections</strong><br><small>Conditional — only if benefit impact flagged</small></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="check">✔</span> Executes change</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+        </tr>
+        <tr>
+          <td><strong>Assign Security Roles</strong><br><small>When a leave requires a role change</small></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="check">✔</span> Assigns roles</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+        </tr>
+        <tr>
+          <td><strong>Request Return from Leave</strong><br><small>Initiate</small></td>
+          <td><span class="check">✔</span> Self</td>
+          <td><span class="check">✔</span> On behalf</td>
+          <td><span class="check">✔</span> On behalf</td>
+          <td><span class="check">✔</span> On behalf</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="check">✔</span> On behalf</td>
+          <td><span class="dash">–</span></td>
+        </tr>
+        <tr>
+          <td><strong>Request Return from Leave</strong><br><small>Review / Approve</small></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="check">✔</span> Reviewer</td>
+          <td><span class="check">✔</span> Reviewer</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="check">✔</span> Reinstates pay</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+        </tr>
+        <tr>
+          <td><strong>Correct / Extend Leave</strong><br><small>Standalone admin task, no approval flow</small></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="check">✔</span> Can correct</td>
+          <td><span class="check">✔</span> Can correct</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="check">✔</span> Where scoped</td>
+          <td><span class="dash">–</span></td>
+        </tr>
+        <tr>
+          <td><strong>View On-Leave Status &amp; Documents</strong><br><small>Visibility limited to those secured to the event</small></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="check">✔</span> If secured to event</td>
+          <td><span class="check">✔</span> Full visibility</td>
+          <td><span class="check">✔</span> Full visibility</td>
+          <td><span class="check">✔</span> Benefit-related only</td>
+          <td><span class="check">✔</span> Payroll-related only</td>
+          <td><span class="dash">–</span> (unless scoped)</td>
+          <td><span class="dash">–</span></td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Role Definitions</div>
+    <div class="card-subtitle">Security role descriptions for Leave of Absence scope</div>
+    <table class="roles-table">
+      <thead>
+        <tr>
+          <th>Role</th>
+          <th>Description</th>
+          <th>Can Wear Other Hats?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="role-tag employee">Employee</span></td>
+          <td>The worker requesting their own leave or return, where self-service initiation is allowed for that leave type. Cannot approve their own request.</td>
+          <td>N/A</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag manager">Manager</span></td>
+          <td>Can initiate a leave or return on behalf of a direct report. Reviews/acknowledges leave requests — full approval authority for medical/FMLA leaves is being reconsidered in favor of a notification or acknowledgment step.</td>
+          <td><span class="check">✔</span> Can also be Timekeeper, HR Partner, Absence Partner</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag budget">Absence Partner / Administrator</span></td>
+          <td>Campus HR-based role that reviews and approves leave and return requests. Frequently the same individual as the HR Partner — when they match, the duplicate approval step is skipped automatically.</td>
+          <td><span class="check">✔</span> Very often also HR Partner, Timekeeper, or Benefits Partner</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag hr">HR Partner / Administrator / Specialist</span></td>
+          <td>Reviews and approves requests, assigns security roles triggered by a leave, and can initiate on an employee's behalf. Based at the campus.</td>
+          <td><span class="check">✔</span> Can also be Absence Partner, Manager, Timekeeper</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag admin">Benefits Partner</span></td>
+          <td>Changes benefit elections when a leave request is flagged with a benefit impact. Only involved when that specific condition is triggered.</td>
+          <td><span class="check">✔</span> Can also be HR Partner or Absence Partner</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag payroll">Payroll Partner</span></td>
+          <td>Central payroll role — not typically at the campus level. Final reviewer whenever a leave changes pay (unpaid, reduced %, fellowship adjustments). Processes the action/reason that feeds City and State payroll integrations. Not involved when a leave keeps the employee at full pay, unless pay later changes.</td>
+          <td>Central role — generally not combined with campus roles</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag tk">Timekeeper</span></td>
+          <td>Can initiate a return from leave on behalf of an employee. Currently not enabled to initiate a Request Leave of Absence in the test tenant — flagged as a configuration item pending campus input on which leave types should be in scope.</td>
+          <td><span class="check">✔</span> Can also be Manager, HR Partner, Absence Partner</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag tta">Faculty Relations Partner / Civil Service Director</span></td>
+          <td>Can initiate a leave request for applicable faculty/civil service populations (e.g. scholarly or fellowship leave). Committee and presidential approvals for scholarly leave happen outside the system; this role's involvement is limited to initiation and coordination.</td>
+          <td>Role is population-specific, not typically combined</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="margin-top:24px;">
+      <div class="flag warning">
+        <span class="flag-icon">🚫</span>
+        <div><strong>Excluded: Federal Work Study &amp; State Positions</strong>Federal Work Study coordination and State-specific roles/steps are not included in this dashboard. These operate under a separate scope and process.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const tabs = ['overview','bp1','bp2','bp3','roles'];
+  const idx = tabs.indexOf(id);
+  if(idx >= 0) document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+ /* ────────────────────────────────────────────────────────────
+     BREADCRUMB — self-contained, edit this array only.
+     Each entry: { label: "Text shown", href: "link.html" }
+     Set href to null (or omit it) for the current page —
+     it will render as plain highlighted text, not a link.
+     Add or remove entries to change the trail depth.
+  ──────────────────────────────────────────────────────────── */
+  const BREADCRUMB_TRAIL = [
+    { label: "Business Process Hub", href: "index.html" },
+    { label: "Data", href: "index.html" },
+    { label: "Leave of Absece", href: null }
+  ];
+
+  (function renderBreadcrumb() {
+    const el = document.getElementById('breadcrumb');
+    el.innerHTML = BREADCRUMB_TRAIL.map((item, i) => {
+      const isLast = i === BREADCRUMB_TRAIL.length - 1;
+      const sep = i > 0 ? '<span class="sep">/</span>' : '';
+      const crumb = (item.href && !isLast)
+        ? `<a href="${item.href}">${item.label}</a>`
+        : `<span class="current">${item.label}</span>`;
+      return sep + crumb;
+    }).join('');
+  })();
+
+</script>
+</body>
+</html>
