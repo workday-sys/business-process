@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Personal Information Changes I – Business Process Dashboard</title>
+<title>Personal Information Changes – Business Process Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -213,17 +213,17 @@
   <div class="header-inner">
     <div class="breadcrumb" id="breadcrumb"></div>
     <div class="header-badge">Business Process</div>
-    <h1>Personal Information Changes I – Dashboard</h1>
-    <p>Interactive guide to ID &amp; Passport/Visa change workflows — roles, steps, decisions, and approvals · Federal Work Study &amp; State positions excluded</p>
+    <h1>Personal Information Changes III – Dashboard</h1>
+    <p>Interactive guide to Legal Name, Photo, Preferred Name &amp; Public Profile workflows — roles, steps, decisions, and approvals · FWS &amp; State positions excluded</p>
   </div>
 </div>
 
 <div class="tabs-bar">
   <button class="tab-btn active" onclick="showTab('overview')">📋 Overview</button>
-  <button class="tab-btn" onclick="showTab('bp1')">🪪 Edit Government IDs</button>
-  <button class="tab-btn" onclick="showTab('bp2')">🗂️ Edit ID Information</button>
-  <button class="tab-btn" onclick="showTab('bp3')">🧾 Edit Other IDs</button>
-  <button class="tab-btn" onclick="showTab('bp4')">🛂 Passports &amp; Visa Change</button>
+  <button class="tab-btn" onclick="showTab('bp1')">📝 Legal Name Change</button>
+  <button class="tab-btn" onclick="showTab('bp2')">🖼️ Photo Change</button>
+  <button class="tab-btn" onclick="showTab('bp3')">✏️ Preferred Name Change</button>
+  <button class="tab-btn" onclick="showTab('bp4')">🌐 Public Profile Preferences</button>
   <button class="tab-btn" onclick="showTab('roles')">👥 Roles &amp; Permissions</button>
 </div>
 
@@ -232,522 +232,503 @@
 <!-- ══════ OVERVIEW ══════ -->
 <div id="overview" class="section active">
   <div class="card">
-    <div class="card-title">Personal Information Changes I — At a Glance</div>
-    <div class="card-subtitle">4 Core Business Processes · Faculty/Staff Scope · Excluding Federal Work Study &amp; State-Only Steps</div>
+    <div class="card-title">Personal Information Changes III — At a Glance</div>
+    <div class="card-subtitle">4 Core Business Processes · Excluding Federal Work Study &amp; State-Only Steps</div>
     <div class="overview-grid">
       <div class="overview-tile" onclick="showTab('bp1')">
-        <div class="tile-icon">🪪</div>
-        <div class="tile-name">Edit Government IDs</div>
-        <div class="tile-desc">Employee, Pre-Employee, HR Partner, or HR Administrator submits/updates a Social Security Number or ITIN.</div>
+        <div class="tile-icon">📝</div>
+        <div class="tile-name">Legal Name Change</div>
+        <div class="tile-desc">Employee or an HR-side initiator submits a legal name change with supporting documentation; routes to HR Partner for review when initiated by someone else.</div>
       </div>
       <div class="overview-tile" onclick="showTab('bp2')">
-        <div class="tile-icon">🗂️</div>
-        <div class="tile-name">Edit ID Information</div>
-        <div class="tile-desc">HR Partner makes a one-step, all-in-one update across Government IDs, Passports, Visas, Licenses, and Other IDs.</div>
+        <div class="tile-icon">🖼️</div>
+        <div class="tile-name">Photo Change</div>
+        <div class="tile-desc">Employee or HR uploads a worker profile photo. Optional, single-step, auto-completes — no review or approval configured.</div>
       </div>
       <div class="overview-tile" onclick="showTab('bp3')">
-        <div class="tile-icon">🧾</div>
-        <div class="tile-name">Edit Other IDs</div>
-        <div class="tile-desc">HR Partner or Payroll Administrator updates custom payroll-integration IDs (e.g. NYC Employee ID).</div>
+        <div class="tile-icon">✏️</div>
+        <div class="tile-name">Preferred Name Change</div>
+        <div class="tile-desc">Employee or an HR-side initiator updates a preferred first/middle name. Last name cannot be changed here — blocked by validation.</div>
       </div>
       <div class="overview-tile" onclick="showTab('bp4')">
-        <div class="tile-icon">🛂</div>
-        <div class="tile-name">Passports &amp; Visa Change</div>
-        <div class="tile-desc">Employee, Pre-Employee, Contingent Worker, or HR staff submits a passport/visa update with supporting document.</div>
+        <div class="tile-icon">🌐</div>
+        <div class="tile-name">Public Profile Preferences</div>
+        <div class="tile-desc">Employee only — opts individual fields (date of birth, pronoun, sexual orientation, education) in or out of visibility to co-workers on the same campus.</div>
       </div>
     </div>
   </div>
 
   <div class="card">
     <div class="card-title">Security Roles Legend</div>
-    <div class="card-subtitle">Who participates across all Personal Information Changes I processes</div>
+    <div class="card-subtitle">Who participates across all Personal Information Change processes</div>
     <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px;">
-      <span class="role-tag employee">🔴 Employee / Pre-Employee (Self)</span>
-      <span class="role-tag tk">🟠 Contingent Worker / Pre-Contingent Worker (Self)</span>
+      <span class="role-tag employee">🔴 Employee (Self)</span>
+      <span class="role-tag admin">⚪ HR Administrator</span>
       <span class="role-tag hr">🔵 HR Partner</span>
-      <span class="role-tag admin">⚫ HR Administrator</span>
-      <span class="role-tag payroll">🌊 Payroll Administrator</span>
+      <span class="role-tag tk">🟠 Recruiter</span>
+      <span class="role-tag tta">🟢 Recruiting Administrator</span>
     </div>
     <div class="flag info">
       <span class="flag-icon">ℹ️</span>
-      <div><strong>One Task, Many ID Types</strong>Edit ID Information gives HR Partners (and, where security allows, HR Administrators) an all-in-one page to update Government IDs, Passports, Visas, Licenses, and Other IDs in a single submission — instead of running each business process separately.</div>
+      <div><strong>What "Employee (Self)" Covers</strong>For simplicity, this dashboard groups Employee, Pre-Employee, Contingent Worker, and Pre-Contingent Worker — each acting "as self" — into one Employee (Self) role, since they behave identically in every process below.</div>
     </div>
     <div class="flag decision">
       <span class="flag-icon">⚠️</span>
-      <div><strong>Auto-Approval When Initiator = Approver</strong>If the person submitting the change is themselves an HR Partner for that organization, the approval step is skipped and the process auto-completes. This is the "No Current Assignee was Initiator or Prior Approver" condition rule seen on every approval step.</div>
+      <div><strong>Self-Initiated vs. Initiated by Another</strong>Legal Name Change and Preferred Name Change behave differently depending on who starts them. When the employee initiates on themselves, most steps auto-complete. When HR Administrator, HR Partner, Recruiter, or Recruiting Administrator initiates on behalf of someone else, an HR Partner review step is added for Legal Name Change.</div>
     </div>
     <div class="flag condition">
       <span class="flag-icon">🔀</span>
-      <div><strong>Job Family Routing — Student vs. Non-Student</strong>Every approval step checks whether the worker's Job Family is Student Employee. Non-student (Faculty/Staff) changes route to the HR Partner, shown in this dashboard. Student Employee changes route to the Federal Work Study Coordinator, which is out of scope here.</div>
-    </div>
-    <div class="flag condition">
-      <span class="flag-icon">🔒</span>
-      <div><strong>Access Is Security-Driven</strong>Each task is only visible to the security roles assigned to it. If a step doesn't appear for someone who expects it, that usually means their security role mapping needs to be requested/updated rather than a system error.</div>
+      <div><strong>Notifications &amp; Integrations Not Yet Configured</strong>Per the walkthrough session, notifications and integrations are not turned on for this phase of testing. "Who gets notified" is not shown because that layer hasn't been built yet — approvals still route correctly, but no email/inbox alert is generated outside the Workday inbox task itself.</div>
     </div>
     <div class="flag warning">
       <span class="flag-icon">🚫</span>
-      <div><strong>Excluded: Federal Work Study &amp; State Positions</strong>Federal Work Study routing (Federal Work Study Coordinator) and State-specific steps are not included in this dashboard. These operate under a separate scope and process.</div>
+      <div><strong>Excluded from this Dashboard</strong>Federal Work Study coordinator routing and State-specific steps have been excluded from every process shown here.</div>
     </div>
   </div>
 </div>
 
-<!-- ══════ BP1: EDIT GOVERNMENT IDS ══════ -->
+<!-- ══════ BP1: LEGAL NAME CHANGE ══════ -->
 <div id="bp1" class="section">
   <div class="card">
     <div class="process-header">
-      <div class="process-icon-big blue">🪪</div>
+      <div class="process-icon-big blue">📝</div>
       <div class="process-meta">
-        <h2>Edit Government IDs</h2>
-        <p>Initiated by Employee (Self) · Pre-Employee (Self) · HR Partner · HR Administrator</p>
+        <h2>Legal Name Change</h2>
+        <p>Initiated by Employee (Self) · HR Administrator · HR Partner · Recruiter · Recruiting Administrator</p>
       </div>
-      <div class="completion-badge">Completes When<strong>HR Partner Approves</strong></div>
+      <div class="completion-badge">Completes When<strong>HR Partner Reviews &amp; Approves*</strong></div>
     </div>
 
     <div class="two-col">
       <div>
         <div class="section-label">Who is Involved</div>
         <ul class="who-list">
-          <li><span class="role-dot employee"></span><span class="role-tag employee">Employee (Self)</span> Initiator only — submits their own SSN/ITIN</li>
-          <li><span class="role-dot employee"></span><span class="role-tag employee">Pre-Employee (Self)</span> Initiator only</li>
-          <li><span class="role-dot hr"></span><span class="role-tag hr">HR Partner</span> Initiator &amp; approver</li>
-          <li><span class="role-dot admin"></span><span class="role-tag admin">HR Administrator</span> Initiator only</li>
+          <li><span class="role-dot employee"></span><span class="role-tag employee">Employee (Self)</span> Initiates own legal name change; must attach documentation</li>
+          <li><span class="role-dot admin"></span><span class="role-tag admin">HR Administrator</span> Can initiate on behalf of another worker</li>
+          <li><span class="role-dot hr"></span><span class="role-tag hr">HR Partner</span> Can initiate on behalf; reviews &amp; approves when initiated by another (non-student job family)</li>
+          <li><span class="role-dot tk"></span><span class="role-tag tk">Recruiter</span> Can initiate on behalf of another worker</li>
+          <li><span class="role-dot tta"></span><span class="role-tag tta">Recruiting Administrator</span> Can initiate on behalf of another worker</li>
         </ul>
       </div>
       <div>
         <div class="section-label">Decision Flags</div>
         <div class="flag decision">
           <span class="flag-icon">⚠️</span>
-          <div><strong>Critical SSN Validation Rules</strong>Multiple validations block impossible Social Security Number combinations (e.g. certain digit patterns are rejected) before the record can be submitted.</div>
+          <div><strong>Critical Validation — Documentation Required</strong>If any part of the legal first or last name is changing, a supporting document (e.g. Social Security card) must be attached or the business process throws a hard error and will not submit. Changing only a prefix (Mr./Ms./Dr.) does not trigger this validation.</div>
         </div>
         <div class="flag condition">
           <span class="flag-icon">🔀</span>
-          <div><strong>Not Used by Contingent Workers</strong>This task is not part of the security scope for Contingent Workers — that population is handled under a separate contingent worker/POI process covered elsewhere.</div>
+          <div><strong>Self-Initiated vs. Initiated by Another</strong>When the employee initiates on themselves, the process completes on submission. When HR Administrator, HR Partner, Recruiter, or Recruiting Administrator initiates on behalf of someone else, it routes to an HR Partner for review and approval.</div>
+        </div>
+        <div class="flag warning">
+          <span class="flag-icon">🚫</span>
+          <div><strong>Known Routing Defect (Logged in Testing)</strong>When an HR Partner submits a legal name change on their own record, the review task has been observed routing back to that same HR Partner instead of a different HR Partner or manager — unlike other personal information changes, where it correctly skips to someone else. Flagged as a defect; routing rules are being checked against the standard Personal Information Change routing logic.</div>
         </div>
       </div>
     </div>
 
-    <div class="card-title" style="font-size:1rem;margin-bottom:18px;">Flowchart — Edit Government IDs</div>
+    <div class="card-title" style="font-size:1rem;margin-bottom:18px;">Flowchart — Legal Name Change</div>
     <div class="flowchart">
       <div class="flow-node">
-        <div class="flow-box flow-start">🪪 START — Ad Hoc Government ID Change Needed</div>
+        <div class="flow-box flow-start">📝 START — Legal Name Change Needed</div>
       </div>
       <div class="flow-connector"><span>↓</span></div>
       <div class="flow-node">
-        <div class="flow-label"><span class="role-dot employee"></span> Employee / Pre-Employee / HR Partner / HR Administrator</div>
-        <div class="flow-box flow-action employee">Step A — Initiation: Enters SSN or ITIN, Issue/Expiration/Verification Dates<br><small style="opacity:0.65">Blocked by critical SSN validation rules</small></div>
+        <div class="flow-label"><span class="role-dot employee"></span> Employee (Self) / HR Administrator / HR Partner / Recruiter / Recruiting Admin</div>
+        <div class="flow-box flow-action employee">Opens Actions &gt; Personal Data &gt; Maintain Names &gt; Legal Name Change<br><small style="opacity:0.65">Step A — Initiation</small></div>
       </div>
       <div class="flow-connector"><span>↓</span></div>
       <div class="flow-node">
-        <div class="flow-box flow-decision">⚠️ Decision: Is the initiator already the HR Partner of record (current assignee / prior approver)?</div>
+        <div class="flow-box flow-decision">⚠️ Validation: Is the legal first or last name changing?</div>
       </div>
       <div class="flow-connector"><span>↓</span></div>
       <div class="decision-branch">
         <div class="branch-side">
-          <div class="branch-label">✅ YES — HR Partner Self-Submitted</div>
+          <div class="branch-label">✅ YES — Name Changing</div>
           <div class="flow-connector"><span>↓</span></div>
           <div class="flow-node">
-            <div class="flow-box flow-action" style="background:#e8f8f0;border-color:#1a7a4a;">Approval Step Skipped — Auto-Complete</div>
+            <div class="flow-box flow-action tk">Document Attachment Required<br><small style="opacity:0.65">e.g. Social Security card or court order — hard error if missing</small></div>
           </div>
         </div>
         <div class="branch-side">
-          <div class="branch-label">⏭ NO — Different Initiator</div>
+          <div class="branch-label">⏭ NO — Prefix Only</div>
           <div class="flow-connector"><span>↓</span></div>
           <div class="flow-node">
-            <div class="flow-label"><span class="role-dot hr"></span> HR Partner</div>
-            <div class="flow-box flow-action hr">Step BA — Approval: Reviews &amp; Approves SSN/ITIN Change</div>
+            <div class="flow-box flow-action admin">No Document Required<br><small style="opacity:0.65">Validation does not trigger</small></div>
           </div>
         </div>
       </div>
       <div class="flow-connector"><span>↓</span></div>
       <div class="flow-node">
-        <div class="flow-box flow-end">✅ COMPLETE — SSN/ITIN Updated on Worker Profile</div>
+        <div class="flow-box flow-action" style="background:#eef3fb;border-color:var(--role-hr);">Initiator Submits</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Decision: Initiated by the employee themselves, or by another party?</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="decision-branch">
+        <div class="branch-side">
+          <div class="branch-label">👤 Self-Initiated</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-end">✅ COMPLETE — No Review Step</div>
+          </div>
+        </div>
+        <div class="branch-side">
+          <div class="branch-label">🧑‍💼 Initiated by Another</div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-label"><span class="role-dot hr"></span> HR Partner</div>
+            <div class="flow-box flow-action" style="background:#eef3fb;border-color:var(--role-hr);">Step B — Reviews Documentation &amp; Approves</div>
+          </div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-end">✅ COMPLETE — Legal Name Updated</div>
+          </div>
+        </div>
       </div>
     </div>
 
     <div style="margin-top:28px;">
       <div class="flag info">
-        <span class="flag-icon">📅</span>
-        <div><strong>Timing</strong>Change is reflected in the Workday tenant as soon as the HR Partner approves (or immediately if the HR Partner was the initiator).</div>
-      </div>
-      <div class="flag warning">
-        <span class="flag-icon">🔒</span>
-        <div><strong>Document Handling Caution</strong>Avoid uploading the actual Social Security card or passport image into Workday as an attachment — keep physical proof/verification offline as done today.</div>
+        <span class="flag-icon">ℹ️</span>
+        <div><strong>Display Behavior After Approval</strong>Once a legal name change is approved, if the worker also has a preferred name on file, the preferred name continues to display on the worker profile — the legal name updates in the background record.</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══════ BP2: EDIT ID INFORMATION ══════ -->
+<!-- ══════ BP2: PHOTO CHANGE ══════ -->
 <div id="bp2" class="section">
   <div class="card">
     <div class="process-header">
-      <div class="process-icon-big teal">🗂️</div>
+      <div class="process-icon-big teal">🖼️</div>
       <div class="process-meta">
-        <h2>Edit ID Information</h2>
-        <p>Initiated by HR Partner (single-step, all-in-one ID update)</p>
+        <h2>Photo Change</h2>
+        <p>Initiated by Employee (Self) · HR Administrator · HR Partner</p>
       </div>
-      <div class="completion-badge">Completes When<strong>HR Partner Submits</strong></div>
+      <div class="completion-badge">Completes When<strong>Initiator Submits</strong></div>
     </div>
 
     <div class="two-col">
       <div>
         <div class="section-label">Who is Involved</div>
         <ul class="who-list">
-          <li><span class="role-dot hr"></span><span class="role-tag hr">HR Partner</span> Sole initiator — only security group on this process</li>
+          <li><span class="role-dot employee"></span><span class="role-tag employee">Employee (Self)</span> Uploads own worker profile photo — optional</li>
+          <li><span class="role-dot admin"></span><span class="role-tag admin">HR Administrator</span> Can upload, override, or remove a worker's photo</li>
+          <li><span class="role-dot hr"></span><span class="role-tag hr">HR Partner</span> Can upload, override, or remove a worker's photo</li>
         </ul>
       </div>
       <div>
         <div class="section-label">Decision Flags</div>
         <div class="flag decision">
           <span class="flag-icon">⚠️</span>
-          <div><strong>Full-Time Student Flag</strong>The initiator must enter Yes or No for Full-Time Student under Other IDs. This flag is used for payroll integration purposes.</div>
+          <div><strong>Single Step — Auto-Completes</strong>There is only an initiation step. As soon as the initiator hits submit, the business process is complete and the photo shows on the worker profile — no review or approval step exists today.</div>
         </div>
         <div class="flag condition">
           <span class="flag-icon">🔀</span>
-          <div><strong>Single Step — No Separate Approval</strong>Because HR Partner is the only security group on this business process, submission auto-completes; there is no routed approval step.</div>
+          <div><strong>Optional Everywhere</strong>Uploading a photo is never required. It is also part of onboarding, where the task can be skipped entirely.</div>
+        </div>
+        <div class="flag warning">
+          <span class="flag-icon">🚫</span>
+          <div><strong>No Content Validation, No Approval Routing</strong>Workday validates only file size, not photo content — it cannot detect whether an image is an appropriate headshot. Because there is no approval step, HR is not notified who uploaded a given photo. Raised in walkthrough as a gap worth an approval step to prevent inappropriate or non-professional images; logged as feedback for design consideration.</div>
         </div>
       </div>
     </div>
 
-    <div class="card-title" style="font-size:1rem;margin-bottom:18px;">Flowchart — Edit ID Information</div>
+    <div class="card-title" style="font-size:1rem;margin-bottom:18px;">Flowchart — Photo Change</div>
     <div class="flowchart">
       <div class="flow-node">
-        <div class="flow-box flow-start">🗂️ START — Multiple ID Types Need Updating</div>
+        <div class="flow-box flow-start">🖼️ START — Photo Update Needed</div>
       </div>
       <div class="flow-connector"><span>↓</span></div>
       <div class="flow-node">
-        <div class="flow-label"><span class="role-dot hr"></span> HR Partner</div>
-        <div class="flow-box flow-action hr">Step A — Initiation: Updates Government IDs, Passports, Visas, Licenses &amp; Other IDs in One Page<br><small style="opacity:0.65">Critical SSN validation rules apply</small></div>
+        <div class="flow-label"><span class="role-dot employee"></span> Employee (Self) / HR Administrator / HR Partner</div>
+        <div class="flow-box flow-action employee">Opens Personal Data &gt; Edit Photo<br><small style="opacity:0.65">Step A — Initiation (only step)</small></div>
       </div>
       <div class="flow-connector"><span>↓</span></div>
       <div class="flow-node">
-        <div class="flow-box flow-decision">⚠️ Enter Y / N — Full-Time Student (Other IDs)</div>
+        <div class="flow-box flow-decision">⚠️ Validation: Does the file meet minimum size requirements?</div>
       </div>
       <div class="flow-connector"><span>↓</span></div>
       <div class="flow-node">
-        <div class="flow-label"><span class="role-dot hr"></span> HR Partner</div>
-        <div class="flow-box flow-action hr">Clicks Submit</div>
+        <div class="flow-box flow-action tk">Selects File · Crops to Fit · No Face/Content Check Performed</div>
       </div>
       <div class="flow-connector"><span>↓</span></div>
       <div class="flow-node">
-        <div class="flow-box flow-end">✅ COMPLETE — Auto-Approved, All ID Changes Reflected</div>
+        <div class="flow-box flow-action" style="background:#eef3fb;border-color:var(--role-hr);">Initiator Submits</div>
       </div>
-    </div>
-
-    <div style="margin-top:28px;">
-      <div class="flag info">
-        <span class="flag-icon">📅</span>
-        <div><strong>Timing</strong>Reflected in the Workday tenant immediately upon HR Partner submission.</div>
-      </div>
-      <div class="flag condition">
-        <span class="flag-icon">🔀</span>
-        <div><strong>Why Use This Instead of the Individual Tasks?</strong>Edit ID Information consolidates what would otherwise be three separate submissions (Government IDs, Other IDs, Passports &amp; Visas) into one page for eligible HR staff.</div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-end">✅ COMPLETE — Photo Auto-Updates on Worker Profile</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══════ BP3: EDIT OTHER IDS ══════ -->
+<!-- ══════ BP3: PREFERRED NAME CHANGE ══════ -->
 <div id="bp3" class="section">
   <div class="card">
     <div class="process-header">
-      <div class="process-icon-big orange">🧾</div>
+      <div class="process-icon-big orange">✏️</div>
       <div class="process-meta">
-        <h2>Edit Other IDs</h2>
-        <p>Initiated by HR Partner · Payroll Administrator</p>
+        <h2>Preferred Name Change</h2>
+        <p>Initiated by Employee (Self) · HR Administrator · HR Partner · Recruiter · Recruiting Administrator</p>
       </div>
-      <div class="completion-badge">Completes When<strong>HR Partner Approves</strong></div>
+      <div class="completion-badge">Completes When<strong>Initiator Submits</strong></div>
     </div>
 
     <div class="two-col">
       <div>
         <div class="section-label">Who is Involved</div>
         <ul class="who-list">
-          <li><span class="role-dot hr"></span><span class="role-tag hr">HR Partner</span> Initiator &amp; approver</li>
-          <li><span class="role-dot payroll"></span><span class="role-tag payroll">Payroll Administrator</span> Initiator only — cannot approve</li>
+          <li><span class="role-dot employee"></span><span class="role-tag employee">Employee (Self)</span> Updates own preferred first/middle name</li>
+          <li><span class="role-dot admin"></span><span class="role-tag admin">HR Administrator</span> Can initiate on behalf of another worker</li>
+          <li><span class="role-dot hr"></span><span class="role-tag hr">HR Partner</span> Can initiate on behalf of another worker</li>
+          <li><span class="role-dot tk"></span><span class="role-tag tk">Recruiter</span> Can initiate on behalf of another worker</li>
+          <li><span class="role-dot tta"></span><span class="role-tag tta">Recruiting Administrator</span> Can initiate on behalf of another worker</li>
         </ul>
       </div>
       <div>
         <div class="section-label">Decision Flags</div>
         <div class="flag decision">
           <span class="flag-icon">⚠️</span>
-          <div><strong>Critical Work Permit Validation Rules</strong>Entries are checked against work permit validation rules before submission is accepted.</div>
+          <div><strong>Critical Validation — Last Name Cannot Change Here</strong>Proposed last name must match the current last name, or the business process throws a hard error. This process only allows first (and middle) name changes; any last name change must go through Legal Name Change instead.</div>
         </div>
         <div class="flag condition">
           <span class="flag-icon">🔀</span>
-          <div><strong>Custom Payroll IDs</strong>This is where organization-specific IDs used for payroll integration (e.g. NYC Employee ID, ID type/duration) are entered.</div>
+          <div><strong>Single Step — No Review Configured Today</strong>Only an initiation step exists; the process auto-completes on submission regardless of who initiates it. In the walkthrough session, attendees raised adding an HR Partner review/approval step (similar to Legal Name Change) as a possible enhancement — logged as an open item, not yet built.</div>
         </div>
       </div>
     </div>
 
-    <div class="card-title" style="font-size:1rem;margin-bottom:18px;">Flowchart — Edit Other IDs</div>
+    <div class="card-title" style="font-size:1rem;margin-bottom:18px;">Flowchart — Preferred Name Change</div>
     <div class="flowchart">
       <div class="flow-node">
-        <div class="flow-box flow-start">🧾 START — Custom/Payroll ID Needs Adding or Updating</div>
+        <div class="flow-box flow-start">✏️ START — Preferred Name Update Needed</div>
       </div>
       <div class="flow-connector"><span>↓</span></div>
       <div class="flow-node">
-        <div class="flow-label"><span class="role-dot hr"></span> HR Partner or <span class="role-dot payroll"></span> Payroll Administrator</div>
-        <div class="flow-box flow-action payroll">Step A — Initiation: Enters Custom ID (e.g. NYC Employee ID)<br><small style="opacity:0.65">Critical Work Permit validation rules apply</small></div>
+        <div class="flow-label"><span class="role-dot employee"></span> Employee (Self) / HR Administrator / HR Partner / Recruiter / Recruiting Admin</div>
+        <div class="flow-box flow-action employee">Opens Actions &gt; Personal Data &gt; Maintain Names &gt; Preferred Name Change<br><small style="opacity:0.65">Step A — Initiation (only step)</small></div>
       </div>
       <div class="flow-connector"><span>↓</span></div>
       <div class="flow-node">
-        <div class="flow-box flow-decision">⚠️ Decision: Is the initiator already the HR Partner of record (current assignee / prior approver)?</div>
+        <div class="flow-box flow-action tk">Enters Proposed First / Middle Name</div>
+      </div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-decision">⚠️ Validation: Does proposed last name match current last name?</div>
       </div>
       <div class="flow-connector"><span>↓</span></div>
       <div class="decision-branch">
         <div class="branch-side">
-          <div class="branch-label">✅ YES — HR Partner Self-Submitted</div>
+          <div class="branch-label">⛔ NO — Last Name Changed</div>
           <div class="flow-connector"><span>↓</span></div>
           <div class="flow-node">
-            <div class="flow-box flow-action" style="background:#e8f8f0;border-color:#1a7a4a;">Approval Step Skipped — Auto-Complete</div>
+            <div class="flow-box flow-end denied">⛔ CRITICAL ERROR — Blocked, Use Legal Name Change BP</div>
           </div>
         </div>
         <div class="branch-side">
-          <div class="branch-label">⏭ NO — Payroll Administrator (or Other) Initiated</div>
+          <div class="branch-label">✅ YES — Last Name Unchanged</div>
           <div class="flow-connector"><span>↓</span></div>
           <div class="flow-node">
-            <div class="flow-label"><span class="role-dot hr"></span> HR Partner</div>
-            <div class="flow-box flow-action hr">Step BA — Approval: Reviews &amp; Approves Custom ID Change</div>
+            <div class="flow-box flow-action" style="background:#eef3fb;border-color:var(--role-hr);">Initiator Submits</div>
+          </div>
+          <div class="flow-connector"><span>↓</span></div>
+          <div class="flow-node">
+            <div class="flow-box flow-end">✅ COMPLETE — Preferred Name Displays on Profile</div>
           </div>
         </div>
-      </div>
-      <div class="flow-connector"><span>↓</span></div>
-      <div class="flow-node">
-        <div class="flow-box flow-end">✅ COMPLETE — Custom ID Updated on Worker Profile</div>
-      </div>
-    </div>
-
-    <div style="margin-top:28px;">
-      <div class="flag info">
-        <span class="flag-icon">📅</span>
-        <div><strong>Timing</strong>Reflected in the Workday tenant as soon as the HR Partner approves (or immediately if the HR Partner was the initiator).</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══════ BP4: PASSPORTS & VISA CHANGE ══════ -->
+<!-- ══════ BP4: PUBLIC PROFILE PREFERENCES ══════ -->
 <div id="bp4" class="section">
   <div class="card">
     <div class="process-header">
-      <div class="process-icon-big purple">🛂</div>
+      <div class="process-icon-big purple">🌐</div>
       <div class="process-meta">
-        <h2>Passports &amp; Visa Change</h2>
-        <p>Initiated by Employee (Self) · Pre-Employee (Self) · Contingent Worker (Self) · Pre-Contingent Worker (Self) · HR Partner · HR Administrator</p>
+        <h2>Public Profile Preferences</h2>
+        <p>Initiated by Employee (Self) only — no on-behalf-of initiation</p>
       </div>
-      <div class="completion-badge">Completes When<strong>HR Partner Approves</strong></div>
+      <div class="completion-badge">Completes When<strong>Employee Submits</strong></div>
     </div>
 
     <div class="two-col">
       <div>
         <div class="section-label">Who is Involved</div>
         <ul class="who-list">
-          <li><span class="role-dot employee"></span><span class="role-tag employee">Employee (Self)</span> Initiator only</li>
-          <li><span class="role-dot employee"></span><span class="role-tag employee">Pre-Employee (Self)</span> Initiator only</li>
-          <li><span class="role-dot tk"></span><span class="role-tag tk">Contingent Worker (Self)</span> Initiator only — can start, cannot approve/submit further</li>
-          <li><span class="role-dot tk"></span><span class="role-tag tk">Pre-Contingent Worker (Self)</span> Initiator only</li>
-          <li><span class="role-dot hr"></span><span class="role-tag hr">HR Partner</span> Initiator &amp; approver</li>
-          <li><span class="role-dot admin"></span><span class="role-tag admin">HR Administrator</span> Initiator only</li>
+          <li><span class="role-dot employee"></span><span class="role-tag employee">Employee (Self)</span> Only role that can initiate — no HR or admin on-behalf-of option</li>
         </ul>
       </div>
       <div>
         <div class="section-label">Decision Flags</div>
         <div class="flag decision">
           <span class="flag-icon">⚠️</span>
-          <div><strong>Document Required Before Submitting</strong>A supporting document must be attached to the passport/visa change, or the critical validation will block submission.</div>
-        </div>
-        <div class="flag decision">
-          <span class="flag-icon">⚠️</span>
-          <div><strong>Cannot Hold a Passport and F-1 Visa at the Same Time</strong>The validation is date-driven — a worker cannot have an active (US) passport and an active F-1 visa recorded simultaneously. Currently only the US passport type is covered by this rule.</div>
+          <div><strong>Default Is Hidden</strong>Every field (date of birth, pronoun, sexual orientation, education) is hidden from other workers by default. Nothing is visible until the employee actively opts a field in.</div>
         </div>
         <div class="flag condition">
           <span class="flag-icon">🔀</span>
-          <div><strong>Contingent Workers Are Initiators Only</strong>This is the one process in this scope where Contingent Workers and Pre-Contingent Workers participate — as self-service initiators only.</div>
+          <div><strong>Campus-Scoped, Not Public Internet</strong>"Public" here means visible to other workers within the same campus/company in Workday — not the public internet or a college website. Security is segregated by campus, so a worker at one campus cannot search up a worker at another.</div>
+        </div>
+        <div class="flag info">
+          <span class="flag-icon">ℹ️</span>
+          <div><strong>Reversible Anytime</strong>An employee who opts a field in can return to the task and hide it again at any time — nothing is permanent.</div>
         </div>
       </div>
     </div>
 
-    <div class="card-title" style="font-size:1rem;margin-bottom:18px;">Flowchart — Passports &amp; Visa Change</div>
+    <div class="card-title" style="font-size:1rem;margin-bottom:18px;">Flowchart — Public Profile Preferences</div>
     <div class="flowchart">
       <div class="flow-node">
-        <div class="flow-box flow-start">🛂 START — Passport or Visa Change Needed</div>
+        <div class="flow-box flow-start">🌐 START — Employee Opens Public Profile Preferences</div>
       </div>
       <div class="flow-connector"><span>↓</span></div>
       <div class="flow-node">
-        <div class="flow-label"><span class="role-dot employee"></span> Employee / Pre-Employee / Contingent Worker / Pre-Contingent Worker / HR Partner / HR Administrator</div>
-        <div class="flow-box flow-action employee">Step A — Initiation: Enters Passport or Visa Details &amp; Attaches Supporting Document</div>
+        <div class="flow-label"><span class="role-dot employee"></span> Employee (Self)</div>
+        <div class="flow-box flow-action employee">Views Current Settings — All Fields Hidden by Default<br><small style="opacity:0.65">Date of Birth · Pronoun · Sexual Orientation · Education</small></div>
       </div>
       <div class="flow-connector"><span>↓</span></div>
       <div class="flow-node">
-        <div class="flow-box flow-decision">⚠️ Validation: Document attached AND not holding a passport + F-1 visa at the same time?</div>
+        <div class="flow-box flow-decision">⚠️ Decision: Which fields (if any) should be visible to other campus workers?</div>
       </div>
       <div class="flow-connector"><span>↓</span></div>
       <div class="decision-branch">
         <div class="branch-side">
-          <div class="branch-label">⚠️ NO — Validation Fails</div>
+          <div class="branch-label">👁 Opt Field(s) In</div>
           <div class="flow-connector"><span>↓</span></div>
           <div class="flow-node">
-            <div class="flow-box flow-action tk">Submission Blocked — Initiator Must Attach Document / Correct Dates</div>
+            <div class="flow-box flow-action tk">Toggles Selected Field(s) to Visible</div>
           </div>
         </div>
         <div class="branch-side">
-          <div class="branch-label">✅ YES — Validation Passes</div>
+          <div class="branch-label">🙈 Leave Hidden</div>
           <div class="flow-connector"><span>↓</span></div>
           <div class="flow-node">
-            <div class="flow-box flow-decision" style="font-size:0.8rem;">Is initiator already the HR Partner of record?</div>
-          </div>
-        </div>
-      </div>
-      <div class="flow-connector"><span>↓</span></div>
-      <div class="decision-branch">
-        <div class="branch-side">
-          <div class="branch-label">✅ YES — HR Partner Self-Submitted</div>
-          <div class="flow-connector"><span>↓</span></div>
-          <div class="flow-node">
-            <div class="flow-box flow-action" style="background:#e8f8f0;border-color:#1a7a4a;">Approval Step Skipped — Auto-Complete</div>
-          </div>
-        </div>
-        <div class="branch-side">
-          <div class="branch-label">⏭ NO — Different Initiator</div>
-          <div class="flow-connector"><span>↓</span></div>
-          <div class="flow-node">
-            <div class="flow-label"><span class="role-dot hr"></span> HR Partner</div>
-            <div class="flow-box flow-action hr">Step BA — Approval: Reviews Document &amp; Approves</div>
+            <div class="flow-box flow-action admin">No Change — Field Stays Hidden</div>
           </div>
         </div>
       </div>
       <div class="flow-connector"><span>↓</span></div>
       <div class="flow-node">
-        <div class="flow-box flow-end">✅ COMPLETE — Passport/Visa Record Updated</div>
+        <div class="flow-box flow-action" style="background:#eef3fb;border-color:var(--role-hr);">Employee Clicks OK / Submits</div>
       </div>
-    </div>
-
-    <div style="margin-top:28px;">
-      <div class="flag info">
-        <span class="flag-icon">📅</span>
-        <div><strong>Timing</strong>Reflected in the Workday tenant as soon as the HR Partner approves (or immediately if the HR Partner was the initiator).</div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-end">✅ COMPLETE — Visible to Other Campus Workers per Selection</div>
       </div>
-      <div class="flag warning">
-        <span class="flag-icon">🔒</span>
-        <div><strong>Document Handling Caution</strong>Avoid uploading the actual passport image as the attachment — keep the physical document verification offline; attach only what's genuinely needed as supporting proof.</div>
+      <div class="flow-connector"><span>↓</span></div>
+      <div class="flow-node">
+        <div class="flow-box flow-action tta">Employee Can Return Anytime to Hide Fields Again</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══════ ROLES & PERMISSIONS ══════ -->
+<!-- ══════ ROLES TABLE ══════ -->
 <div id="roles" class="section">
   <div class="card">
     <div class="card-title">Master Roles &amp; Permissions Table</div>
-    <div class="card-subtitle">Who can initiate and approve across all 4 Personal Information Changes I processes</div>
+    <div class="card-subtitle">Personal Information Changes · FWS &amp; State Excluded</div>
     <div style="overflow-x:auto;">
     <table class="roles-table">
       <thead>
         <tr>
           <th>Business Process</th>
-          <th><span class="role-tag employee">Employee / Pre-Employee</span></th>
-          <th><span class="role-tag tk">Contingent / Pre-Contingent Worker</span></th>
-          <th><span class="role-tag hr">HR Partner</span></th>
+          <th><span class="role-tag employee">Employee (Self)</span></th>
           <th><span class="role-tag admin">HR Administrator</span></th>
-          <th><span class="role-tag payroll">Payroll Administrator</span></th>
+          <th><span class="role-tag hr">HR Partner</span></th>
+          <th><span class="role-tag tk">Recruiter</span></th>
+          <th><span class="role-tag tta">Recruiting Admin</span></th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td><strong>Edit Government IDs</strong><br><small>SSN / ITIN entry</small></td>
-          <td><span class="check">✔</span> Initiate own</td>
-          <td><span class="dash">–</span></td>
-          <td><span class="check">✔</span> Initiate &amp; approve</td>
+          <td><strong>Legal Name Change</strong><br><small>Documentation required if name is changing</small></td>
+          <td><span class="check">✔</span> Initiate &amp; attach doc</td>
           <td><span class="check">✔</span> Initiate on behalf</td>
-          <td><span class="dash">–</span></td>
-        </tr>
-        <tr>
-          <td><strong>Edit ID Information</strong><br><small>All-in-one ID update, single step</small></td>
-          <td><span class="dash">–</span></td>
-          <td><span class="dash">–</span></td>
-          <td><span class="check">✔</span> Sole initiator</td>
-          <td><span class="dash">–</span></td>
-          <td><span class="dash">–</span></td>
-        </tr>
-        <tr>
-          <td><strong>Edit Other IDs</strong><br><small>Custom / payroll-integration IDs</small></td>
-          <td><span class="dash">–</span></td>
-          <td><span class="dash">–</span></td>
-          <td><span class="check">✔</span> Initiate &amp; approve</td>
-          <td><span class="dash">–</span></td>
-          <td><span class="check">✔</span> Initiate only</td>
-        </tr>
-        <tr>
-          <td><strong>Passports &amp; Visa Change</strong><br><small>Requires supporting document</small></td>
-          <td><span class="check">✔</span> Initiate own</td>
-          <td><span class="check">✔</span> Initiate own</td>
-          <td><span class="check">✔</span> Initiate &amp; approve</td>
+          <td><span class="check">✔</span> Initiate on behalf &amp; Review/Approve*</td>
           <td><span class="check">✔</span> Initiate on behalf</td>
+          <td><span class="check">✔</span> Initiate on behalf</td>
+        </tr>
+        <tr>
+          <td><strong>Photo Change</strong><br><small>Optional · auto-completes on submit</small></td>
+          <td><span class="check">✔</span> Initiate</td>
+          <td><span class="check">✔</span> Initiate / override</td>
+          <td><span class="check">✔</span> Initiate / override</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+        </tr>
+        <tr>
+          <td><strong>Preferred Name Change</strong><br><small>First/middle only · last name blocked</small></td>
+          <td><span class="check">✔</span> Initiate</td>
+          <td><span class="check">✔</span> Initiate on behalf</td>
+          <td><span class="check">✔</span> Initiate on behalf</td>
+          <td><span class="check">✔</span> Initiate on behalf</td>
+          <td><span class="check">✔</span> Initiate on behalf</td>
+        </tr>
+        <tr>
+          <td><strong>Public Profile Preferences</strong><br><small>Self only · campus-visible fields</small></td>
+          <td><span class="check">✔</span> Initiate (self only)</td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
+          <td><span class="dash">–</span></td>
           <td><span class="dash">–</span></td>
         </tr>
       </tbody>
     </table>
     </div>
+    <div style="margin-top:14px;font-size:0.78rem;color:var(--slate);">* HR Partner review/approve step only applies to Legal Name Change, and only when initiated by someone other than the employee for a non-student job family. A routing defect for HR Partner-on-self submissions is currently logged — see the Legal Name Change tab.</div>
   </div>
 
   <div class="card">
     <div class="card-title">Role Definitions</div>
-    <div class="card-subtitle">Security role descriptions for Personal Information Changes I scope</div>
+    <div class="card-subtitle">Security role descriptions for Personal Information Changes scope</div>
     <table class="roles-table">
       <thead>
         <tr>
           <th>Role</th>
           <th>Description</th>
-          <th>Approval Authority</th>
+          <th>Can Wear Other Hats?</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td><span class="role-tag employee">Employee (Self)</span></td>
-          <td>The worker updating their own information through self-service. Covers Government IDs and Passports &amp; Visa Change only.</td>
-          <td><span class="dash">–</span> Initiator only</td>
-        </tr>
-        <tr>
-          <td><span class="role-tag employee">Pre-Employee (Self)</span></td>
-          <td>A not-yet-started worker completing the same self-service ID tasks ahead of their start date.</td>
-          <td><span class="dash">–</span> Initiator only</td>
-        </tr>
-        <tr>
-          <td><span class="role-tag tk">Contingent / Pre-Contingent Worker (Self)</span></td>
-          <td>Non-employee workers (and pre-hire contingent workers). Only participate in Passports &amp; Visa Change, as self-service initiators — not part of Government IDs, ID Information, or Other IDs in this scope.</td>
-          <td><span class="dash">–</span> Initiator only</td>
-        </tr>
-        <tr>
-          <td><span class="role-tag hr">HR Partner</span></td>
-          <td>Primary approver across all four processes. Can also initiate on behalf of a worker; when the HR Partner is both initiator and would-be approver, the process auto-completes.</td>
-          <td><span class="check">✔</span> Primary approver</td>
+          <td>Covers Employee, Pre-Employee, Contingent Worker, and Pre-Contingent Worker acting "as self." Initiates changes to their own record. Cannot approve their own Legal Name Change when it requires review.</td>
+          <td>N/A</td>
         </tr>
         <tr>
           <td><span class="role-tag admin">HR Administrator</span></td>
-          <td>Administrative initiator on Government IDs and Passports &amp; Visa Change; does not approve. Access is user-based, so notification/visibility can be scoped down by campus/org.</td>
-          <td><span class="dash">–</span> Initiator only</td>
+          <td>Can initiate Legal Name Change, Photo Change, and Preferred Name Change on behalf of another worker. Does not participate in Public Profile Preferences.</td>
+          <td><span class="check">✔</span> Can also hold HR Partner responsibilities depending on campus setup</td>
         </tr>
         <tr>
-          <td><span class="role-tag payroll">Payroll Administrator</span></td>
-          <td>Initiates changes to custom/payroll-integration IDs under Edit Other IDs. Approval routes to the HR Partner.</td>
-          <td><span class="dash">–</span> Initiator only</td>
+          <td><span class="role-tag hr">HR Partner</span></td>
+          <td>Can initiate on behalf of another worker across most processes, and is the reviewer/approver for Legal Name Changes initiated by someone other than the employee. Can also override or remove a worker's photo.</td>
+          <td><span class="check">✔</span> Can also hold HR Administrator responsibilities</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag tk">Recruiter</span></td>
+          <td>Can initiate Legal Name Change and Preferred Name Change on behalf of another worker — typically used for candidates transitioning into worker records.</td>
+          <td><span class="check">✔</span> Can also hold Recruiting Administrator responsibilities</td>
+        </tr>
+        <tr>
+          <td><span class="role-tag tta">Recruiting Administrator</span></td>
+          <td>Broader recruiting-side administrative access. Can initiate Legal Name Change and Preferred Name Change on behalf of another worker.</td>
+          <td><span class="check">✔</span> Can also hold Recruiter responsibilities</td>
         </tr>
       </tbody>
     </table>
 
     <div style="margin-top:24px;">
-      <div class="flag decision">
-        <span class="flag-icon">⚠️</span>
-        <div><strong>Common Condition Rule</strong>"No Current Assignee was Initiator or Prior Approver" appears on every approval step in this scope — it prevents an HR Partner from having to approve a change they just submitted themselves.</div>
-      </div>
-      <div class="flag condition">
-        <span class="flag-icon">🗂️</span>
-        <div><strong>Data Quality Note</strong>Because some worker types (e.g. certain contingent/volunteer records) may not initially capture an SSN or TIN, duplicate worker records are a known risk when that person later becomes a CUNY employee. Search carefully before creating a new record.</div>
-      </div>
       <div class="flag warning">
         <span class="flag-icon">🚫</span>
-        <div><strong>Excluded: Federal Work Study &amp; State Positions</strong>Federal Work Study Coordinator routing and State-specific steps are not included in this dashboard. These operate under a separate scope and process.</div>
+        <div><strong>Excluded: Federal Work Study Coordinator &amp; State Positions</strong>Federal Work Study coordinator review/routing and State-specific roles are not included in this dashboard. These operate under a separate scope and process.</div>
       </div>
     </div>
   </div>
@@ -777,7 +758,7 @@ function showTab(id) {
     { label: "Business Process Hub", href: "index.html" },
     { label: "Data", href: "index.html" },
     { label: "Personal Information", href: "index.html" },
-    { label: "Personal Information Changes I", href: null }
+    { label: "Personal Information Changes III", href: null }
   ];
 
   (function renderBreadcrumb() {
@@ -791,7 +772,6 @@ function showTab(id) {
       return sep + crumb;
     }).join('');
   })();
-
 </script>
 </body>
 </html>
