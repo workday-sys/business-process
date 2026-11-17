@@ -1,7 +1,7 @@
 /* ==========================================================================
    Business Process Hub — shared stylesheet
    File: css/styles.css
-   Used by: index.html (add the same <link> to every other page)
+   Used by: index.html, position-management.html (add the same <link> to every other page)
 
    HOW THIS FILE IS ORGANIZED
      1. Font import
@@ -258,6 +258,46 @@
      font-weight: 600;
    }
    
+   /* Overview tiles — small soft-tint tiles in a grid (child/section pages).
+      Markup: <button class="overview-tile overview-tile--blue"> with
+      .tile-icon, .tile-name, .tile-desc inside. */
+   .overview-grid {
+     display: grid;
+     grid-template-columns: repeat(3, minmax(0, 1fr));
+     gap: 16px;
+   }
+   .overview-tile {
+     --accent: var(--blue);   /* icon color — overridden by variants below */
+     --tint: #eaf1fa;         /* tile background */
+     display: flex;
+     flex-direction: column;
+     align-items: flex-start;
+     gap: 6px;
+     width: 100%;
+     padding: 18px 18px 20px;
+     background: var(--tint);
+     border: 1px solid transparent;
+     border-radius: 5px;
+     color: var(--navy);
+     font: inherit;           /* buttons don't inherit the page font by default */
+     text-align: left;
+     cursor: pointer;
+     transition: border-color 0.2s, transform 0.2s;
+   }
+   .overview-tile:hover { border-color: rgba(15, 32, 64, 0.15); transform: translateY(-2px); }
+   .overview-tile:focus-visible { outline: 3px solid var(--blue-light); outline-offset: 2px; }
+   
+   .overview-tile--blue   { --accent: #1e5fa8; --tint: #eaf1fa; }
+   .overview-tile--gold   { --accent: #8a6400; --tint: #fdf4e1; }
+   .overview-tile--teal   { --accent: #0b7266; --tint: #e6f4f1; }
+   .overview-tile--purple { --accent: #6d28d9; --tint: #f1ecfd; }
+   .overview-tile--red    { --accent: #c0392b; --tint: #fbecea; }
+   .overview-tile--slate  { --accent: #4a5568; --tint: #eef1f5; }
+   
+   .overview-tile .tile-icon { display: flex; color: var(--accent); margin-bottom: 6px; }
+   .overview-tile .tile-name { font-size: 1rem; font-weight: 700; }
+   .overview-tile .tile-desc { font-size: 0.85rem; line-height: 1.45; color: var(--slate); }
+   
    /* Scope note (callout box) */
    .scope-note {
      display: flex;
@@ -287,6 +327,7 @@
    @media (max-width: 960px) {
      .module-row { flex-wrap: wrap; }
      .module-workflows { order: 3; width: 100%; padding-left: 68px; }
+     .overview-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
    }
    @media (max-width: 860px) {
      .content { padding: 28px 24px 48px; }
@@ -300,5 +341,6 @@
      .module-icon { width: 40px; height: 40px; }
      .module-workflows { padding-left: 0; }
      .module-arrow { display: none; }
+     .overview-grid { grid-template-columns: 1fr; }
    }
    
