@@ -317,15 +317,27 @@
   .bp-pill.cl { background: #fce7e7; color: var(--red); }
   .bp-pill.ep { background: #f1f5f9; color: var(--slate); }
 
-  /* PROCESS HEADER */
+  /* PROCESS HEADER — solid color title band at the top of each process tab.
+     The color comes from a modifier class (e.g. .process-header--red), which
+     sets --ph-bg. Colors match the overview tiles and pass 4.5:1 contrast with white text. */
   .process-header {
+    --ph-bg: var(--blue);
     display: flex;
     align-items: center;
     gap: 16px;
     margin-bottom: 28px;
-    padding-bottom: 20px;
-    border-bottom: 2px solid var(--border);
+    padding: 20px 24px;
+    background: var(--ph-bg);
+    color: var(--white);
+    border-radius: 12px;
   }
+  .process-header--blue   { --ph-bg: #1e5fa8; }
+  .process-header--amber  { --ph-bg: #b45309; }
+  .process-header--teal   { --ph-bg: #0b7266; }
+  .process-header--purple { --ph-bg: #6d28d9; }
+  .process-header--red    { --ph-bg: #c0392b; }
+  .process-header--slate  { --ph-bg: #4a5568; }
+
   .process-icon-big {
     width: 56px; height: 56px;
     border-radius: 14px;
@@ -339,19 +351,28 @@
   .process-icon-big.purple { background: linear-gradient(135deg, #2d1060, var(--role-manager)); }
   .process-icon-big.red { background: linear-gradient(135deg, #7a0a0a, var(--red)); }
   .process-icon-big.slate { background: linear-gradient(135deg, #2a3040, var(--slate)); }
+  .process-icon-big.white { background: var(--white); }
   .process-meta { flex: 1; }
-  .process-meta h2 { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.01em; color: var(--navy); }
-  .process-meta p { color: var(--slate); font-size: 0.88rem; margin-top: 4px; }
+  .process-meta h2 { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.01em; color: var(--white); }
+  .process-meta p { color: rgba(255,255,255,0.88); font-size: 0.88rem; margin-top: 4px; }
+
+  /* "Completes When" box sits on the colored band: translucent white */
   .completion-badge {
-    background: var(--light);
-    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.35);
     border-radius: 8px;
     padding: 10px 16px;
     font-size: 0.78rem;
+    color: rgba(255,255,255,0.9);
     text-align: center;
     flex-shrink: 0;
   }
-  .completion-badge strong { color: var(--navy); display: block; font-size: 0.95rem; margin-top: 4px; }
+  .completion-badge strong { color: var(--white); display: block; font-size: 0.95rem; margin-top: 4px; }
+
+  @media (max-width: 700px) {
+    .process-header { flex-wrap: wrap; }
+    .completion-badge { width: 100%; }
+  }
 
   /* TWO-COL */
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 28px; }
@@ -475,8 +496,8 @@
 <!-- ══════════════════════ BP1: CREATE POSITION ══════════════════════ -->
 <div id="bp1" class="section">
   <div class="card">
-    <div class="process-header">
-      <div class="process-icon-big blue">➕</div>
+    <div class="process-header process-header--blue">
+      <div class="process-icon-big white">➕</div>
       <div class="process-meta">
         <h2>Create Position</h2>
         <p>City positions · Initiated by HR Partner, Manager, Budget Manager, or HR Administrator</p>
@@ -572,8 +593,8 @@
 <!-- ══════════════════════ BP2: EDIT POSITION RESTRICTIONS ══════════════════════ -->
 <div id="bp2" class="section">
   <div class="card">
-    <div class="process-header">
-      <div class="process-icon-big gold">✏️</div>
+    <div class="process-header process-header--amber">
+      <div class="process-icon-big white">✏️</div>
       <div class="process-meta">
         <h2>Edit Position Restrictions</h2>
         <p>City positions · Modifies existing position parameters including org, compensation, and payroll data</p>
@@ -687,8 +708,8 @@
 <!-- ══════════════════════ BP3: EDIT ADDITIONAL DATA ══════════════════════ -->
 <div id="bp3" class="section">
   <div class="card">
-    <div class="process-header">
-      <div class="process-icon-big green">📊</div>
+    <div class="process-header process-header--teal">
+      <div class="process-icon-big white">📊</div>
       <div class="process-meta">
         <h2>Edit Position Restrictions – Additional Data</h2>
         <p>City positions · Employee worker type · Non-FWS only · Custom object / payroll data fields</p>
@@ -781,8 +802,8 @@
 <!-- ══════════════════════ BP4: FREEZE / UNFREEZE ══════════════════════ -->
 <div id="bp4" class="section">
   <div class="card">
-    <div class="process-header">
-      <div class="process-icon-big purple">❄️</div>
+    <div class="process-header process-header--purple">
+      <div class="process-icon-big white">❄️</div>
       <div class="process-meta">
         <h2>Freeze / Unfreeze Position</h2>
         <p>Same task used for both actions · Toggle the freeze checkbox · City positions</p>
@@ -878,8 +899,8 @@
 <!-- ══════════════════════ BP5: CLOSE POSITION ══════════════════════ -->
 <div id="bp5" class="section">
   <div class="card">
-    <div class="process-header">
-      <div class="process-icon-big red">🔒</div>
+    <div class="process-header process-header--red">
+      <div class="process-icon-big white">🔒</div>
       <div class="process-meta">
         <h2>Close Position</h2>
         <p>City positions · Permanent closure · Dual approval pathway depending on who initiates</p>
@@ -945,8 +966,8 @@
 <!-- ══════════════════════ BP6: EDIT POSITION ══════════════════════ -->
 <div id="bp6" class="section">
   <div class="card">
-    <div class="process-header">
-      <div class="process-icon-big slate">🔧</div>
+    <div class="process-header process-header--slate">
+      <div class="process-icon-big white">🔧</div>
       <div class="process-meta">
         <h2>Edit Position (Minor Changes)</h2>
         <p>For small edits like position title · NOT for job profile/classification changes (use Change Job for those)</p>
