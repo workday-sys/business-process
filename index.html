@@ -3,538 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>Business Process Hub</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --navy: #0f2040;
-    --navy-mid: #1a3460;
-    --blue: #1e5fa8;
-    --blue-light: #2e7dd1;
-    --gold: #e8a922;
-    --teal: #0e8a7a;
-    --red: #c0392b;
-    --green: #1a7a4a;
-    --slate: #4a5568;
-    --light: #f4f7fb;
-    --white: #ffffff;
-    --border: #dde4ef;
-    --card-shadow: 0 4px 24px rgba(15,32,64,0.10);
-    --role-hr: #2e7dd1;
-    --role-budget: #e8a922;
-    --role-payroll: #0e8a7a;
-    --role-manager: #7c3aed;
-    --role-admin: #64748b;
-    --purple: #7c3aed;
-    --coral: #e2694f;
-  }
 
-  * {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-
-  body {
-    font-family: 'DM Sans', Arial, sans-serif;
-    background: var(--light);
-    color: var(--navy);
-    min-height: 100vh;
-  }
-
-  /* ── HEADER ── */
-  .header {
-    background: -webkit-linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, var(--blue) 100%);
-    background: -moz-linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, var(--blue) 100%);
-    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, var(--blue) 100%);
-    color: white;
-    padding: 36px 48px 28px;
-    position: relative;
-    overflow: hidden;
-  }
-  .header::before {
-    content: '';
-    position: absolute;
-    top: -60px;
-    right: -60px;
-    width: 300px;
-    height: 300px;
-    background: -webkit-radial-gradient(circle, rgba(232,169,34,0.18) 0%, transparent 70%);
-    background: radial-gradient(circle, rgba(232,169,34,0.18) 0%, transparent 70%);
-    border-radius: 50%;
-  }
-  .header::after {
-    content: '';
-    position: absolute;
-    bottom: -40px;
-    left: 30%;
-    width: 200px;
-    height: 200px;
-    background: -webkit-radial-gradient(circle, rgba(46,125,209,0.2) 0%, transparent 70%);
-    background: radial-gradient(circle, rgba(46,125,209,0.2) 0%, transparent 70%);
-    border-radius: 50%;
-  }
-  .header-inner {
-    position: relative;
-    z-index: 1;
-  }
-  .header h1 {
-    font-family: 'DM Serif Display', Georgia, serif;
-    font-size: 2.2rem;
-    letter-spacing: -0.5px;
-    margin-bottom: 6px;
-  }
-  .header p {
-    color: rgba(255,255,255,0.72);
-    font-size: 0.95rem;
-    font-weight: 400;
-  }
-  .header-badge {
-    display: inline-block;
-    background: var(--gold);
-    color: var(--navy);
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    padding: 3px 10px;
-    border-radius: 20px;
-    margin-bottom: 12px;
-  }
-
-  /* ── CONTENT ── */
-  .content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 40px 48px 60px;
-  }
-
-  /* ── SECTION INTRO ── */
-  .section-intro {
-    margin-bottom: 28px;
-  }
-  .section-intro h2 {
-    font-family: 'DM Serif Display', Georgia, serif;
-    font-size: 1.5rem;
-    color: var(--navy);
-    margin-bottom: 6px;
-  }
-  .section-intro p {
-    color: var(--slate);
-    font-size: 0.9rem;
-  }
-
-  /* ── ROLE LEGEND CARD ── */
-  .legend-card {
-    background: var(--white);
-    border-radius: 16px;
-    -webkit-box-shadow: var(--card-shadow);
-    box-shadow: var(--card-shadow);
-    border: 1px solid var(--border);
-    padding: 22px 28px;
-    margin-bottom: 28px;
-  }
-  .legend-card h3 {
-    font-family: 'DM Serif Display', Georgia, serif;
-    font-size: 1.1rem;
-    color: var(--navy);
-    margin-bottom: 4px;
-  }
-  .legend-subtitle {
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    color: var(--slate);
-    margin-bottom: 14px;
-  }
-  .legend-row {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  .role-tag {
-    display: -webkit-inline-box;
-    display: -ms-inline-flexbox;
-    display: inline-flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    gap: 5px;
-    font-size: 0.76rem;
-    font-weight: 700;
-    padding: 4px 11px;
-    border-radius: 20px;
-  }
-  .role-tag.hr      { background: #ddeeff; color: var(--blue); }
-  .role-tag.budget  { background: #fff3cc; color: #7a5800; }
-  .role-tag.payroll { background: #d9f5ef; color: var(--teal); }
-  .role-tag.manager { background: #ede9ff; color: #5b21b6; }
-  .role-tag.admin   { background: #f1f5f9; color: var(--slate); }
-  .role-tag.benefits { background: #fce7e7; color: var(--red); }
-
-  /* ── MODULE GRID ── */
-  .module-grid {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
-    gap: 24px;
-    margin-bottom: 32px;
-  }
-
-  /* ── MODULE CARD ── */
-  .module-card {
-    background: var(--white);
-    border-radius: 16px;
-    -webkit-box-shadow: var(--card-shadow);
-    box-shadow: var(--card-shadow);
-    border: 1px solid var(--border);
-    overflow: hidden;
-    -webkit-box-flex: 1;
-    -ms-flex: 1 1 320px;
-    flex: 1 1 320px;
-    min-width: 280px;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    -webkit-transition: -webkit-transform 0.2s, -webkit-box-shadow 0.2s;
-    -moz-transition: transform 0.2s, box-shadow 0.2s;
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-  .module-card:hover {
-    -webkit-transform: translateY(-3px);
-    -ms-transform: translateY(-3px);
-    transform: translateY(-3px);
-    -webkit-box-shadow: 0 10px 36px rgba(15,32,64,0.16);
-    box-shadow: 0 10px 36px rgba(15,32,64,0.16);
-  }
-
-  /* Accent bars */
-  .card-accent {
-    height: 5px;
-    width: 100%;
-  }
-  .accent-blue {
-    background: -webkit-linear-gradient(90deg, var(--navy), var(--blue-light));
-    background: linear-gradient(90deg, var(--navy), var(--blue-light));
-  }
-  .accent-teal {
-    background: -webkit-linear-gradient(90deg, #0a5a50, var(--teal));
-    background: linear-gradient(90deg, #0a5a50, var(--teal));
-  }
-  .accent-red {
-    background: -webkit-linear-gradient(90deg, #7a0a0a, var(--red));
-    background: linear-gradient(90deg, #7a0a0a, var(--red));
-  }
-  .accent-gold {
-    background: -webkit-linear-gradient(90deg, #8a6400, var(--gold));
-    background: linear-gradient(90deg, #8a6400, var(--gold));
-  }
-  .accent-slate {
-    background: -webkit-linear-gradient(90deg, #060515, var(--slate));
-    background: linear-gradient(90deg, #060515, var(--slate));
-  }
-  .accent-purple {
-    background: -webkit-linear-gradient(90deg, #4c1d95, var(--purple));
-    background: linear-gradient(90deg, #4c1d95, var(--purple));
-  }
-  .accent-coral {
-    background: -webkit-linear-gradient(90deg, #8a2e1c, var(--coral));
-    background: linear-gradient(90deg, #8a2e1c, var(--coral));
-  }
-
-  .card-body {
-    padding: 28px 28px 22px;
-    -webkit-box-flex: 1;
-    -ms-flex: 1;
-    flex: 1;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
-    flex-direction: column;
-  }
-
-  .card-header-row {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: flex-start;
-    -ms-flex-align: flex-start;
-    align-items: flex-start;
-    gap: 14px;
-    margin-bottom: 14px;
-  }
-
-  .card-icon {
-    width: 50px;
-    height: 50px;
-    border-radius: 12px;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    -ms-flex-negative: 0;
-    flex-shrink: 0;
-  }
-  .icon-blue {
-    background: -webkit-linear-gradient(135deg, var(--navy), var(--blue));
-    background: linear-gradient(135deg, var(--navy), var(--blue));
-  }
-  .icon-teal {
-    background: -webkit-linear-gradient(135deg, #1a4a2e, var(--teal));
-    background: linear-gradient(135deg, #1a4a2e, var(--teal));
-  }
-  .icon-red {
-    background: -webkit-linear-gradient(135deg, #7a0a0a, var(--red));
-    background: linear-gradient(135deg, #7a0a0a, var(--red));
-  }
-  .icon-gold {
-    background: -webkit-linear-gradient(135deg, #8a6400, var(--gold));
-    background: linear-gradient(135deg, #8a6400, var(--gold));
-  }
-  .icon-purple {
-    background: -webkit-linear-gradient(135deg, #4c1d95, var(--purple));
-    background: linear-gradient(135deg, #4c1d95, var(--purple));
-  }
-  .icon-coral {
-    background: -webkit-linear-gradient(135deg, #8a2e1c, var(--coral));
-    background: linear-gradient(135deg, #8a2e1c, var(--coral));
-  }
-
-  .card-title-group { -webkit-box-flex: 1; -ms-flex: 1; flex: 1; }
-  .card-eyebrow {
-    font-size: 0.7rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1.2px;
-    color: var(--slate);
-    margin-bottom: 4px;
-  }
-  .card-title {
-    font-family: 'DM Serif Display', Georgia, serif;
-    font-size: 1.3rem;
-    color: var(--navy);
-    line-height: 1.25;
-  }
-
-  .card-desc {
-    font-size: 0.87rem;
-    color: var(--slate);
-    line-height: 1.65;
-    margin-bottom: 18px;
-  }
-
-  /* Workflow pills */
-  .pills-label {
-    font-size: 0.7rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.9px;
-    color: var(--slate);
-    margin-bottom: 8px;
-  }
-  .pills-row {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 22px;
-    max-height: 64px;      /* clamps to ~2 lines of pills */
-    overflow: hidden;
-    -webkit-box-align: start;
-    -ms-flex-align: start;
-    align-content: flex-start;
-  }
-  .pills-row.expanded {
-    max-height: none;
-    overflow: visible;
-  }
-  .pill {
-    display: -webkit-inline-box;
-    display: -ms-inline-flexbox;
-    display: inline-flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    gap: 5px;
-    padding: 4px 11px;
-    border-radius: 20px;
-    font-size: 0.76rem;
-    font-weight: 600;
-    white-space: nowrap;
-  }
-  .pill-blue   { background: #ddeeff; color: var(--blue); }
-  .pill-teal   { background: #d9f5ef; color: var(--teal); }
-  .pill-gold   { background: #fff3cc; color: #7a5800; }
-  .pill-purple { background: #ede9ff; color: #5b21b6; }
-  .pill-red    { background: #fce7e7; color: var(--red); }
-  .pill-slate  { background: #f1f5f9; color: var(--slate); }
-
-  /* "see more / show less" toggle for pill rows */
-  .see-more-link {
-    display: -webkit-inline-box;
-    display: -ms-inline-flexbox;
-    display: inline-flex;
-    align-items: center;
-    padding: 4px 2px;
-    font-family: 'DM Sans', Arial, sans-serif;
-    font-size: 0.76rem;
-    font-weight: 700;
-    color: var(--blue);
-    background: none;
-    border: none;
-    cursor: pointer;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-  .see-more-link:hover { color: var(--navy); }
-
-  /* Open button — pill-shaped gradient */
-  .card-footer {
-    padding-top: 16px;
-    border-top: 1px solid var(--border);
-    margin-top: auto;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    justify-content: center;
-  }
-  .open-btn {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 11px 28px;
-    background: -webkit-linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
-    background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
-    color: white;
-    font-family: 'DM Sans', Arial, sans-serif;
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 0.3px;
-    border: 1.5px solid transparent;
-    border-radius: 30px;
-    cursor: pointer;
-    text-decoration: none;
-    -webkit-box-shadow: 0 2px 10px rgba(15,32,64,0.18);
-    box-shadow: 0 2px 10px rgba(15,32,64,0.18);
-    -webkit-transition: transform 0.15s, -webkit-box-shadow 0.2s, border-color 0.2s;
-    -moz-transition: transform 0.15s, box-shadow 0.2s, border-color 0.2s;
-    transition: transform 0.15s, box-shadow 0.2s, border-color 0.2s;
-  }
-  .open-btn:hover {
-    -webkit-transform: translateY(-1px);
-    -ms-transform: translateY(-1px);
-    transform: translateY(-1px);
-    -webkit-box-shadow: 0 6px 20px rgba(30,95,168,0.35);
-    box-shadow: 0 6px 20px rgba(30,95,168,0.35);
-    border-color: rgba(255,255,255,0.45);
-  }
-  .btn-arrow {
-    -webkit-transition: -webkit-transform 0.2s;
-    -moz-transition: transform 0.2s;
-    transition: transform 0.2s;
-    display: inline-block;
-  }
-  .open-btn:hover .btn-arrow {
-    -webkit-transform: translateX(3px);
-    -ms-transform: translateX(3px);
-    transform: translateX(3px);
-  }
-
-  /* ── SCOPE NOTE ── */
-  .scope-note {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: flex-start;
-    -ms-flex-align: flex-start;
-    align-items: flex-start;
-    gap: 12px;
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-left: 4px solid var(--red);
-    border-radius: 10px;
-    padding: 16px 20px;
-    font-size: 0.87rem;
-    line-height: 1.6;
-    color: var(--slate);
-    -webkit-box-shadow: var(--card-shadow);
-    box-shadow: var(--card-shadow);
-  }
-  .scope-note-icon { font-size: 1.1rem; -ms-flex-negative: 0; flex-shrink: 0; margin-top: 1px; }
-  .scope-note strong {
-    display: block;
-    color: var(--navy);
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 3px;
-  }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 860px) {
-    .content { padding: 28px 24px 48px; }
-    .header  { padding: 28px 24px 22px; }
-    .header h1 { font-size: 1.75rem; }
-    .module-card { -webkit-box-flex: 1; -ms-flex: 1 1 100%; flex: 1 1 100%; min-width: 0; }
-  }
-  @media (max-width: 480px) {
-    .content { padding: 20px 16px 40px; }
-    .header  { padding: 22px 16px 18px; }
-    .card-body { padding: 20px 18px 16px; }
-  }
-</style>
+<!-- Shared stylesheet: fonts, colors and all component styles live here.
+     Relative path: index.html is in the repo root, so "css/styles.css". -->
+<link rel="stylesheet" href="css/styles.css?v=1">
 </head>
 <body>
 
 <!-- ══ HEADER ══ -->
-<div class="header">
+<header class="header">
   <div class="header-inner">
     <div class="header-badge">Business Process</div>
     <h1>Business Process Hub</h1>
     <p>Central hub for all interactive workflow guides &mdash; roles, steps, decisions, and approvals</p>
   </div>
-</div>
+</header>
 
 <!-- ══ MAIN CONTENT ══ -->
-<div class="content">
+<main class="content">
 
   <!-- Intro -->
   <div class="section-intro">
-    <h2>Available Dashboards</h2>
-    <p>Select a module below to open its full interactive guide with flowcharts, role breakdowns, and decision flags.</p>
+    <h2>Available dashboards</h2>
+    <p>Select a module to open its interactive guide with flowcharts, role breakdowns, and decision flags.</p>
   </div>
 
   <!-- Role Legend -->
@@ -551,210 +43,112 @@
     </div>
   </div>
 
-  <!-- Module Cards -->
-  <div class="module-grid">
+  <!-- Module list: one <li> per dashboard. Links are RELATIVE (same folder as index.html). -->
+  <nav aria-label="Dashboards">
+    <ul class="module-list">
 
-    <!-- Card 1: Position Management -->
-    <div class="module-card">
-      <div class="card-accent accent-blue"></div>
-      <div class="card-body">
-        <div class="card-header-row">
-          <div class="card-icon icon-blue">&#x1F4CB;</div>
-          <div class="card-title-group">
-            <div class="card-title">Position Management Dashboard</div>
+      <li>
+        <a class="module-row module-row--blue" href="position-management.html">
+          <span class="module-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg>
+          </span>
+          <div class="module-text">
+            <h3 class="module-title">Position Management</h3>
+            <p class="module-desc">Create, edit, freeze and close city positions, with dual-approval paths.</p>
           </div>
-        </div>
-        <p class="card-desc">
-          Full lifecycle of city positions &mdash; from creation and editing to freezing and permanent closure.
-          Covers org assignments, compensation steps, and dual-approval pathways depending on who initiates.
-          Includes a master roles and permissions table for all 6 processes.
-        </p>
-        <div class="pills-label">Workflows covered</div>
-        <div class="pills-row" data-pills>
-          <span class="pill pill-blue">&#x2795; Create Position</span>
-          <span class="pill pill-gold">&#x270F;&#xFE0F; Edit Restrictions</span>
-          <span class="pill pill-teal">&#x1F4CA; Edit Add&#x27;l Data</span>
-          <span class="pill pill-purple">&#x2744;&#xFE0F; Freeze / Unfreeze</span>
-          <span class="pill pill-red">&#x1F512; Close Position</span>
-          <span class="pill pill-slate">&#x1F527; Edit Position</span>
-        </div>
-        <div class="card-footer">
-          <a href="https://workday-sys.github.io/business-process/position-management.html"
-             target="_self"
-             rel="noopener noreferrer"
-             class="open-btn">
-            Open Dashboard <span class="btn-arrow">&#x2192;</span>
-          </a>
-        </div>
-      </div>
-    </div>
+          <span class="module-workflows">Create &middot; Edit &middot; Edit Restrictions &middot; Additional Data &middot; Freeze &middot; Close</span>
+          <span class="module-arrow" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
+        </a>
+      </li>
 
-    <!-- Card 2: Time & Leave -->
-    <div class="module-card">
-      <div class="card-accent accent-teal"></div>
-      <div class="card-body">
-        <div class="card-header-row">
-          <div class="card-icon icon-teal">&#x23F1;</div>
-          <div class="card-title-group">
-            <div class="card-title">Time &amp; Leave Dashboard</div>
+      <li>
+        <a class="module-row module-row--teal" href="timeandleave.html">
+          <span class="module-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          </span>
+          <div class="module-text">
+            <h3 class="module-title">Time &amp; Leave</h3>
+            <p class="module-desc">Time entry, approvals, corrections and time-off requests.</p>
           </div>
-        </div>
-        <p class="card-desc">
-          Complete guide to time entry and absence management for city positions. Covers web clock for non-exempt
-          employees, microblock self-reporting for HEO/HEA staff, timesheet approvals and corrections, and
-          the full request and correction workflow for time off.
-        </p>
-        <div class="pills-label">Workflows covered</div>
-        <div class="pills-row" data-pills>
-          <span class="pill pill-teal">&#x23F1; Enter Time</span>
-          <span class="pill pill-blue">&#x2705; Approve Time</span>
-          <span class="pill pill-gold">&#x270F;&#xFE0F; Edit / Correct Time</span>
-          <span class="pill pill-purple">&#x1F4C5; Request Absence</span>
-          <span class="pill pill-red">&#x1F4C5; Request Time Off</span>
-          <span class="pill pill-slate">&#x1F504; Update / Cancel</span>
-        </div>
-        <div class="card-footer">
-          <a href="https://workday-sys.github.io/business-process/timeandleave.html"
-             target="_self"
-             rel="noopener noreferrer"
-             class="open-btn">
-            Open Dashboard <span class="btn-arrow">&#x2192;</span>
-          </a>
-        </div>
-      </div>
-    </div>
+          <span class="module-workflows">Enter &middot; Approve &middot; Correct Time &middot; Request Absence &middot; Time Off &middot; Cancel</span>
+          <span class="module-arrow" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
+        </a>
+      </li>
 
-    <!-- Card 3: Benefits -->
-    <div class="module-card">
-      <div class="card-accent accent-red"></div>
-      <div class="card-body">
-        <div class="card-header-row">
-          <div class="card-icon icon-red">&#x1F4B0;</div>
-          <div class="card-title-group">
-            <div class="card-title">Benefits Dashboard</div>
+      <li>
+        <a class="module-row module-row--red" href="benefits.html">
+          <span class="module-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.35-7-10a4 4 0 0 1 7-2.65A4 4 0 0 1 19 10c0 5.65-7 10-7 10z"/></svg>
+          </span>
+          <div class="module-text">
+            <h3 class="module-title">Benefits</h3>
+            <p class="module-desc">Benefit changes, life events, dependents, COBRA and open enrollment.</p>
           </div>
-        </div>
-        <p class="card-desc">
-          End-to-end guide to benefits administration for city employees. Covers employee-initiated changes,
-          qualifying life events, dependent updates, COBRA eligibility processing, and open enrollment.
-          Replaces the previous paper-based and NYCAPS/PMS manual entry process.
-        </p>
-        <div class="pills-label">Workflows covered</div>
-        <div class="pills-row" data-pills>
-          <span class="pill pill-blue">&#x1F504; Change Benefits</span>
-          <span class="pill pill-gold">&#x1F49B; Change Benefits for Life</span>
-          <span class="pill pill-teal">&#x1F46A; Dependent Event</span>
-          <span class="pill pill-red">&#x1F40D; COBRA Eligibility</span>
-          <span class="pill pill-purple">&#x1F4C5; Open Enrollment</span>
-        </div>
-        <div class="card-footer">
-          <a href="https://workday-sys.github.io/business-process/benefits.html"
-             target="_self"
-             rel="noopener noreferrer"
-             class="open-btn">
-            Open Dashboard <span class="btn-arrow">&#x2192;</span>
-          </a>
-        </div>
-      </div>
-    </div>
+          <span class="module-workflows">Change Benefits &middot; Life Events &middot; Dependents &middot; COBRA &middot; Open Enrollment</span>
+          <span class="module-arrow" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
+        </a>
+      </li>
 
-    <!-- Card 4: Job Information (Placeholder) -->
-    <div class="module-card">
-      <div class="card-accent accent-gold"></div>
-      <div class="card-body">
-        <div class="card-header-row">
-          <div class="card-icon icon-gold">&#x1F4C4;</div>
-          <div class="card-title-group">
-            <div class="card-title">Job Information Dashboard</div>
+      <li>
+        <a class="module-row module-row--gold" href="job-information.html">
+          <span class="module-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
+          </span>
+          <div class="module-text">
+            <h3 class="module-title">Job Information</h3>
+            <p class="module-desc">Hire through termination: job changes, onboarding and compensation.</p>
           </div>
-        </div>
-        <p class="card-desc">
-          Every workflow that touches a worker's job record, from hire through termination. Covers hiring processes (Direct Hire and Recruiting-sourced hires, academic appointments, self-service onboarding), job changes (additional concurrent jobs, transfers, promotions, and demotions), and compensation action — plus voluntary and involuntary terminations.
-        </p>
-        <div class="pills-label">Workflows covered</div>
-        <div class="pills-row" data-pills>
-          <span class="pill pill-blue">&#x1F680; Hire / Rehire</span>
-          <span class="pill pill-purple">&#x1F454; Additional Job</span>
-          <span class="pill pill-teal">&#x1F504; Change Job</span>
-          <span class="pill pill-gold">&#x1F396;&#xFE0F; Scholarships &amp; Honorariums</span>
-          <span class="pill pill-red">&#x1F6AA; Terminations</span>
-          <span class="pill pill-slate">&#x1F9ED; Onboarding</span>
-        </div>
-        <div class="card-footer">
-          <a href="https://workday-sys.github.io/business-process/job-information.html"
-             target="_self"
-             rel="noopener noreferrer"
-             class="open-btn">
-            Open Dashboard <span class="btn-arrow">&#x2192;</span>
-          </a>
-        </div>
-      </div>
-    </div>
+          <span class="module-workflows">Hire &middot; Additional Job &middot; Change Job &middot; Scholarships &middot; Terminations &middot; Onboarding</span>
+          <span class="module-arrow" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
+        </a>
+      </li>
 
-            <!-- Card 5: (Placeholder) -->
-    <div class="module-card">
-      <div class="card-accent accent-purple"></div>
-      <div class="card-body">
-        <div class="card-header-row">
-          <div class="card-icon icon-purple">&#x1F4C4;</div>
-          <div class="card-title-group">
-            <div class="card-title">Talent Acquisition Mgmt Dashboard </div>
+      <li>
+        <a class="module-row module-row--purple" href="tam.html">
+          <span class="module-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-4-6"/></svg>
+          </span>
+          <div class="module-text">
+            <h3 class="module-title">Talent Acquisition</h3>
+            <p class="module-desc">Requisitions, applications, evergreen pools and recruiting.</p>
           </div>
-        </div>
-        <p class="card-desc">
-          Guide to sourcing, hiring, and requisition workflows for city positions. Covers job requisition creation and budget approval, application review through offer and disposition, evergreen requisitions and candidate pools, and full recruiting pipeline management with role-based approval paths.
-        </p>
-        <div class="pills-label">Workflows covered</div>
-        <div class="pills-row" data-pills>
-          <span class="pill pill-purple">&#x1F4DD; Job Requisition</span>
-          <span class="pill pill-blue">&#x1F4CB; Job Application</span>
-          <span class="pill pill-teal">&#x1F33F; Evergreen Requisition</span>
-          <span class="pill pill-gold">&#x1F50D; Recruiting</span>
-        </div>
-        <div class="card-footer">
-          <a href="/business-process/tam.html"
-             target="_self"
-             rel="noopener noreferrer"
-             class="open-btn">
-            Open Dashboard <span class="btn-arrow">&#x2192;</span>
-          </a>
-        </div>
-      </div>
-    </div>
+          <span class="module-workflows">Job Requisition &middot; Job Application &middot; Evergreen &middot; Recruiting</span>
+          <span class="module-arrow" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
+        </a>
+      </li>
 
-            <!-- Card 6:  (Placeholder) -->
-    <div class="module-card">
-      <div class="card-accent accent-coral"></div>
-      <div class="card-body">
-        <div class="card-header-row">
-          <div class="card-icon icon-coral">&#x1F4C4;</div>
-          <div class="card-title-group">
-            <div class="card-title">Data</div>
+      <li>
+        <a class="module-row module-row--coral" href="data.html">
+          <span class="module-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V11M12 20V4M19 20v-7M3 20h18"/></svg>
+          </span>
+          <div class="module-text">
+            <h3 class="module-title">Data</h3>
+            <p class="module-desc">Personal information and time &amp; leave data.</p>
           </div>
-        </div>
-        <p class="card-desc">
-          
-        </p>
-        <div class="pills-label">Workflows covered</div>
-        <div class="pills-row" data-pills>
-          <span class="pill pill-slate">&#x1F6A7; Coming Soon</span>
-        </div>
-        <div class="card-footer">
-          <a href="/business-process/data.html"
-             target="_self"
-             rel="noopener noreferrer"
-             class="open-btn">
-            Open Dashboard <span class="btn-arrow">&#x2192;</span>
-          </a>
-        </div>
-      </div>
-    </div>
+          <span class="module-workflows"><span class="badge-soon">Coming soon</span></span>
+          <span class="module-arrow" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
+        </a>
+      </li>
 
-  </div><!-- /module-grid -->
+    </ul>
+  </nav>
 
   <!-- Scope Note -->
   <div class="scope-note">
-    <span class="scope-note-icon">&#x1F6AB;</span>
+    <span class="scope-note-icon" aria-hidden="true">&#x1F6AB;</span>
     <div>
       <strong>Scope &mdash; City Positions Only</strong>
       All processes and workflows shown across these dashboards apply to City positions only.
@@ -763,120 +157,7 @@
     </div>
   </div>
 
-</div><!-- /content -->
-
-<script>
-// Clamps each "Workflows covered" pill row to two lines, appending a
-// "+N more" link that expands the row in place. Clicking it again
-// ("Show less") re-clamps back to two lines.
-//
-// Approach: measure ONCE how many pills naturally fit in the first two
-// lines (and leave room for the link itself), store that count on the
-// row, then toggling just flips display on/off against that stored
-// count. Nothing is re-derived while pills are hidden, which is what
-// caused the "everything vanishes" bug in the previous version.
-
-function measureVisibleCount(row, pills) {
-  // make sure every pill is visible and un-clamped so natural
-  // flex-wrap positions can be read
-  pills.forEach(function (p) { p.style.display = ''; });
-  row.classList.add('expanded'); // remove max-height/overflow while measuring
-
-  const tops = Array.from(new Set(pills.map(function (p) { return p.offsetTop; })));
-  row.classList.remove('expanded');
-
-  if (tops.length <= 2) return pills.length; // everything already fits
-
-  const line2Top = tops[1];
-
-  // last pill whose row starts within the first two lines
-  let idx = pills.length - 1;
-  for (let i = pills.length - 1; i >= 0; i--) {
-    if (pills[i].offsetTop <= line2Top) { idx = i; break; }
-  }
-
-  // shrink until a "+N more" link of this length would also fit on line 2
-  const probe = document.createElement('button');
-  probe.type = 'button';
-  probe.className = 'see-more-link';
-  probe.style.visibility = 'hidden';
-
-  while (idx >= 0) {
-    pills.forEach(function (p, i) { p.style.display = i <= idx ? '' : 'none'; });
-    probe.textContent = '+' + (pills.length - (idx + 1)) + ' more';
-    row.appendChild(probe);
-    const fits = probe.offsetTop <= line2Top;
-    row.removeChild(probe);
-    if (fits) break;
-    idx--;
-  }
-
-  pills.forEach(function (p) { p.style.display = ''; }); // restore for now
-  return Math.max(idx + 1, 1); // always show at least one pill
-}
-
-function applyCollapsed(row, pills, visibleCount) {
-  row.classList.remove('expanded');
-  pills.forEach(function (p, i) { p.style.display = i < visibleCount ? '' : 'none'; });
-  let link = row.querySelector('.see-more-link');
-  if (!link) {
-    link = document.createElement('button');
-    link.type = 'button';
-    link.className = 'see-more-link';
-    row.appendChild(link);
-  }
-  link.textContent = '+' + (pills.length - visibleCount) + ' more';
-  link.onclick = function () { applyExpanded(row, pills); };
-}
-
-function applyExpanded(row, pills) {
-  row.classList.add('expanded');
-  pills.forEach(function (p) { p.style.display = ''; });
-  let link = row.querySelector('.see-more-link');
-  if (!link) {
-    link = document.createElement('button');
-    link.type = 'button';
-    link.className = 'see-more-link';
-    row.appendChild(link);
-  }
-  link.textContent = 'Show less';
-  link.onclick = function () { applyCollapsed(row, pills, row._visibleCount); };
-}
-
-function setupPillsRow(row) {
-  const pills = Array.from(row.querySelectorAll('.pill'));
-  if (!pills.length) return;
-
-  const existingLink = row.querySelector('.see-more-link');
-  if (existingLink) existingLink.remove();
-
-  const visibleCount = measureVisibleCount(row, pills);
-  row._visibleCount = visibleCount;
-
-  if (visibleCount >= pills.length) {
-    // nothing overflows — plain row, no link needed
-    row.classList.remove('expanded');
-    pills.forEach(function (p) { p.style.display = ''; });
-    return;
-  }
-
-  applyCollapsed(row, pills, visibleCount);
-}
-
-function initAllPillsRows() {
-  document.querySelectorAll('[data-pills]').forEach(setupPillsRow);
-}
-
-window.addEventListener('load', initAllPillsRows);
-window.addEventListener('resize', function () {
-  clearTimeout(window._pillsResizeTimer);
-  window._pillsResizeTimer = setTimeout(function () {
-    // only re-measure rows that are currently collapsed, so an open
-    // "Show less" row doesn't snap shut while someone is reading it
-    document.querySelectorAll('[data-pills]:not(.expanded)').forEach(setupPillsRow);
-  }, 120);
-});
-</script>
+</main>
 
 </body>
 </html>

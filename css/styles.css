@@ -1,0 +1,304 @@
+/* ==========================================================================
+   Business Process Hub — shared stylesheet
+   File: css/styles.css
+   Used by: index.html (add the same <link> to every other page)
+
+   HOW THIS FILE IS ORGANIZED
+     1. Font import
+     2. Theme tokens (colors, font, radius)  ← change these to restyle every page
+     3. Base (reset, body, headings, links)
+     4. Layout (header, main content area)
+     5. Components (section intro, legend, module list, scope note)
+     6. Responsive rules
+   ========================================================================== */
+
+
+/* 1. FONT IMPORT ------------------------------------------------------------
+   Loads the web font for every page that links this file.
+   To change the site font: replace this URL AND --font-base below.        */
+   @import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap');
+
+
+   /* 2. THEME TOKENS ----------------------------------------------------------
+      CSS custom properties ("variables"). Every rule below reads from these,
+      so changing a value here changes it everywhere on every page.           */
+   :root {
+     /* Font */
+     --font-base: 'Work Sans', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+   
+     /* Brand palette */
+     --navy: #0f2040;
+     --navy-mid: #1a3460;
+     --blue: #1e5fa8;
+     --blue-light: #2e7dd1;
+     --gold: #e8a922;
+     --teal: #0e8a7a;
+     --red: #c0392b;
+     --green: #1a7a4a;
+     --purple: #7c3aed;
+     --coral: #e2694f;
+     --slate: #4a5568;
+   
+     /* Surfaces and lines */
+     --light: #f6f8fb;
+     --white: #ffffff;
+     --border: #e3e8f0;
+     --border-hover: #b9c7dc;
+   
+     /* Shape and depth */
+     --radius: 14px;
+     --card-shadow: 0 4px 24px rgba(15, 32, 64, 0.08);
+   }
+   
+   
+   /* 3. BASE ------------------------------------------------------------------ */
+   * {
+     box-sizing: border-box;
+     margin: 0;
+     padding: 0;
+   }
+   
+   body {
+     font-family: var(--font-base);
+     background: var(--light);
+     color: var(--navy);
+     min-height: 100vh;
+     line-height: 1.5;
+   }
+   
+   /* Form controls don't inherit the page font by default */
+   button, input, select, textarea {
+     font-family: inherit;
+   }
+   
+   
+   /* 4. LAYOUT ---------------------------------------------------------------- */
+   
+   /* Site header (navy gradient band at the top of every page) */
+   .header {
+     background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, var(--blue) 100%);
+     color: var(--white);
+     padding: 36px 48px 28px;
+     position: relative;
+     overflow: hidden;
+   }
+   .header::before {          /* soft gold glow, top right */
+     content: '';
+     position: absolute;
+     top: -60px; right: -60px;
+     width: 300px; height: 300px;
+     background: radial-gradient(circle, rgba(232, 169, 34, 0.18) 0%, transparent 70%);
+     border-radius: 50%;
+   }
+   .header::after {           /* soft blue glow, bottom */
+     content: '';
+     position: absolute;
+     bottom: -40px; left: 30%;
+     width: 200px; height: 200px;
+     background: radial-gradient(circle, rgba(46, 125, 209, 0.2) 0%, transparent 70%);
+     border-radius: 50%;
+   }
+   .header-inner { position: relative; z-index: 1; }
+   .header h1 {
+     font-size: 2.2rem;
+     font-weight: 700;
+     letter-spacing: -0.02em;
+     margin-bottom: 6px;
+   }
+   .header p {
+     color: rgba(255, 255, 255, 0.78);
+     font-size: 0.95rem;
+   }
+   .header-badge {
+     display: inline-block;
+     background: var(--gold);
+     color: var(--navy);
+     font-size: 0.72rem;
+     font-weight: 700;
+     letter-spacing: 1.5px;
+     text-transform: uppercase;
+     padding: 3px 10px;
+     border-radius: 20px;
+     margin-bottom: 12px;
+   }
+   
+   /* Main content column */
+   .content {
+     max-width: 1200px;
+     margin: 0 auto;
+     padding: 40px 48px 60px;
+   }
+   
+   
+   /* 5. COMPONENTS ------------------------------------------------------------ */
+   
+   /* Section intro (heading + one-line description) */
+   .section-intro { margin-bottom: 24px; }
+   .section-intro h2 {
+     font-size: 1.6rem;
+     font-weight: 700;
+     letter-spacing: -0.02em;
+     margin-bottom: 4px;
+   }
+   .section-intro p { color: var(--slate); font-size: 0.95rem; }
+   
+   /* Role legend card */
+   .legend-card {
+     background: var(--white);
+     border-radius: var(--radius);
+     border: 1px solid var(--border);
+     padding: 22px 28px;
+     margin-bottom: 28px;
+   }
+   .legend-card h3 {
+     font-size: 1.05rem;
+     font-weight: 700;
+     margin-bottom: 4px;
+   }
+   .legend-subtitle {
+     font-size: 0.75rem;
+     font-weight: 600;
+     text-transform: uppercase;
+     letter-spacing: 0.8px;
+     color: var(--slate);
+     margin-bottom: 14px;
+   }
+   .legend-row { display: flex; flex-wrap: wrap; gap: 8px; }
+   .role-tag {
+     display: inline-flex;
+     align-items: center;
+     gap: 5px;
+     font-size: 0.76rem;
+     font-weight: 600;
+     padding: 4px 11px;
+     border-radius: 20px;
+   }
+   .role-tag.hr       { background: #ddeeff; color: var(--blue); }
+   .role-tag.budget   { background: #fff3cc; color: #7a5800; }
+   .role-tag.payroll  { background: #d9f5ef; color: #0b7266; }
+   .role-tag.manager  { background: #ede9ff; color: #5b21b6; }
+   .role-tag.admin    { background: #f1f5f9; color: var(--slate); }
+   .role-tag.benefits { background: #fce7e7; color: var(--red); }
+   
+   /* Module list — wide clickable rows (home page, reusable on section pages) */
+   .module-list {
+     list-style: none;
+     display: flex;
+     flex-direction: column;
+     gap: 12px;
+     margin-bottom: 32px;
+   }
+   .module-row {
+     --accent: var(--blue);   /* overridden by the color variants below */
+     --tint: #eaf1fa;
+     display: flex;
+     align-items: center;
+     gap: 20px;
+     padding: 20px 24px;
+     background: var(--white);
+     border: 1px solid var(--border);
+     border-radius: var(--radius);
+     color: var(--navy);
+     text-decoration: none;
+     transition: border-color 0.2s, background-color 0.2s;
+   }
+   .module-row:hover { border-color: var(--border-hover); background: #fbfcfe; }
+   .module-row:focus-visible { outline: 3px solid var(--blue-light); outline-offset: 2px; }
+   
+   /* Color variants: only the two custom properties change */
+   .module-row--blue   { --accent: #1e5fa8; --tint: #eaf1fa; }
+   .module-row--teal   { --accent: #0b7266; --tint: #e6f4f1; }
+   .module-row--red    { --accent: #c0392b; --tint: #fbecea; }
+   .module-row--gold   { --accent: #8a6400; --tint: #fdf4e1; }
+   .module-row--purple { --accent: #6d28d9; --tint: #f1ecfd; }
+   .module-row--coral  { --accent: #b8492f; --tint: #fcefeb; }
+   
+   .module-icon {
+     width: 48px; height: 48px;
+     flex-shrink: 0;
+     border-radius: 12px;
+     background: var(--tint);
+     color: var(--accent);
+     display: flex;
+     align-items: center;
+     justify-content: center;
+   }
+   .module-text { flex: 1; min-width: 0; }
+   .module-title {
+     font-size: 1.15rem;
+     font-weight: 700;
+     letter-spacing: -0.01em;
+     margin-bottom: 2px;
+   }
+   .module-desc { font-size: 0.88rem; color: var(--slate); }
+   .module-workflows {
+     width: 340px;
+     flex-shrink: 0;
+     font-size: 0.8rem;
+     color: var(--slate);
+   }
+   .module-arrow {
+     width: 34px; height: 34px;
+     flex-shrink: 0;
+     border-radius: 50%;
+     border: 1px solid var(--border);
+     color: var(--accent);
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     transition: transform 0.2s, border-color 0.2s;
+   }
+   .module-row:hover .module-arrow { transform: translateX(3px); border-color: var(--accent); }
+   
+   .badge-soon {
+     display: inline-block;
+     padding: 3px 10px;
+     border-radius: 999px;
+     background: #f1f4f8;
+     font-weight: 600;
+   }
+   
+   /* Scope note (callout box) */
+   .scope-note {
+     display: flex;
+     align-items: flex-start;
+     gap: 12px;
+     background: var(--white);
+     border: 1px solid var(--border);
+     border-left: 4px solid var(--red);
+     border-radius: 10px;
+     padding: 16px 20px;
+     font-size: 0.88rem;
+     line-height: 1.6;
+     color: var(--slate);
+   }
+   .scope-note-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+   .scope-note strong {
+     display: block;
+     color: var(--navy);
+     font-size: 0.8rem;
+     text-transform: uppercase;
+     letter-spacing: 0.5px;
+     margin-bottom: 3px;
+   }
+   
+   
+   /* 6. RESPONSIVE ------------------------------------------------------------ */
+   @media (max-width: 960px) {
+     .module-row { flex-wrap: wrap; }
+     .module-workflows { order: 3; width: 100%; padding-left: 68px; }
+   }
+   @media (max-width: 860px) {
+     .content { padding: 28px 24px 48px; }
+     .header  { padding: 28px 24px 22px; }
+     .header h1 { font-size: 1.75rem; }
+   }
+   @media (max-width: 480px) {
+     .content { padding: 20px 16px 40px; }
+     .header  { padding: 22px 16px 18px; }
+     .module-row { padding: 16px; gap: 14px; }
+     .module-icon { width: 40px; height: 40px; }
+     .module-workflows { padding-left: 0; }
+     .module-arrow { display: none; }
+   }
+   
