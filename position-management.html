@@ -5,8 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Position Management – Business Process Dashboard</title>
 <!-- Shared stylesheet: site font, colors, header, content area.
-     position-management.html is in the repo root, so the path is "css/styles.css". -->
-<link rel="stylesheet" href="css/styles.css?v=2">
+     position-management.html is in the repo root, so the path is "css/styles.css" (no "../"). -->
+<link rel="stylesheet" href="css/styles.css?v=9">
+<!-- Shared script: adds a "Print flowchart" button above each flowchart -->
+<script src="js/print-flowchart.js?v=1" defer></script>
 
 <!-- Page-specific styles. This block comes AFTER the shared link,
      so anything defined here overrides the shared rules. -->
@@ -183,6 +185,24 @@
     text-transform: uppercase;
     letter-spacing: 0.7px;
     justify-content: center;
+    /* Long role lists wrap onto a new line BETWEEN roles, instead of
+       squeezing each role into a narrow column and breaking its words */
+    flex-wrap: wrap;
+    row-gap: 4px;
+  }
+  /* First label in each flowchart (the "who can initiate" line): extra room
+     above and below so it doesn't crowd the Print flowchart row or the start pill */
+  .flowchart > .flow-node:first-child .flow-label {
+    margin-top: 8px;
+    margin-bottom: 14px;
+  }
+  /* One role inside a flow label: keeps the colored dot and the name together
+     on the same line, so wrapping only happens between roles */
+  .flow-role {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
   }
   .role-dot {
     width: 8px; height: 8px;
@@ -395,24 +415,70 @@
   }
   .who-list li:last-child { border-bottom: none; }
 
-  /* Print-ready for summary */
+  /* Print-ready */
+  /* ── SAMPLE: "Print" button on each process tab (this page only for now) ──
+     If approved, these rules move to css/styles.css and the script to js/. */
+  /* Row between the colored band and "Who is Involved / Key Rules", button on the LEFT */
+  .section-tools {
+    display: flex;
+    justify-content: flex-start;
+    margin: 0 0 28px;                             /* 28px above (from the band's margin) and 28px below, so sections don't crowd the button */
+  }
+  .print-section-btn {
+    text-decoration: none;                        /* it is a link (<a>), so remove the underline */
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 12px;
+    font: inherit; font-size: 0.8rem; font-weight: 600;
+    color: var(--blue);
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .print-section-btn:hover { background: #eef3fb; border-color: var(--blue); }
+  .print-section-btn:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+
+  /* PRINT — Ctrl+P prints every tab, each starting on a new page.
+     (The "Print Summary" button opens the summary PDF instead.) */
   @media print {
-    .tabs-bar { display: none !important; }
+    .tabs-bar, .breadcrumb, .section-tools { display: none !important; }
     .section { display: block !important; page-break-before: always; }
     .section:first-of-type { page-break-before: auto; }
+
+    /* Keep the colored bands, tiles and boxes (browsers drop backgrounds by default) */
+    body { background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+    /* Ink-friendly header: white background, dark text */
+    .header { background: #fff !important; color: var(--navy); padding: 0 0 12px; border-bottom: 2px solid var(--navy); }
+    .header::before, .header::after { display: none; }
+    .header p { color: var(--slate); }
+
+    .content { padding: 16px 0 0; max-width: none; }
+    .card { box-shadow: none; padding: 20px; }
+    /* Don't split a step, a note or a table row across two pages */
+    .flow-node, .flow-connector, .flag, .overview-tile, .roles-table tr { break-inside: avoid; }
+    .roles-table thead { display: table-header-group; }   /* repeat table header on each page */
+    /* Keep the "Process Flowchart" label on the same page as its flowchart */
+    .section-label, .flowchart-tools { break-after: avoid; page-break-after: avoid; }
+    /* Slightly tighter flowchart on paper so most processes fit on one page */
+    .flow-connector { height: 24px; }
+    .flow-box { padding: 10px 18px; }
   }
 </style>
 </head>
-<body>
+<!-- data-summary-pdf: the printable summary for this page (relative path).
+     The "Print Summary" buttons link to it. Remove the attribute and the buttons disappear. -->
+<body data-summary-pdf="docs/position-management-summary.pdf">
 
-<div class="header">
+<header class="header">
   <div class="header-inner">
     <div class="breadcrumb" id="breadcrumb"></div>
     <div class="header-badge">Business Process</div>
     <h1>Position Management Dashboard</h1>
     <p>Interactive guide to all 6 position management workflows — roles, steps, decisions, and approvals</p>
   </div>
-</div>
+</header>
 
 <div class="tabs-bar">
   <button class="tab-btn active" onclick="showTab('overview')">📋 Overview</button>
@@ -743,7 +809,7 @@
     <div class="section-label">Process Flowchart</div>
     <div class="flowchart">
       <div class="flow-node">
-        <div class="flow-label"><span class="role-dot hr"></span><span class="role-dot budget" style="margin-left:4px;"></span> HR Partner or Budget Manager</div>
+        <div class="flow-label"><span class="flow-role"><span class="role-dot hr"></span> HR Partner or</span> <span class="flow-role"><span class="role-dot budget"></span> Budget Manager</span></div>
         <div class="flow-box flow-start">🚀 INITIATION — Edit Additional Data</div>
       </div>
       <div class="flow-connector"><span>↓</span></div>
@@ -929,7 +995,7 @@
     <div class="section-label">Process Flowchart</div>
     <div class="flowchart">
       <div class="flow-node">
-        <div class="flow-label"><span class="role-dot hr"></span><span class="role-dot budget" style="margin-left:4px;"></span><span class="role-dot admin" style="margin-left:4px;"></span> HR Partner / Budget Manager / HR Admin</div>
+        <div class="flow-label"><span class="flow-role"><span class="role-dot hr"></span> HR Partner /</span> <span class="flow-role"><span class="role-dot budget"></span> Budget Manager /</span> <span class="flow-role"><span class="role-dot admin"></span> HR Admin</span></div>
         <div class="flow-box flow-start">🚀 INITIATION — Close Position Task</div>
       </div>
       <div class="flow-connector"><span>↓</span></div>
@@ -1202,6 +1268,36 @@ function showTab(id) {
         : `<span class="current">${item.label}</span>`;
       return sep + crumb;
     }).join('');
+  })();
+  
+
+  /* ────────────────────────────────────────────────────────────
+     SAMPLE: "Print Summary" button on each process tab.
+     Adds a row right below every colored title band (.process-header),
+     above "Who is Involved" and "Key Rules & Notes", with a link to the
+     summary PDF named in <body data-summary-pdf="...">.
+     The PDF opens in a new tab, where the browser's PDF viewer prints it.
+  ──────────────────────────────────────────────────────────── */
+  (function addSummaryPdfButtons() {
+    const PDF_URL = document.body.dataset.summaryPdf;   // reads data-summary-pdf
+    if (!PDF_URL) return;                               // no PDF set → no buttons
+    const ICON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 14h12v7H6z"/></svg>';
+
+    document.querySelectorAll('.process-header').forEach(function (band) {
+      const link = document.createElement('a');
+      link.className = 'print-section-btn';
+      link.href = PDF_URL;
+      link.target = '_blank';            // open the PDF in a new tab
+      link.rel = 'noopener';             // security: new tab can't control this page
+      link.innerHTML = ICON + '<span>Print Full Summary</span>';
+      // Screen readers hear what happens when they click.
+      link.setAttribute('aria-label', 'Print Summary (summary PDF, opens in a new tab)');
+
+      const tools = document.createElement('div');
+      tools.className = 'section-tools';
+      tools.appendChild(link);
+      band.after(tools);
+    });
   })();
 </script>
 </body>
