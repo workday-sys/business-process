@@ -673,3 +673,84 @@
      .module-arrow { display: none; }
      .overview-grid, .overview-grid--2col, .overview-grid--4col { grid-template-columns: 1fr; }
    }
+   
+   /* ==========================================================================
+      6. PRINT FLOWCHART — button + print-only layout
+      Used with js/print-flowchart.js on every detail page that has a flowchart.
+      ========================================================================== */
+   
+   /* Toolbar row: "Process Flowchart" label on the left, button on the right */
+   .flowchart-tools {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     gap: 12px;
+     margin-bottom: 12px;
+   }
+   .flowchart-tools .section-label { margin-bottom: 0; }
+   
+   .print-btn {
+     display: inline-flex;
+     align-items: center;
+     gap: 6px;
+     margin-left: auto;                 /* stays on the right even with no label */
+     padding: 6px 12px;
+     font: inherit;
+     font-size: 0.8rem;
+     font-weight: 600;
+     color: var(--blue);
+     background: var(--white);
+     border: 1px solid var(--border);
+     border-radius: 8px;
+     cursor: pointer;
+     transition: background 0.15s, border-color 0.15s;
+   }
+   .print-btn:hover { background: #eef3fb; border-color: var(--blue); }
+   .print-btn:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+   
+   /* The temporary print copy is never shown on screen */
+   #print-area { display: none; }
+   
+   @media print {
+     /* Never print the buttons themselves (also when printing the whole page) */
+     .print-btn { display: none !important; }
+   
+     /* While printing one flowchart: hide everything except #print-area */
+     body.is-printing-flowchart { background: #fff; min-height: 0; }
+     body.is-printing-flowchart > *:not(#print-area) { display: none !important; }
+     body.is-printing-flowchart #print-area { display: block; }
+   
+     .print-area-page {
+       font-size: 0.75rem;
+       text-transform: uppercase;
+       letter-spacing: 1px;
+       color: #4a5568;
+       margin-bottom: 4px;
+     }
+     .print-area-title { font-size: 1.4rem; color: #0f2040; margin-bottom: 16px; }
+   
+     /* Keep the colored boxes and dots (browsers drop backgrounds by default) */
+     #print-area, #print-area * {
+       -webkit-print-color-adjust: exact;
+       print-color-adjust: exact;
+     }
+     /* Don't split a single step (or a short Yes/No branch) across two pages */
+     #print-area .flow-node,
+     #print-area .flow-connector,
+     #print-area .decision-branch { break-inside: avoid; }
+
+     /* Print the flowchart as a normal BLOCK instead of a flexbox.
+        Some browsers (Firefox, Safari) won't split a flex container across
+        pages: if it doesn't fit under the title, they push the WHOLE chart
+        to page 2 and leave page 1 blank. Blocks split cleanly everywhere. */
+     #print-area .flowchart { display: block; padding: 0; }
+     #print-area .flowchart > * { margin-left: auto; margin-right: auto; }  /* keeps each step centered */
+
+     /* Slightly more compact on paper so long charts fit on one page */
+     #print-area .flow-connector { height: 20px; }
+     #print-area .flow-box { padding: 8px 16px; transform: none; }
+     #print-area .flow-label { margin-bottom: 3px; }
+     #print-area .flowchart > .flow-node:first-child .flow-label { margin: 0 0 6px; }
+   }
+   
+   @page { margin: 12mm; }
