@@ -3,151 +3,157 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>Job Information — Business Process Hub</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --navy: #0f2040; --navy-mid: #1a3460; --blue: #1e5fa8; --blue-light: #2e7dd1;
-    --gold: #e8a922; --teal: #0e8a7a; --red: #c0392b; --purple: #7c3aed; --slate: #4a5568;
-    --light: #f4f7fb; --white: #ffffff; --border: #dde4ef; --card-shadow: 0 4px 24px rgba(15,32,64,0.10);
-    --hiring-solid: #1e5fa8;   --hiring-glow: rgba(30,95,168,0.28);   --hiring-tint: #dfebfa;   --hiring-text: #0d3f73;
-    --jobchange-solid: #7c3aed; --jobchange-glow: rgba(124,58,237,0.28); --jobchange-tint: #ece3fc; --jobchange-text: #4c1d95;
-    --comp-solid: #c8850c;     --comp-glow: rgba(200,133,12,0.28);     --comp-tint: #faedcf;     --comp-text: #7a5800;
-    --separation-solid: #c0392b; --separation-glow: rgba(192,57,43,0.28); --separation-tint: #f9dedb; --separation-text: #8a2419;
-    --soon-solid: #64748b;     --soon-glow: rgba(100,116,139,0.22);     --soon-tint: #e6eaf0;     --soon-text: #3f4a5a;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'DM Sans', Arial, sans-serif; background: var(--light); color: var(--navy); min-height: 100vh; }
 
-  .header {
-    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, var(--blue) 100%);
-    color: white; padding: 36px 48px 28px; position: relative; overflow: hidden;
-  }
-  .header::before { content:''; position:absolute; top:-60px; right:-60px; width:300px; height:300px; background: radial-gradient(circle, rgba(232,169,34,0.18) 0%, transparent 70%); border-radius:50%; }
-  .header::after { content:''; position:absolute; bottom:-40px; left:30%; width:200px; height:200px; background: radial-gradient(circle, rgba(46,125,209,0.2) 0%, transparent 70%); border-radius:50%; }
-  .header-inner { position: relative; z-index: 1; }
+<!-- Shared stylesheet: site font, colors, header, content area, category sections.
+     This page is in the repo root, so the path is "css/styles.css".
+     ?v=5 = version with the category sections (heading + tiles). -->
+<link rel="stylesheet" href="css/styles.css?v=5">
+
+<!-- Page-specific styles (come AFTER the shared link, so they win if they overlap) -->
+<style>
+  /* Breadcrumb — rendered from the BREADCRUMB_TRAIL config near the bottom of this file */
   .breadcrumb { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; font-size: 0.82rem; min-height: 1.2em; }
   .breadcrumb a { color: rgba(255,255,255,0.65); text-decoration: none; font-weight: 500; }
   .breadcrumb a:hover { color: white; text-decoration: underline; }
   .breadcrumb .sep { color: rgba(255,255,255,0.4); }
   .breadcrumb .current { color: var(--gold); font-weight: 600; }
-  .header h1 { font-family: 'DM Serif Display', Georgia, serif; font-size: 2.2rem; letter-spacing: -0.5px; margin-bottom: 6px; }
-  .header p { color: rgba(255,255,255,0.72); font-size: 0.95rem; font-weight: 400; }
-  .header-badge { display: inline-block; background: var(--gold); color: var(--navy); font-size: 0.72rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; margin-bottom: 12px; }
-
-  .content { max-width: 1200px; margin: 0 auto; padding: 40px 48px 60px; }
-  .section-intro { margin-bottom: 28px; }
-  .section-intro h2 { font-family: 'DM Serif Display', Georgia, serif; font-size: 1.5rem; color: var(--navy); margin-bottom: 6px; }
-  .section-intro p { color: var(--slate); font-size: 0.9rem; }
-
-  .scope-note {
-    display: flex; align-items: flex-start; gap: 12px; background: var(--white);
-    border: 1px solid var(--border); border-left: 4px solid var(--red); border-radius: 10px;
-    padding: 16px 20px; font-size: 0.87rem; line-height: 1.6; color: var(--slate);
-    box-shadow: var(--card-shadow); margin-bottom: 32px;
-  }
-  .scope-note-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
-  .scope-note strong { display: block; color: var(--navy); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
-
-  /* ── 2-COLUMN CATEGORY GRID ── */
-  .categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; align-items: start; }
-  .category-block.span-2 { grid-column: 1 / -1; }
-
-  .category-head {
-    display: inline-flex; align-items: center; gap: 9px; margin-bottom: 16px;
-    padding: 9px 18px 9px 14px; border-radius: 30px; box-shadow: 0 3px 10px rgba(15,32,64,0.08);
-  }
-  .head-icon { font-size: 1.05rem; line-height: 1; flex-shrink: 0; }
-  .category-title {
-    font-family: 'DM Sans', Arial, sans-serif; font-size: 0.86rem; font-weight: 800;
-    text-transform: uppercase; letter-spacing: 0.9px;
-  }
-  .category-count {
-    font-size: 0.68rem; font-weight: 800; padding: 2px 9px; border-radius: 20px; margin-left: 2px;
-    background: rgba(255,255,255,0.6);
-  }
-  .head-hiring     { background: var(--hiring-tint); }
-  .head-hiring .category-title, .head-hiring .category-count { color: var(--hiring-text); }
-  .head-jobchange  { background: var(--jobchange-tint); }
-  .head-jobchange .category-title, .head-jobchange .category-count { color: var(--jobchange-text); }
-  .head-comp       { background: var(--comp-tint); }
-  .head-comp .category-title, .head-comp .category-count { color: var(--comp-text); }
-  .head-separation { background: var(--separation-tint); }
-  .head-separation .category-title, .head-separation .category-count { color: var(--separation-text); }
-  .head-soon       { background: var(--soon-tint); }
-  .head-soon .category-title, .head-soon .category-count { color: var(--soon-text); }
-
-  /* Elevated glow item cards */
-  .item-stack { display: flex; flex-direction: column; gap: 12px; }
-
-  .glow-card {
-    display: flex; align-items: center; gap: 16px; background: var(--white);
-    border-radius: 14px; padding: 16px 20px; text-decoration: none; color: inherit;
-    border: 1px solid var(--border); position: relative; overflow: hidden;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-  }
-  .glow-card::before {
-    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
-  }
-  .glow-card.placeholder-card { cursor: default; }
-
-  .item-hiring::before     { background: var(--hiring-solid); }
-  .item-jobchange::before  { background: var(--jobchange-solid); }
-  .item-comp::before       { background: var(--comp-solid); }
-  .item-separation::before { background: var(--separation-solid); }
-  .item-soon::before       { background: var(--soon-solid); }
-
-  .item-hiring:hover     { transform: translateY(-4px); box-shadow: 0 14px 30px var(--hiring-glow); border-color: var(--hiring-solid); }
-  .item-jobchange:hover  { transform: translateY(-4px); box-shadow: 0 14px 30px var(--jobchange-glow); border-color: var(--jobchange-solid); }
-  .item-comp:hover       { transform: translateY(-4px); box-shadow: 0 14px 30px var(--comp-glow); border-color: var(--comp-solid); }
-  .item-separation:hover { transform: translateY(-4px); box-shadow: 0 14px 30px var(--separation-glow); border-color: var(--separation-solid); }
-
-  .glow-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; color: white; flex-shrink: 0; }
-  .icon-hiring     { background: var(--hiring-solid); }
-  .icon-jobchange  { background: var(--jobchange-solid); }
-  .icon-comp       { background: var(--comp-solid); }
-  .icon-separation { background: var(--separation-solid); }
-  .icon-soon       { background: var(--soon-solid); }
-
-  .glow-text { flex: 1; min-width: 0; }
-  .glow-title { font-family: 'DM Serif Display', Georgia, serif; font-size: 1.02rem; color: var(--navy); margin-bottom: 3px; }
-  .glow-desc { font-size: 0.82rem; color: var(--slate); line-height: 1.5; }
-
-  .glow-arrow { font-size: 1.1rem; color: var(--border); flex-shrink: 0; transition: color 0.2s, transform 0.2s; }
-  .glow-card:hover .glow-arrow { transform: translateX(3px); }
-  .item-hiring:hover .glow-arrow     { color: var(--hiring-solid); }
-  .item-jobchange:hover .glow-arrow  { color: var(--jobchange-solid); }
-  .item-comp:hover .glow-arrow       { color: var(--comp-solid); }
-  .item-separation:hover .glow-arrow { color: var(--separation-solid); }
-
-  .badge-soon { font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; background: var(--soon-tint, #eef1f5); color: var(--slate); padding: 3px 9px; border-radius: 20px; flex-shrink: 0; }
-
-  @media (max-width: 900px) { .categories-grid { grid-template-columns: 1fr; } }
-  @media (max-width: 700px) {
-    .content { padding: 28px 20px 48px; }
-    .header { padding: 28px 20px 22px; }
-    .header h1 { font-size: 1.75rem; }
-    .glow-card { padding: 14px 16px; gap: 12px; }
-  }
 </style>
 </head>
 <body>
 
-<div class="header">
+<!-- ══ HEADER ══ -->
+<header class="header">
   <div class="header-inner">
     <div class="breadcrumb" id="breadcrumb"></div>
     <div class="header-badge">Business Process</div>
     <h1>Job Information</h1>
-    <p>Every workflow that touches a worker's job record — from hire through termination</p>
+    <p>Every workflow that touches a worker&#8217;s job record &mdash; from hire through termination</p>
   </div>
-</div>
+</header>
 
-<div class="content">
+<!-- ══ MAIN CONTENT ══ -->
+<main class="content">
 
-  <!-- 
+  <div class="section-intro">
+    <h2>Available guides</h2>
+    <p>8 process guides in 4 categories. Select one to open its flowcharts, roles and approvals.</p>
+  </div>
+
+  <!-- Category sections: one <section> per category (heading + guide tiles).
+       Section colors are the --cat-* tokens in css/styles.css.
+       Links are RELATIVE: the guides live in the jobinfo/ folder. -->
+  <div class="category-list">
+
+    <!-- Hiring -->
+    <section class="category-section category-section--hiring" aria-labelledby="cat-hiring">
+      <div class="category-head">
+        <span class="category-icon" aria-hidden="true"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M19 8v6M16 11h6"/></svg></span>
+        <h2 class="category-name" id="cat-hiring">Hiring</h2>
+        <span class="category-count">3 guides</span>
+      </div>
+      <ul class="category-links">
+          <li>
+            <a class="category-link" href="jobinfo/hire-rehire.html">
+              <span class="category-link-title">Hire / Rehire</span>
+              <span class="category-link-desc">Direct and Recruiting-sourced hires, background checks, org assignments and approvals.</span>
+              <span class="category-link-cta">Open guide <span aria-hidden="true" style="display:flex"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span>
+            </a>
+          </li>
+          <li>
+            <a class="category-link" href="jobinfo/academic-appointments.html">
+              <span class="category-link-title">Academic Appointments</span>
+              <span class="category-link-desc">Create and renew part-time adjunct faculty appointments.</span>
+              <span class="category-link-cta">Open guide <span aria-hidden="true" style="display:flex"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span>
+            </a>
+          </li>
+          <li>
+            <a class="category-link" href="jobinfo/onboarding.html">
+              <span class="category-link-title">Onboarding</span>
+              <span class="category-link-desc">Self-service onboarding tasks once the Workday account is created.</span>
+              <span class="category-link-cta">Open guide <span aria-hidden="true" style="display:flex"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span>
+            </a>
+          </li>
+      </ul>
+    </section>
+    <!-- Job Changes -->
+    <section class="category-section category-section--jobchanges" aria-labelledby="cat-jobchanges">
+      <div class="category-head">
+        <span class="category-icon" aria-hidden="true"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h13l-3-3M17 17H4l3 3"/></svg></span>
+        <h2 class="category-name" id="cat-jobchanges">Job Changes</h2>
+        <span class="category-count">2 guides</span>
+      </div>
+      <ul class="category-links">
+          <li>
+            <a class="category-link" href="jobinfo/additional-job.html">
+              <span class="category-link-title">Additional Job</span>
+              <span class="category-link-desc">A second concurrent position with its own org assignment and compensation.</span>
+              <span class="category-link-cta">Open guide <span aria-hidden="true" style="display:flex"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span>
+            </a>
+          </li>
+          <li>
+            <a class="category-link" href="jobinfo/change-job.html">
+              <span class="category-link-title">Change Job</span>
+              <span class="category-link-desc">Transfers, promotions and demotions: position, compensation and org changes.</span>
+              <span class="category-link-cta">Open guide <span aria-hidden="true" style="display:flex"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span>
+            </a>
+          </li>
+      </ul>
+    </section>
+    <!-- Compensation & Configuration -->
+    <section class="category-section category-section--comp" aria-labelledby="cat-comp">
+      <div class="category-head">
+        <span class="category-icon" aria-hidden="true"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/></svg></span>
+        <h2 class="category-name" id="cat-comp">Compensation &amp; Configuration</h2>
+        <span class="category-count">2 guides</span>
+      </div>
+      <ul class="category-links">
+          <li>
+            <a class="category-link" href="jobinfo/scholarships-honorariums.html">
+              <span class="category-link-title">Scholarships &amp; Honorariums</span>
+              <span class="category-link-desc">One-time payments: request, approval and payroll routing.</span>
+              <span class="category-link-cta">Open guide <span aria-hidden="true" style="display:flex"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span>
+            </a>
+          </li>
+          <li>
+            <a class="category-link" href="jobinfo/request-framework.html">
+              <span class="category-link-title">Request Frameworks</span>
+              <span class="category-link-desc">Compensation and grade framework requests that set pay structures.</span>
+              <span class="category-link-cta">Open guide <span aria-hidden="true" style="display:flex"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span>
+            </a>
+          </li>
+      </ul>
+    </section>
+    <!-- Separation -->
+    <section class="category-section category-section--separation" aria-labelledby="cat-separation">
+      <div class="category-head">
+        <span class="category-icon" aria-hidden="true"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h5a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-5M3 12h12M10 7l5 5-5 5"/></svg></span>
+        <h2 class="category-name" id="cat-separation">Separation</h2>
+        <span class="category-count">1 guide</span>
+      </div>
+      <ul class="category-links">
+          <!-- CHECK: the site map lists "terminations-faculty.html" (with an s). Match this href to the real file name. -->
+          <li>
+            <a class="category-link" href="jobinfo/termination-faculty.html">
+              <span class="category-link-title">Terminations</span>
+              <span class="category-link-desc">Voluntary and involuntary terminations, last-day processing and approvals.</span>
+              <span class="category-link-cta">Open guide <span aria-hidden="true" style="display:flex"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span>
+            </a>
+          </li>
+      </ul>
+    </section>
+
+    <!-- Coming soon placeholder -->
+    <div class="category-soon">
+      <span aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+      <span><strong>Coming soon:</strong> reserved for an upcoming Job Information process guide.</span>
+    </div>
+
+  </div><!-- /category-list -->
+
+  <!--
   <div class="scope-note">
-    <span class="scope-note-icon">&#x1F6AB;</span>
+    <span class="scope-note-icon" aria-hidden="true">&#x1F6AB;</span>
     <div>
       <strong>Scope — City Positions Only</strong>
       All processes and workflows shown across these dashboards apply to City positions only.
@@ -156,103 +162,28 @@
   </div>
   -->
 
-  <div class="categories-grid">
-
-    <!-- Hiring -->
-    <div class="category-block">
-      <div class="category-head head-hiring"><span class="head-icon">&#x1F680;</span><span class="category-title">Hiring</span><span class="category-count">3</span></div>
-      <div class="item-stack">
-        <a href="/business-process/jobinfo/hire-rehire.html" class="glow-card item-hiring">
-          <div class="glow-icon icon-hiring">&#x1F680;</div>
-          <div class="glow-text"><div class="glow-title">Hire / Rehire</div><div class="glow-desc">Direct hires and Recruiting-sourced hires, background checks, org assignments, and approvals.</div></div>
-          <div class="glow-arrow">&#x2192;</div>
-        </a>
-        <a href="/business-process/jobinfo/academic-appointments.html" class="glow-card item-hiring">
-          <div class="glow-icon icon-hiring">&#x1F393;</div>
-          <div class="glow-text"><div class="glow-title">Academic Appointments</div><div class="glow-desc">Faculty appointment creation and renewal for part-time adjunct positions.</div></div>
-          <div class="glow-arrow">&#x2192;</div>
-        </a>
-        <a href="/business-process/jobinfo/onboarding.html" class="glow-card item-hiring">
-          <div class="glow-icon icon-hiring">&#x1F9ED;</div>
-          <div class="glow-text"><div class="glow-title">Onboarding</div><div class="glow-desc">Self-service onboarding tasks completed once the Workday account is created.</div></div>
-          <div class="glow-arrow">&#x2192;</div>
-        </a>
-      </div>
-    </div>
-
-    <!-- Job Changes -->
-    <div class="category-block">
-      <div class="category-head head-jobchange"><span class="head-icon">&#x1F504;</span><span class="category-title">Job Changes</span><span class="category-count">2</span></div>
-      <div class="item-stack">
-        <a href="/business-process/jobinfo/additional-job.html" class="glow-card item-jobchange">
-          <div class="glow-icon icon-jobchange">&#x1F454;</div>
-          <div class="glow-text"><div class="glow-title">Additional Job</div><div class="glow-desc">Adding a second concurrent position with its own org assignment and compensation.</div></div>
-          <div class="glow-arrow">&#x2192;</div>
-        </a>
-        <a href="/business-process/jobinfo/change-job.html" class="glow-card item-jobchange">
-          <div class="glow-icon icon-jobchange">&#x1F504;</div>
-          <div class="glow-text"><div class="glow-title">Change Job</div><div class="glow-desc">Transfers, promotions, and demotions — position, compensation, and org changes.</div></div>
-          <div class="glow-arrow">&#x2192;</div>
-        </a>
-      </div>
-    </div>
-
-    <!-- Compensation & Configuration -->
-    <div class="category-block">
-      <div class="category-head head-comp"><span class="head-icon">&#x1F4B0;</span><span class="category-title">Compensation &amp; Configuration</span><span class="category-count">2</span></div>
-      <div class="item-stack">
-        <a href="/business-process/jobinfo/scholarships-honorariums.html" class="glow-card item-comp">
-          <div class="glow-icon icon-comp">&#x1F396;&#xFE0F;</div>
-          <div class="glow-text"><div class="glow-title">Scholarships &amp; Honorariums</div><div class="glow-desc">One-time scholarship or honorarium payments — request, approval, and payroll routing.</div></div>
-          <div class="glow-arrow">&#x2192;</div>
-        </a>
-        <a href="/business-process/jobinfo/request-framework.html" class="glow-card item-comp">
-          <div class="glow-icon icon-comp">&#x1F4D0;</div>
-          <div class="glow-text"><div class="glow-title">Request Frameworks</div><div class="glow-desc">Compensation and grade framework requests that establish pay structures.</div></div>
-          <div class="glow-arrow">&#x2192;</div>
-        </a>
-      </div>
-    </div>
-
-    <!-- Separation -->
-    <div class="category-block">
-      <div class="category-head head-separation"><span class="head-icon">&#x1F6AA;</span><span class="category-title">Separation</span><span class="category-count">1</span></div>
-      <div class="item-stack">
-        <a href="/business-process/jobinfo/termination-faculty.html" class="glow-card item-separation">
-          <div class="glow-icon icon-separation">&#x1F6AA;</div>
-          <div class="glow-text"><div class="glow-title">Terminations</div><div class="glow-desc">Voluntary and involuntary terminations, last-day processing, and required approvals.</div></div>
-          <div class="glow-arrow">&#x2192;</div>
-        </a>
-      </div>
-    </div>
-
-    <!-- Coming Soon (spans both columns) -->
-    <div class="category-block span-2">
-      <div class="category-head head-soon"><span class="head-icon">&#x1F9E9;</span><span class="category-title">Coming Soon</span><span class="category-count">1</span></div>
-      <div class="item-stack">
-        <div class="glow-card placeholder-card">
-          <div class="glow-icon icon-soon">&#x1F9E9;</div>
-          <div class="glow-text"><div class="glow-title">Placeholder</div><div class="glow-desc">Reserved for an upcoming Job Information process guide.</div></div>
-          <span class="badge-soon">Coming Soon</span>
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /categories-grid -->
-
-</div><!-- /content -->
+</main>
 
 <script>
+  /* ────────────────────────────────────────────────────────────
+     BREADCRUMB — self-contained, edit this array only.
+     Each entry: { label: "Text shown", href: "link.html" }
+     Set href to null (or omit it) for the current page —
+     it will render as plain highlighted text, not a link.
+  ──────────────────────────────────────────────────────────── */
   const BREADCRUMB_TRAIL = [
     { label: "Business Process Hub", href: "index.html" },
     { label: "Job Information", href: null }
   ];
+
   (function renderBreadcrumb() {
     const el = document.getElementById('breadcrumb');
     el.innerHTML = BREADCRUMB_TRAIL.map((item, i) => {
       const isLast = i === BREADCRUMB_TRAIL.length - 1;
       const sep = i > 0 ? '<span class="sep">/</span>' : '';
-      const crumb = (item.href && !isLast) ? `<a href="${item.href}">${item.label}</a>` : `<span class="current">${item.label}</span>`;
+      const crumb = (item.href && !isLast)
+        ? `<a href="${item.href}">${item.label}</a>`
+        : `<span class="current">${item.label}</span>`;
       return sep + crumb;
     }).join('');
   })();

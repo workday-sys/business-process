@@ -1,7 +1,8 @@
 /* ==========================================================================
    Business Process Hub — shared stylesheet
    File: css/styles.css
-   Used by: index.html, position-management.html (add the same <link> to every other page)
+   Used by: index.html, position-management.html, benefits.html,
+            job-information.html, tam.html (add the same <link> to every other page)
 
    HOW THIS FILE IS ORGANIZED
      1. Font import
@@ -38,13 +39,27 @@
      --purple: #7c3aed;
      --coral: #e2694f;
      --slate: #4a5568;
-     --white: #ffffff;
    
      /* Surfaces and lines */
      --light: #f6f8fb;
      --white: #ffffff;
      --border: #e3e8f0;
      --border-hover: #b9c7dc;
+   
+     /* Section hub colors (job-information.html, tam.html)
+        --cat-*  = color of each category: icon square, heading underline,
+                   count badge and the "Open guide" links in that section.
+                   Keep them dark enough to read on white (aim for 4.5:1).
+        --link-* = "Open guide" color of individual TAM guides            */
+     --cat-hiring: #1e5fa8;
+     --cat-jobchanges: #6d28d9;
+     --cat-comp: #b45309;
+     --cat-separation: #c0392b;
+     --cat-tam: #1e5fa8;
+     --link-jobreq: #1e5fa8;
+     --link-jobapp: #0b7266;
+     --link-evergreen: #b45309;
+     --link-recruiting: #6d28d9;
    
      /* Shape and depth */
      --radius: 14px;
@@ -278,7 +293,7 @@
      padding: 18px 18px 20px;
      background: var(--tint);
      border: 1px solid transparent;
-     border-radius: 5px;
+     border-radius: 12px;
      color: var(--navy);
      font: inherit;           /* buttons don't inherit the page font by default */
      text-align: left;
@@ -298,6 +313,143 @@
    .overview-tile .tile-icon { display: flex; color: var(--accent); margin-bottom: 6px; }
    .overview-tile .tile-name { font-size: 1rem; font-weight: 700; }
    .overview-tile .tile-desc { font-size: 0.85rem; line-height: 1.45; color: var(--slate); }
+   
+   /* Category sections — section hub pages (level 2: job-information.html, tam.html).
+      Layout: a heading with a thick colored underline, then a grid of white guide tiles.
+      Colors come from the --cat-* / --link-* tokens in section 2.
+      Markup:
+        <section class="category-section category-section--hiring">
+          <div class="category-head"> icon · <h2 class="category-name"> · count </div>
+          <ul class="category-links"> <li><a class="category-link"> … </a></li> </ul>
+        </section>                                                         */
+   .category-list {
+     display: flex;
+     flex-direction: column;
+     gap: 32px;
+   }
+   .category-section {
+     --cat: var(--blue);            /* section color — set by the variants below */
+     display: flex;
+     flex-direction: column;
+     gap: 14px;
+   }
+   
+   /* One variant per category: each just points --cat at its token */
+   .category-section--hiring     { --cat: var(--cat-hiring); }
+   .category-section--jobchanges { --cat: var(--cat-jobchanges); }
+   .category-section--comp       { --cat: var(--cat-comp); }
+   .category-section--separation { --cat: var(--cat-separation); }
+   .category-section--tam        { --cat: var(--cat-tam); }
+   
+   /* Section heading row */
+   .category-head {
+     display: flex;
+     align-items: center;
+     gap: 12px;
+     padding-bottom: 10px;
+     border-bottom: 3px solid var(--cat);
+   }
+   .category-icon {
+     width: 36px; height: 36px;
+     flex-shrink: 0;
+     border-radius: 9px;
+     background: var(--cat);
+     color: var(--white);
+     display: flex;
+     align-items: center;
+     justify-content: center;
+   }
+   .category-name {
+     flex: 1;
+     font-size: 1.375rem;
+     font-weight: 800;
+     letter-spacing: -0.01em;
+     color: var(--navy);
+   }
+   .category-count {
+     font-size: 0.8125rem;
+     font-weight: 700;
+     color: var(--cat);
+     /* a pale version of the section color, mixed automatically */
+     background: color-mix(in srgb, var(--cat) 12%, white);
+     padding: 4px 12px;
+     border-radius: 999px;
+     white-space: nowrap;
+   }
+   
+   /* Guide tiles */
+   .category-links {
+     list-style: none;
+     display: grid;
+     grid-template-columns: repeat(3, minmax(0, 1fr));
+     gap: 14px;
+   }
+   .category-links--2col { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+   .category-links > li { display: flex; }      /* lets tiles in a row share one height */
+   
+   .category-link {
+     --link-accent: var(--cat);     /* "Open guide" color; override per guide below */
+     flex: 1;
+     display: flex;
+     flex-direction: column;
+     gap: 6px;
+     padding: 18px;
+     background: var(--white);
+     border: 1px solid var(--border);
+     border-radius: 12px;
+     color: var(--navy);
+     text-decoration: none;
+     transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+   }
+   .category-link:hover {
+     border-color: var(--border-hover);
+     box-shadow: 0 8px 20px rgba(15, 32, 64, 0.08);
+     transform: translateY(-2px);
+   }
+   .category-link:focus-visible { outline: 3px solid var(--blue-light); outline-offset: 2px; }
+   
+   .category-link--jobreq     { --link-accent: var(--link-jobreq); }
+   .category-link--jobapp     { --link-accent: var(--link-jobapp); }
+   .category-link--evergreen  { --link-accent: var(--link-evergreen); }
+   .category-link--recruiting { --link-accent: var(--link-recruiting); }
+   
+   .category-link-title { font-size: 1.0625rem; font-weight: 700; }
+   .category-link-desc { font-size: 0.875rem; line-height: 1.45; color: var(--slate); }
+   .category-link-covers { font-size: 0.8125rem; line-height: 1.45; color: var(--slate); }
+   .category-link-covers strong {
+     font-size: 0.7rem;
+     font-weight: 700;
+     letter-spacing: 0.8px;
+     text-transform: uppercase;
+     color: #64748b;
+     margin-right: 4px;
+   }
+   .category-link-cta {
+     margin-top: auto;              /* pins "Open guide" to the bottom of the tile */
+     padding-top: 6px;
+     display: inline-flex;
+     align-items: center;
+     gap: 4px;
+     font-size: 0.875rem;
+     font-weight: 700;
+     color: var(--link-accent);
+   }
+   .category-link-cta svg { transition: transform 0.2s; }
+   .category-link:hover .category-link-cta svg { transform: translateX(3px); }
+   
+   /* "Coming soon" placeholder under the sections */
+   .category-soon {
+     display: flex;
+     align-items: center;
+     gap: 12px;
+     padding: 14px 20px;
+     background: var(--white);
+     border: 1px dashed #c9d3e2;
+     border-radius: 14px;
+     color: var(--slate);
+     font-size: 0.875rem;
+   }
+   .category-soon strong { color: var(--navy); }
    
    /* Scope note (callout box) */
    .scope-note {
@@ -329,6 +481,11 @@
      .module-row { flex-wrap: wrap; }
      .module-workflows { order: 3; width: 100%; padding-left: 68px; }
      .overview-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+     .category-links { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+   }
+   @media (max-width: 700px) {
+     .category-name { font-size: 1.2rem; }
+     .category-links, .category-links--2col { grid-template-columns: 1fr; }
    }
    @media (max-width: 860px) {
      .content { padding: 28px 24px 48px; }
@@ -344,4 +501,3 @@
      .module-arrow { display: none; }
      .overview-grid { grid-template-columns: 1fr; }
    }
-   
