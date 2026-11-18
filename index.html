@@ -6,8 +6,9 @@
 <title>Business Process Hub</title>
 
 <!-- Shared stylesheet: fonts, colors and all component styles live here.
-     Relative path: index.html is in the repo root, so "css/styles.css". -->
-<link rel="stylesheet" href="css/styles.css?v=1">
+     Relative path: index.html is in the repo root, so "css/styles.css".
+     ?v=6 = version with the welcome intro and module cards. -->
+<link rel="stylesheet" href="css/styles.css?v=6">
 </head>
 <body>
 
@@ -23,11 +24,142 @@
 <!-- ══ MAIN CONTENT ══ -->
 <main class="content">
 
-  <!-- Intro -->
-  <div class="section-intro">
-    <h2>Available dashboards</h2>
-    <p>Select a module to open its interactive guide with flowcharts, role breakdowns, and decision flags.</p>
+  <!-- Welcome intro: what this site is and how to use it -->
+  <section class="welcome" aria-labelledby="welcome-title">
+    <div>
+      <div class="welcome-eyebrow">Welcome</div>
+      <h2 id="welcome-title">Find the guide for your HR business process</h2>
+      <p>This hub collects step-by-step guides for each business process: who starts it, who reviews and approves it, and the decisions along the way. Start with the area you need below.</p>
+    </div>
+    <ol class="welcome-steps">
+      <li><span class="step-num" aria-hidden="true">1</span><span><span class="step-title">Pick a module</span><span class="step-desc">Choose the area you need, such as Benefits or Time &amp; Leave.</span></span></li>
+      <li><span class="step-num" aria-hidden="true">2</span><span><span class="step-title">Open a process</span><span class="step-desc">Each module lists its processes and what they cover.</span></span></li>
+      <li><span class="step-num" aria-hidden="true">3</span><span><span class="step-title">Follow the guide</span><span class="step-desc">Flowcharts, role breakdowns and decision flags walk you through every step.</span></span></li>
+    </ol>
+  </section>
+
+  <!-- Section heading for the module cards -->
+  <div class="section-head">
+    <div>
+      <h2>Available dashboards</h2>
+      <p>6 modules · select one to open its interactive guide</p>
+    </div>
   </div>
+
+  <!-- Module cards: one <li> per dashboard. Links are RELATIVE (same folder as index.html).
+       Card colors are the --mod-* tokens in css/styles.css. -->
+  <nav aria-label="Dashboards">
+    <ul class="module-grid">
+
+
+      <li>
+        <a class="module-card module-card--position" href="position-management.html">
+          <span class="module-card-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg></span>
+          <span class="module-card-body">
+            <span class="module-card-title">Position Management</span>
+            <span class="module-card-desc">Full lifecycle of city positions, from creation and editing to freezing and permanent closure, with dual-approval paths.</span>
+            <span class="module-card-label">Workflows covered</span>
+            <span class="module-pills">
+              <span class="module-pill">Create Position</span>
+              <span class="module-pill">Edit Restrictions</span>
+              <span class="module-pill">Edit Additional Data</span>
+              <span class="module-pill">Freeze / Unfreeze</span>
+              <span class="module-pill">Close Position</span>
+              <span class="module-pill">Edit Position</span>
+            </span>
+          </span>
+          <span class="module-card-arrow" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+      </li>
+      <li>
+        <a class="module-card module-card--timeleave" href="timeandleave.html">
+          <span class="module-card-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+          <span class="module-card-body">
+            <span class="module-card-title">Time &amp; Leave</span>
+            <span class="module-card-desc">Time entry and absence management: web clock, microblock self-reporting, timesheet approvals and time-off requests.</span>
+            <span class="module-card-label">Workflows covered</span>
+            <span class="module-pills">
+              <span class="module-pill">Enter Time</span>
+              <span class="module-pill">Approve Time</span>
+              <span class="module-pill">Edit / Correct Time</span>
+              <span class="module-pill">Request Absence</span>
+              <span class="module-pill">Request Time Off</span>
+              <span class="module-pill">Update / Cancel</span>
+            </span>
+          </span>
+          <span class="module-card-arrow" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+      </li>
+      <li>
+        <a class="module-card module-card--benefits" href="benefits.html">
+          <span class="module-card-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.35-7-10a4 4 0 0 1 7-2.65A4 4 0 0 1 19 10c0 5.65-7 10-7 10z"/></svg></span>
+          <span class="module-card-body">
+            <span class="module-card-title">Benefits</span>
+            <span class="module-card-desc">Benefits administration for city employees: employee changes, life events, dependents, COBRA and open enrollment.</span>
+            <span class="module-card-label">Workflows covered</span>
+            <span class="module-pills">
+              <span class="module-pill">Change Benefits</span>
+              <span class="module-pill">Change Benefits for Life</span>
+              <span class="module-pill">Dependent Event</span>
+              <span class="module-pill">COBRA Eligibility</span>
+              <span class="module-pill">Open Enrollment</span>
+            </span>
+          </span>
+          <span class="module-card-arrow" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+      </li>
+      <li>
+        <a class="module-card module-card--jobinfo" href="job-information.html">
+          <span class="module-card-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg></span>
+          <span class="module-card-body">
+            <span class="module-card-title">Job Information</span>
+            <span class="module-card-desc">Every workflow that touches a worker&#8217;s job record, from hire and onboarding through job changes and termination.</span>
+            <span class="module-card-label">Workflows covered</span>
+            <span class="module-pills">
+              <span class="module-pill">Hire / Rehire</span>
+              <span class="module-pill">Additional Job</span>
+              <span class="module-pill">Change Job</span>
+              <span class="module-pill">Scholarships &amp; Honorariums</span>
+              <span class="module-pill">Terminations</span>
+              <span class="module-pill">Onboarding</span>
+            </span>
+          </span>
+          <span class="module-card-arrow" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+      </li>
+      <li>
+        <a class="module-card module-card--talent" href="tam.html">
+          <span class="module-card-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-4-6"/></svg></span>
+          <span class="module-card-body">
+            <span class="module-card-title">Talent Acquisition</span>
+            <span class="module-card-desc">Sourcing, hiring and requisition workflows, from requisition and budget approval to offer and disposition.</span>
+            <span class="module-card-label">Workflows covered</span>
+            <span class="module-pills">
+              <span class="module-pill">Job Requisition</span>
+              <span class="module-pill">Job Application</span>
+              <span class="module-pill">Evergreen Requisition</span>
+              <span class="module-pill">Recruiting</span>
+            </span>
+          </span>
+          <span class="module-card-arrow" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+      </li>
+      <li>
+        <a class="module-card module-card--data" href="data.html">
+          <span class="module-card-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V11M12 20V4M19 20v-7M3 20h18"/></svg></span>
+          <span class="module-card-body">
+            <span class="module-card-title">Data</span>
+            <span class="module-card-desc">Personal information and time &amp; leave data.</span>
+            <span class="module-pills">
+              <span class="module-pill module-pill--soon">Coming soon</span>
+            </span>
+          </span>
+          <span class="module-card-arrow" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+      </li>
+
+    </ul>
+  </nav>
 
   <!-- Role Legend -->
   <div class="legend-card">
@@ -42,109 +174,6 @@
       <span class="role-tag benefits">&#x1F534; Benefits Partner</span>
     </div>
   </div>
-
-  <!-- Module list: one <li> per dashboard. Links are RELATIVE (same folder as index.html). -->
-  <nav aria-label="Dashboards">
-    <ul class="module-list">
-
-      <li>
-        <a class="module-row module-row--blue" href="position-management.html">
-          <span class="module-icon" aria-hidden="true">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg>
-          </span>
-          <div class="module-text">
-            <h3 class="module-title">Position Management</h3>
-            <p class="module-desc">Create, edit, freeze and close city positions, with dual-approval paths.</p>
-          </div>
-          <span class="module-workflows">Create &middot; Edit &middot; Edit Restrictions &middot; Additional Data &middot; Freeze &middot; Close</span>
-          <span class="module-arrow" aria-hidden="true">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-          </span>
-        </a>
-      </li>
-
-      <li>
-        <a class="module-row module-row--teal" href="timeandleave.html">
-          <span class="module-icon" aria-hidden="true">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-          </span>
-          <div class="module-text">
-            <h3 class="module-title">Time &amp; Leave</h3>
-            <p class="module-desc">Time entry, approvals, corrections and time-off requests.</p>
-          </div>
-          <span class="module-workflows">Enter &middot; Approve &middot; Correct Time &middot; Request Absence &middot; Time Off &middot; Cancel</span>
-          <span class="module-arrow" aria-hidden="true">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-          </span>
-        </a>
-      </li>
-
-      <li>
-        <a class="module-row module-row--red" href="benefits.html">
-          <span class="module-icon" aria-hidden="true">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.35-7-10a4 4 0 0 1 7-2.65A4 4 0 0 1 19 10c0 5.65-7 10-7 10z"/></svg>
-          </span>
-          <div class="module-text">
-            <h3 class="module-title">Benefits</h3>
-            <p class="module-desc">Benefit changes, life events, dependents, COBRA and open enrollment.</p>
-          </div>
-          <span class="module-workflows">Change Benefits &middot; Life Events &middot; Dependents &middot; COBRA &middot; Open Enrollment</span>
-          <span class="module-arrow" aria-hidden="true">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-          </span>
-        </a>
-      </li>
-
-      <li>
-        <a class="module-row module-row--gold" href="job-information.html">
-          <span class="module-icon" aria-hidden="true">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
-          </span>
-          <div class="module-text">
-            <h3 class="module-title">Job Information</h3>
-            <p class="module-desc">Hire through termination: job changes, onboarding and compensation.</p>
-          </div>
-          <span class="module-workflows">Hire &middot; Additional Job &middot; Change Job &middot; Scholarships &middot; Terminations &middot; Onboarding</span>
-          <span class="module-arrow" aria-hidden="true">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-          </span>
-        </a>
-      </li>
-
-      <li>
-        <a class="module-row module-row--purple" href="tam.html">
-          <span class="module-icon" aria-hidden="true">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-4-6"/></svg>
-          </span>
-          <div class="module-text">
-            <h3 class="module-title">Talent Acquisition</h3>
-            <p class="module-desc">Requisitions, applications, evergreen pools and recruiting.</p>
-          </div>
-          <span class="module-workflows">Job Requisition &middot; Job Application &middot; Evergreen &middot; Recruiting</span>
-          <span class="module-arrow" aria-hidden="true">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-          </span>
-        </a>
-      </li>
-
-      <li>
-        <a class="module-row module-row--coral" href="data.html">
-          <span class="module-icon" aria-hidden="true">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V11M12 20V4M19 20v-7M3 20h18"/></svg>
-          </span>
-          <div class="module-text">
-            <h3 class="module-title">Data</h3>
-            <p class="module-desc">Personal information and time &amp; leave data.</p>
-          </div>
-          <span class="module-workflows"><span class="badge-soon">Coming soon</span></span>
-          <span class="module-arrow" aria-hidden="true">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-          </span>
-        </a>
-      </li>
-
-    </ul>
-  </nav>
 
   <!-- Scope Note -->
   <div class="scope-note">

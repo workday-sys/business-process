@@ -4,23 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Change Job – Staff &amp; Faculty Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- Shared stylesheet: site font, colors, header, content area, overview tiles.
+     This page is in the jobinfo/ folder, so the path goes UP one level: "../css/styles.css". -->
+<link rel="stylesheet" href="../css/styles.css?v=7">
+
+<!-- Page-specific styles. This block comes AFTER the shared link,
+     so anything defined here overrides the shared rules. -->
 <style>
+  /* Page-only tokens (shared tokens like --navy, --blue live in css/styles.css) */
   :root {
-    --navy: #0f2040;
-    --navy-mid: #1a3460;
-    --blue: #1e5fa8;
-    --blue-light: #2e7dd1;
-    --gold: #e8a922;
     --gold-light: #f5c84a;
-    --teal: #0e8a7a;
-    --red: #c0392b;
-    --green: #1a7a4a;
-    --slate: #4a5568;
-    --light: #f4f7fb;
-    --white: #ffffff;
-    --border: #dde4ef;
-    --card-shadow: 0 4px 24px rgba(15,32,64,0.10);
     --role-hr: #2e7dd1;
     --role-budget: #e8a922;
     --role-payroll: #0e8a7a;
@@ -31,32 +24,8 @@
     --role-academic: #be185d;
     --role-system: #1f2937;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--light); color: var(--navy); min-height: 100vh; }
 
-  /* HEADER */
-  .header {
-    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, var(--blue) 100%);
-    color: white; padding: 36px 48px 28px; position: relative; overflow: hidden;
-  }
-  .header::before {
-    content: ''; position: absolute; top: -60px; right: -60px; width: 300px; height: 300px;
-    background: radial-gradient(circle, rgba(232,169,34,0.18) 0%, transparent 70%); border-radius: 50%;
-  }
-  .header::after {
-    content: ''; position: absolute; bottom: -40px; left: 30%; width: 200px; height: 200px;
-    background: radial-gradient(circle, rgba(46,125,209,0.2) 0%, transparent 70%); border-radius: 50%;
-  }
-  .header-inner { position: relative; z-index: 1; }
-  .header h1 { font-family: 'DM Serif Display', serif; font-size: 2.2rem; letter-spacing: -0.5px; margin-bottom: 6px; }
-  .header p { color: rgba(255,255,255,0.72); font-size: 0.95rem; font-weight: 400; }
-  .header-badge {
-    display: inline-block; background: var(--gold); color: var(--navy);
-    font-size: 0.72rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
-    padding: 3px 10px; border-radius: 20px; margin-bottom: 12px;
-  }
-
-    /* BREADCRUMBS in style code */
+    /* Breadcrumb — rendered from the BREADCRUMB_TRAIL config near the bottom of this file */
 
   .breadcrumb {display: flex; align-items: center; gap: 8px; margin-bottom: 14px; font-size: 0.82rem; min-height: 1.2em; }
   .breadcrumb a { color: rgba(255, 255, 255, 0.65); text-decoration: none; font-weight: 500;}
@@ -71,7 +40,7 @@
     box-shadow: 0 2px 12px rgba(15,32,64,0.07);
   }
   .tab-btn {
-    padding: 16px 18px; font-family: 'DM Sans', sans-serif; font-size: 0.83rem; font-weight: 600;
+    padding: 16px 18px; font-family: inherit; font-size: 0.83rem; font-weight: 600;
     color: var(--slate); background: none; border: none; border-bottom: 3px solid transparent;
     cursor: pointer; white-space: nowrap; transition: all 0.2s; position: relative; top: 2px;
   }
@@ -79,31 +48,15 @@
   .tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
 
   /* CONTENT */
-  .content { max-width: 1200px; margin: 0 auto; padding: 36px 48px 60px; }
   .section { display: none; }
   .section.active { display: block; }
 
   /* CARDS */
   .card { background: var(--white); border-radius: 16px; box-shadow: var(--card-shadow); padding: 32px; margin-bottom: 28px; border: 1px solid var(--border); }
-  .card-title { font-family: 'DM Serif Display', serif; font-size: 1.35rem; color: var(--navy); margin-bottom: 6px; }
+  .card-title { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.01em; color: var(--navy); margin-bottom: 6px; }
   .card-subtitle { font-size: 0.82rem; color: var(--slate); margin-bottom: 22px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.8px; }
 
-  /* OVERVIEW GRID */
-  .overview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; margin-bottom: 28px; }
-  .overview-tile {
-    background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
-    color: white; border-radius: 14px; padding: 22px 20px; cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s; border: 2px solid transparent;
-    position: relative; overflow: hidden;
-  }
-  .overview-tile::after { content: ''; position: absolute; bottom: -20px; right: -20px; width: 80px; height: 80px; background: rgba(255,255,255,0.06); border-radius: 50%; }
-  .overview-tile:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(15,32,64,0.18); }
-  .overview-tile:nth-child(2) { background: linear-gradient(135deg, #1a4a2e 0%, var(--teal) 100%); }
-  .overview-tile:nth-child(3) { background: linear-gradient(135deg, #5b2a00 0%, #c06a10 100%); }
-  .overview-tile:nth-child(4) { background: linear-gradient(135deg, #2d1060 0%, var(--role-manager) 100%); }
-  .tile-icon { font-size: 1.8rem; margin-bottom: 10px; }
-  .tile-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
-  .tile-desc { font-size: 0.78rem; opacity: 0.8; line-height: 1.5; }
+  /* OVERVIEW TILES: styles live in css/styles.css (section 5) */
 
   /* FLOWCHART */
   .flowchart { display: flex; flex-direction: column; align-items: center; gap: 0; padding: 10px 0; }
@@ -185,19 +138,51 @@
   .who-list li { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.87rem; }
   .who-list li:last-child { border-bottom: none; }
 
-  /* PROCESS HEADER */
-  .process-header { display: flex; align-items: flex-start; gap: 20px; margin-bottom: 28px; padding-bottom: 22px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
-  .process-icon-big { width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; flex-shrink: 0; }
-  .process-icon-big.blue { background: linear-gradient(135deg, var(--navy), var(--blue)); }
-  .process-icon-big.teal { background: linear-gradient(135deg, #065f46, var(--teal)); }
-  .process-icon-big.orange { background: linear-gradient(135deg, #7c2d12, #ea580c); }
-  .process-icon-big.purple { background: linear-gradient(135deg, #3b0764, var(--role-manager)); }
-  .process-icon-big.rose { background: linear-gradient(135deg, #831843, var(--role-academic)); }
+  /* PROCESS HEADER — solid color title band at the top of each process tab.
+     The color comes from a modifier class (e.g. .process-header--teal), which
+     sets --ph-bg. Colors match the overview tiles and pass 4.5:1 contrast with white text. */
+  .process-header {
+    --ph-bg: var(--blue);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding: 20px 24px;
+    background: var(--ph-bg);
+    color: var(--white);
+    border-radius: 12px;
+  }
+  .process-header--blue   { --ph-bg: #1e5fa8; }
+  .process-header--amber  { --ph-bg: #b45309; }
+  .process-header--teal   { --ph-bg: #0b7266; }
+  .process-header--purple { --ph-bg: #6d28d9; }
+  .process-header--red    { --ph-bg: #c0392b; }
+  .process-header--slate  { --ph-bg: #4a5568; }
+
+  .process-icon-big {
+    width: 56px; height: 56px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem;
+    flex-shrink: 0;
+  }
+  .process-icon-big.white { background: var(--white); }
   .process-meta { flex: 1; }
-  .process-meta h2 { font-family: 'DM Serif Display', serif; font-size: 1.5rem; color: var(--navy); margin-bottom: 4px; }
-  .process-meta p { font-size: 0.85rem; color: var(--slate); }
-  .completion-badge { background: var(--light); border: 1px solid var(--border); border-radius: 10px; padding: 10px 16px; font-size: 0.78rem; color: var(--slate); text-align: center; flex-shrink: 0; }
-  .completion-badge strong { display: block; font-size: 0.92rem; color: var(--navy); margin-top: 4px; }
+  .process-meta h2 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; color: var(--white); margin-bottom: 4px; }
+  .process-meta p { color: rgba(255,255,255,0.88); font-size: 0.88rem; }
+
+  /* "Completes When" box sits on the colored band: translucent white */
+  .completion-badge {
+    background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.35);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.9);
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .completion-badge strong { color: var(--white); display: block; font-size: 0.95rem; margin-top: 4px; }
 
   /* PRINT */
   @media print {
@@ -206,6 +191,8 @@
     .section:first-of-type { page-break-before: auto; }
   }
   @media (max-width: 700px) {
+    .process-header { flex-wrap: wrap; }
+    .completion-badge { width: 100%; }
     .header { padding: 24px 20px 18px; }
     .tabs-bar { padding: 0 8px; }
     .content { padding: 20px 16px 40px; }
@@ -214,14 +201,14 @@
 </head>
 <body>
 
-<div class="header">
+<header class="header">
   <div class="header-inner">
     <div class="breadcrumb" id="breadcrumb"></div>
     <div class="header-badge">Business Process</div>
     <h1>Change Job – Staff &amp; Faculty Dashboard</h1>
     <p>Interactive guide to the Change Job workflow — initiators, approvers, to-dos, decision points · Source: Business Process Overview session (Feb 18, 2026) &amp; unit-testing walkthrough · FWS &amp; State positions excluded</p>
   </div>
-</div>
+</header>
 
 <div class="tabs-bar">
   <button class="tab-btn active" onclick="showTab('overview')">📋 Overview</button>
@@ -239,27 +226,29 @@
   <div class="card">
     <div class="card-title">Change Job — Staff &amp; Faculty at a Glance</div>
     <div class="card-subtitle">1 Core Business Process · 3 Phases · City Positions · Excluding Federal Work Study &amp; State-Only Steps</div>
-    <div class="overview-grid">
-      <div class="overview-tile" onclick="showTab('bp1')">
-        <div class="tile-icon">🚀</div>
-        <div class="tile-name">Part 1: Initiation &amp; Setup</div>
-        <div class="tile-desc">HR Partner/Administrator/Specialist or Manager initiates. Manager reviews (if a transfer), org assignments, compensation, pay group, and position/payroll data are set.</div>
-      </div>
-      <div class="overview-tile" onclick="showTab('bp2')">
-        <div class="tile-icon">✅</div>
-        <div class="tile-name">Part 2: Approvals</div>
-        <div class="tile-desc">Budget Manager, Manager's Manager, HR Partner, and Compensation Partner give consolidated approvals as applicable, then Payroll Partner gives the final approval.</div>
-      </div>
-      <div class="overview-tile" onclick="showTab('bp3')">
-        <div class="tile-icon">🔄</div>
-        <div class="tile-name">Part 3: Post-Completion</div>
-        <div class="tile-desc">Automated accrual adjustment, time off updates, benefit elections, academic appointment updates, and other steps fire after approval — conditional on the scenario.</div>
-      </div>
-      <div class="overview-tile" onclick="showTab('bp4')">
-        <div class="tile-icon">🔁</div>
-        <div class="tile-name">Related Processes</div>
-        <div class="tile-desc">Request Transfer (a trigger task), Edit Position (a separate process for vacant positions), Service Dates Change, and Change Contingent Worker Details.</div>
-      </div>
+    <!-- Overview tiles: one <button> per process. The color class sets --accent/--tint.
+         Clicking runs showTab() (defined at the bottom of this file). -->
+    <div class="overview-grid overview-grid--2col">
+      <button type="button" class="overview-tile overview-tile--blue" onclick="showTab('bp1')">
+        <span class="tile-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 8l6 4-6 4z"/></svg></span>
+        <span class="tile-name">Part 1: Initiation &amp; Setup</span>
+        <span class="tile-desc">Transfer review, org assignments, compensation, pay group and payroll data.</span>
+      </button>
+      <button type="button" class="overview-tile overview-tile--teal" onclick="showTab('bp2')">
+        <span class="tile-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg></span>
+        <span class="tile-name">Part 2: Approvals</span>
+        <span class="tile-desc">Conditional approvals, then the Payroll Partner&#8217;s final approval.</span>
+      </button>
+      <button type="button" class="overview-tile overview-tile--gold" onclick="showTab('bp3')">
+        <span class="tile-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5M3 21v-5h5"/></svg></span>
+        <span class="tile-name">Part 3: Post-Completion</span>
+        <span class="tile-desc">Accruals, time off, benefits and appointment updates, as they apply.</span>
+      </button>
+      <button type="button" class="overview-tile overview-tile--purple" onclick="showTab('bp4')">
+        <span class="tile-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg></span>
+        <span class="tile-name">Related Processes</span>
+        <span class="tile-desc">Request Transfer, Edit Position, Service Dates, Contingent Worker Details.</span>
+      </button>
     </div>
   </div>
 
@@ -303,8 +292,8 @@
 <!-- ══════ BP1: INITIATION & SETUP ══════ -->
 <div id="bp1" class="section">
   <div class="card">
-    <div class="process-header">
-      <div class="process-icon-big blue">🚀</div>
+    <div class="process-header process-header--blue">
+      <div class="process-icon-big white">🚀</div>
       <div class="process-meta">
         <h2>Initiation &amp; Setup</h2>
         <p>Initiated by HR Administrator · HR Partner · HR Specialist · Manager &nbsp;|&nbsp; Part 1 of 3</p>
@@ -491,8 +480,8 @@
 <!-- ══════ BP2: APPROVALS ══════ -->
 <div id="bp2" class="section">
   <div class="card">
-    <div class="process-header">
-      <div class="process-icon-big teal">✅</div>
+    <div class="process-header process-header--teal">
+      <div class="process-icon-big white">✅</div>
       <div class="process-meta">
         <h2>Consolidated Approvals</h2>
         <p>Approved by Budget Manager · Manager's Manager · HR Partner · Compensation Partner · Payroll Partner &nbsp;|&nbsp; Part 2 of 3</p>
@@ -694,8 +683,8 @@
 <!-- ══════ BP3: POST-COMPLETION ══════ -->
 <div id="bp3" class="section">
   <div class="card">
-    <div class="process-header">
-      <div class="process-icon-big rose">🔄</div>
+    <div class="process-header process-header--amber">
+      <div class="process-icon-big white">🔄</div>
       <div class="process-meta">
         <h2>Post-Completion Steps</h2>
         <p>Triggered automatically once Payroll Partner approves &nbsp;|&nbsp; Part 3 of 3</p>
@@ -1457,9 +1446,9 @@ function showTab(id) {
 
   // BREADCRUMBS script 
 const BREADCRUMB_TRAIL = [
-    { label: "Business Process Hub", href: "/business-process/index.html" },
-    { label: "Job Information", href: "/business-process/job-information.html"},
-    { label: "Change Job", href: "/business-process/jobinfo/change-job.html"}
+    { label: "Business Process Hub", href: "../index.html" },      // ../ = up one folder (to the repo root)
+    { label: "Job Information", href: "../job-information.html" },
+    { label: "Change Job", href: null }                                // current page: not a link
   ];
 
   (function renderBreadcrumb() {

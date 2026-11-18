@@ -4,23 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TAM – Job Application Process Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- Shared stylesheet: site font, colors, header, content area, overview tiles.
+     This page is in the tam/ folder, so the path goes UP one level: "../css/styles.css". -->
+<link rel="stylesheet" href="../css/styles.css?v=8">
+
+<!-- Page-specific styles. This block comes AFTER the shared link,
+     so anything defined here overrides the shared rules. -->
 <style>
+  /* Page-only tokens (shared tokens like --navy, --blue live in css/styles.css) */
   :root {
-    --navy: #0f2040;
-    --navy-mid: #1a3460;
-    --blue: #1e5fa8;
-    --blue-light: #2e7dd1;
-    --gold: #e8a922;
     --gold-light: #f5c84a;
-    --teal: #0e8a7a;
-    --red: #c0392b;
-    --green: #1a7a4a;
-    --slate: #4a5568;
-    --light: #f4f7fb;
-    --white: #ffffff;
-    --border: #dde4ef;
-    --card-shadow: 0 4px 24px rgba(15,32,64,0.10);
     --role-hr: #2e7dd1;
     --role-budget: #e8a922;
     --role-recruiter: #0e8a7a;
@@ -28,64 +21,13 @@
     --role-admin: #64748b;
     --role-hiring: #c0392b;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--light);
-    color: var(--navy);
-    min-height: 100vh;
-  }
 
-  /* HEADER */
-  .header {
-    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, var(--blue) 100%);
-    color: white;
-    padding: 36px 48px 28px;
-    position: relative;
-    overflow: hidden;
-  }
-  .header::before {
-    content: '';
-    position: absolute; top: -60px; right: -60px;
-    width: 300px; height: 300px;
-    background: radial-gradient(circle, rgba(232,169,34,0.18) 0%, transparent 70%);
-    border-radius: 50%;
-  }
-  .header::after {
-    content: '';
-    position: absolute; bottom: -40px; left: 30%;
-    width: 200px; height: 200px;
-    background: radial-gradient(circle, rgba(46,125,209,0.2) 0%, transparent 70%);
-    border-radius: 50%;
-  }
-  .header-inner { position: relative; z-index: 1; }
-  
   /* Breadcrumb — rendered from the BREADCRUMB_TRAIL config near the bottom of this file */
   .breadcrumb { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; font-size: 0.82rem; min-height: 1.2em; }
   .breadcrumb a { color: rgba(255,255,255,0.65); text-decoration: none; font-weight: 500; }
   .breadcrumb a:hover { color: white; text-decoration: underline; }
   .breadcrumb .sep { color: rgba(255,255,255,0.4); }
   .breadcrumb .current { color: var(--gold); font-weight: 600; }
-  
-  .header h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 2.2rem;
-    letter-spacing: -0.5px;
-    margin-bottom: 6px;
-  }
-  .header p { color: rgba(255,255,255,0.72); font-size: 0.95rem; font-weight: 400; }
-  .header-badge {
-    display: inline-block;
-    background: var(--gold);
-    color: var(--navy);
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    padding: 3px 10px;
-    border-radius: 20px;
-    margin-bottom: 12px;
-  }
 
   /* NAV TABS */
   .tabs-bar {
@@ -102,7 +44,7 @@
   }
   .tab-btn {
     padding: 16px 20px;
-    font-family: 'DM Sans', sans-serif;
+    font-family: inherit;
     font-size: 0.85rem;
     font-weight: 600;
     color: var(--slate);
@@ -119,7 +61,6 @@
   .tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
 
   /* CONTENT */
-  .content { max-width: 1200px; margin: 0 auto; padding: 36px 48px 60px; }
   .section { display: none; }
   .section.active { display: block; }
 
@@ -133,8 +74,9 @@
     border: 1px solid var(--border);
   }
   .card-title {
-    font-family: 'DM Serif Display', serif;
     font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
     color: var(--navy);
     margin-bottom: 6px;
   }
@@ -147,41 +89,7 @@
     letter-spacing: 0.8px;
   }
 
-  /* OVERVIEW GRID */
-  .overview-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 18px;
-    margin-bottom: 32px;
-  }
-  .overview-tile {
-    background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
-    color: white;
-    border-radius: 14px;
-    padding: 22px 20px;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    border: 2px solid transparent;
-    position: relative;
-    overflow: hidden;
-  }
-  .overview-tile::after {
-    content: '';
-    position: absolute; bottom: -20px; right: -20px;
-    width: 80px; height: 80px;
-    background: rgba(255,255,255,0.06);
-    border-radius: 50%;
-  }
-  .overview-tile:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(15,32,64,0.18); }
-  .overview-tile:nth-child(2) { background: linear-gradient(135deg, #1a4a2e 0%, var(--teal) 100%); }
-  .overview-tile:nth-child(3) { background: linear-gradient(135deg, #5b2a00 0%, #c06a10 100%); }
-  .overview-tile:nth-child(4) { background: linear-gradient(135deg, #2d1060 0%, var(--role-candidate) 100%); }
-  .overview-tile:nth-child(5) { background: linear-gradient(135deg, #5a0a0a 0%, var(--role-hiring) 100%); }
-  .overview-tile:nth-child(6) { background: linear-gradient(135deg, #0a3030 0%, #0e6060 100%); }
-  .overview-tile:nth-child(7) { background: linear-gradient(135deg, #2a3040 0%, var(--slate) 100%); }
-  .tile-icon { font-size: 1.8rem; margin-bottom: 10px; }
-  .tile-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
-  .tile-desc { font-size: 0.78rem; opacity: 0.8; line-height: 1.5; }
+  /* OVERVIEW TILES: styles live in css/styles.css (section 5) */
 
   /* FLOWCHART */
   .flowchart {
@@ -386,15 +294,27 @@
   .flag-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
   .flag strong { color: var(--navy); display: block; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
 
-  /* PROCESS HEADER */
+  /* PROCESS HEADER — solid color title band at the top of each process tab.
+     The color comes from a modifier class (e.g. .process-header--teal), which
+     sets --ph-bg. Colors match the overview tiles and pass 4.5:1 contrast with white text. */
   .process-header {
+    --ph-bg: var(--blue);
     display: flex;
     align-items: center;
     gap: 16px;
     margin-bottom: 28px;
-    padding-bottom: 20px;
-    border-bottom: 2px solid var(--border);
+    padding: 20px 24px;
+    background: var(--ph-bg);
+    color: var(--white);
+    border-radius: 12px;
   }
+  .process-header--blue   { --ph-bg: #1e5fa8; }
+  .process-header--amber  { --ph-bg: #b45309; }
+  .process-header--teal   { --ph-bg: #0b7266; }
+  .process-header--purple { --ph-bg: #6d28d9; }
+  .process-header--red    { --ph-bg: #c0392b; }
+  .process-header--slate  { --ph-bg: #4a5568; }
+
   .process-icon-big {
     width: 56px; height: 56px;
     border-radius: 14px;
@@ -402,25 +322,28 @@
     font-size: 1.6rem;
     flex-shrink: 0;
   }
-  .process-icon-big.blue { background: linear-gradient(135deg, var(--navy), var(--blue)); }
-  .process-icon-big.green { background: linear-gradient(135deg, #1a4a2e, var(--teal)); }
-  .process-icon-big.gold { background: linear-gradient(135deg, #5b2a00, #c06a10); }
-  .process-icon-big.purple { background: linear-gradient(135deg, #2d1060, var(--role-candidate)); }
-  .process-icon-big.red { background: linear-gradient(135deg, #7a0a0a, var(--red)); }
-  .process-icon-big.slate { background: linear-gradient(135deg, #2a3040, var(--slate)); }
+  .process-icon-big.white { background: var(--white); }
   .process-meta { flex: 1; }
-  .process-meta h2 { font-family: 'DM Serif Display', serif; font-size: 1.6rem; color: var(--navy); }
-  .process-meta p { color: var(--slate); font-size: 0.88rem; margin-top: 4px; }
+  .process-meta h2 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; color: var(--white); margin-bottom: 4px; }
+  .process-meta p { color: rgba(255,255,255,0.88); font-size: 0.88rem; }
+
+  /* "Completes When" box sits on the colored band: translucent white */
   .completion-badge {
-    background: var(--light);
-    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.35);
     border-radius: 8px;
     padding: 10px 16px;
     font-size: 0.78rem;
+    color: rgba(255,255,255,0.9);
     text-align: center;
     flex-shrink: 0;
   }
-  .completion-badge strong { color: var(--navy); display: block; font-size: 0.95rem; margin-top: 4px; }
+  .completion-badge strong { color: var(--white); display: block; font-size: 0.95rem; margin-top: 4px; }
+
+  @media (max-width: 700px) {
+    .process-header { flex-wrap: wrap; }
+    .completion-badge { width: 100%; }
+  }
 
   /* TWO-COL */
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 28px; }
@@ -474,14 +397,14 @@
 </head>
 <body>
 
-<div class="header">
+<header class="header">
   <div class="header-inner">
     <div class="breadcrumb" id="breadcrumb"></div>
     <div class="header-badge">Business Process</div>
     <h1>TAM - Job Application Dashboard</h1>
     <p>Interactive guide to all 7 recruitment stages — roles, steps, decisions, and approvals · Excluding Federal Work Study &amp; State positions</p>
   </div>
-</div>
+</header>
 
 <div class="tabs-bar">
   <button class="tab-btn active" onclick="showTab('overview')">📋 Overview</button>
@@ -503,47 +426,49 @@
   <div class="card">
     <div class="card-title">Job Application Process at a Glance</div>
     <div class="card-subtitle">7 Active Recruitment Stages · City Positions · Excluding Federal Work Study &amp; State Positions</div>
-    <div class="overview-grid">
-      <div class="overview-tile" onclick="showTab('bp1')">
-        <div class="tile-icon">📥</div>
-        <div class="tile-name">Apply</div>
-        <div class="tile-desc">Internal &amp; external candidates submit applications via career sites. Always the first step.</div>
-      </div>
-      <div class="overview-tile" onclick="showTab('bp2')">
-        <div class="tile-icon">🔍</div>
-        <div class="tile-name">Review</div>
-        <div class="tile-desc">All candidates land here first. Recruiter reviews qualifications, resumes, and questionnaire responses.</div>
-      </div>
-      <div class="overview-tile" onclick="showTab('bp3')">
-        <div class="tile-icon">📞</div>
-        <div class="tile-name">Screen</div>
-        <div class="tile-desc">Optional phone or screening interview stage. Primary Recruiter manages questionnaire and decision.</div>
-      </div>
-      <div class="overview-tile" onclick="showTab('bp4')">
-        <div class="tile-icon">🎤</div>
-        <div class="tile-name">Interview</div>
-        <div class="tile-desc">Formal interview stage. Multiple rounds possible. Search Committee and Hiring Manager involved.</div>
-      </div>
-      <div class="overview-tile" onclick="showTab('bp5')">
-        <div class="tile-icon">📋</div>
-        <div class="tile-name">Reference Check</div>
-        <div class="tile-desc">Candidate adds references. Primary Recruiter manages follow-up and makes the decision.</div>
-      </div>
-      <div class="overview-tile" onclick="showTab('bp6')">
-        <div class="tile-icon">📄</div>
-        <div class="tile-name">Offer</div>
-        <div class="tile-desc">Formal offer lifecycle: initiation, HR Partner review, Budget Manager approval, candidate acknowledgment.</div>
-      </div>
-      <div class="overview-tile" onclick="showTab('bp7')">
-        <div class="tile-icon">🔒</div>
-        <div class="tile-name">Background Check</div>
-        <div class="tile-desc">Primary Recruiter selects background check status and makes the final background check decision.</div>
-      </div>
-    </div>
-    <div class="overview-tile" onclick="showTab('bp8')" style="background:linear-gradient(135deg,#1a4a2e,#0e8a7a);margin-bottom:0;">
-      <div class="tile-icon">✅</div>
-      <div class="tile-name">Ready for Hire</div>
-      <div class="tile-desc">Final stage. Primary Recruiter moves candidate; HR Partner initiates the applicable hiring process.</div>
+    <!-- Overview tiles: one <button> per process. The color class sets --accent/--tint.
+         Clicking runs showTab() (defined at the bottom of this file). -->
+    <div class="overview-grid overview-grid--4col">
+      <button type="button" class="overview-tile overview-tile--purple" onclick="showTab('bp1')">
+        <span class="tile-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13h5l2 3h4l2-3h5"/><path d="M5 5h14l2 8v6H3v-6z"/></svg></span>
+        <span class="tile-name">Apply</span>
+        <span class="tile-desc">Candidates apply via the internal or external career site.</span>
+      </button>
+      <button type="button" class="overview-tile overview-tile--blue" onclick="showTab('bp2')">
+        <span class="tile-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-5-5"/></svg></span>
+        <span class="tile-name">Review</span>
+        <span class="tile-desc">Every candidate starts here; the recruiter reviews qualifications.</span>
+      </button>
+      <button type="button" class="overview-tile overview-tile--teal" onclick="showTab('bp3')">
+        <span class="tile-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-3 2a11 11 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg></span>
+        <span class="tile-name">Screen</span>
+        <span class="tile-desc">Optional phone or screening interview.</span>
+      </button>
+      <button type="button" class="overview-tile overview-tile--red" onclick="showTab('bp4')">
+        <span class="tile-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span>
+        <span class="tile-name">Interview</span>
+        <span class="tile-desc">One or more rounds with the search committee and hiring manager.</span>
+      </button>
+      <button type="button" class="overview-tile overview-tile--gold" onclick="showTab('bp5')">
+        <span class="tile-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9zM9 12h6M9 16h4"/></svg></span>
+        <span class="tile-name">Reference Check</span>
+        <span class="tile-desc">Candidate adds references; the recruiter follows up.</span>
+      </button>
+      <button type="button" class="overview-tile overview-tile--blue" onclick="showTab('bp6')">
+        <span class="tile-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg></span>
+        <span class="tile-name">Offer</span>
+        <span class="tile-desc">HR Partner review, Budget Manager approval, candidate acknowledges.</span>
+      </button>
+      <button type="button" class="overview-tile overview-tile--slate" onclick="showTab('bp7')">
+        <span class="tile-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span>
+        <span class="tile-name">Background Check</span>
+        <span class="tile-desc">Recruiter sets the status and makes the final decision.</span>
+      </button>
+      <button type="button" class="overview-tile overview-tile--teal" onclick="showTab('bp8')">
+        <span class="tile-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg></span>
+        <span class="tile-name">Ready for Hire</span>
+        <span class="tile-desc">HR Partner starts the right hiring process.</span>
+      </button>
     </div>
   </div>
 
@@ -642,8 +567,8 @@
 <!-- ══════════════════════ BP1: APPLY ══════════════════════ -->
 <div id="bp1" class="section">
   <div class="card">
-    <div class="process-header">
-      <div class="process-icon-big purple">📥</div>
+    <div class="process-header process-header--purple">
+      <div class="process-icon-big white">📥</div>
       <div class="process-meta">
         <h2>Apply — Job Application Submission</h2>
         <p>Internal and external candidates submit applications · Anytime the requisition is open</p>
@@ -725,8 +650,8 @@
 <!-- ══════════════════════ BP2: REVIEW ══════════════════════ -->
 <div id="bp2" class="section">
   <div class="card">
-    <div class="process-header">
-      <div class="process-icon-big blue">🔍</div>
+    <div class="process-header process-header--blue">
+      <div class="process-icon-big white">🔍</div>
       <div class="process-meta">
         <h2>Review — Candidate Review Stage</h2>
         <p>First stage after application · All candidates enter here · Recruiter evaluates minimum qualifications</p>
@@ -797,8 +722,8 @@
 <!-- ══════════════════════ BP3: SCREEN ══════════════════════ -->
 <div id="bp3" class="section">
   <div class="card">
-    <div class="process-header">
-      <div class="process-icon-big green">📞</div>
+    <div class="process-header process-header--teal">
+      <div class="process-icon-big white">📞</div>
       <div class="process-meta">
         <h2>Screen — Candidate Screening</h2>
         <p>Optional stage · Primary Recruiter only · Phone screen or preliminary qualification check</p>
@@ -866,8 +791,8 @@
 <!-- ══════════════════════ BP4: INTERVIEW ══════════════════════ -->
 <div id="bp4" class="section">
   <div class="card">
-    <div class="process-header">
-      <div class="process-icon-big red">🎤</div>
+    <div class="process-header process-header--red">
+      <div class="process-icon-big white">🎤</div>
       <div class="process-meta">
         <h2>Interview — Candidate Interview Stage</h2>
         <p>Optional stage · Multiple rounds available · Primary Recruiter, Search Committee, or Hiring Manager can schedule</p>
@@ -958,8 +883,8 @@
 <!-- ══════════════════════ BP5: REFERENCE CHECK ══════════════════════ -->
 <div id="bp5" class="section">
   <div class="card">
-    <div class="process-header">
-      <div class="process-icon-big gold">📋</div>
+    <div class="process-header process-header--amber">
+      <div class="process-icon-big white">📋</div>
       <div class="process-meta">
         <h2>Reference Check</h2>
         <p>Optional stage · Candidate adds references · Primary Recruiter manages and decides</p>
@@ -1034,8 +959,8 @@
 <!-- ══════════════════════ BP6: OFFER ══════════════════════ -->
 <div id="bp6" class="section">
   <div class="card">
-    <div class="process-header">
-      <div class="process-icon-big blue">📄</div>
+    <div class="process-header process-header--blue">
+      <div class="process-icon-big white">📄</div>
       <div class="process-meta">
         <h2>Offer — Formal Job Offer</h2>
         <p>Primary Recruiter initiates · HR Partner reviews &amp; approves · Budget Manager may approve · Candidate acknowledges</p>
@@ -1157,8 +1082,8 @@
 <!-- ══════════════════════ BP7: BACKGROUND CHECK ══════════════════════ -->
 <div id="bp7" class="section">
   <div class="card">
-    <div class="process-header">
-      <div class="process-icon-big slate">🔒</div>
+    <div class="process-header process-header--slate">
+      <div class="process-icon-big white">🔒</div>
       <div class="process-meta">
         <h2>Background Check</h2>
         <p>Optional stage · Primary Recruiter manages status and makes decision</p>
@@ -1222,8 +1147,8 @@
 <!-- ══════════════════════ BP8: READY FOR HIRE ══════════════════════ -->
 <div id="bp8" class="section">
   <div class="card">
-    <div class="process-header">
-      <div class="process-icon-big green">✅</div>
+    <div class="process-header process-header--teal">
+      <div class="process-icon-big white">✅</div>
       <div class="process-meta">
         <h2>Ready for Hire</h2>
         <p>Final recruitment stage · Primary Recruiter moves candidate · HR Partner initiates applicable hiring process</p>
@@ -1423,9 +1348,9 @@ function showTab(id) {
      Add or remove entries to change the trail depth.
   ──────────────────────────────────────────────────────────── */
   const BREADCRUMB_TRAIL = [
-    { label: "Business Process Hub", href: "/business-process/index.html" },
-    { label: "TAM", href: "/business-process/tam.html" },
-    { label: "Job Application", href: null}
+    { label: "Business Process Hub", href: "../index.html" },   // ../ = up one folder (to the repo root)
+    { label: "TAM", href: "../tam.html" },
+    { label: "Job Application", href: null }                             // current page: not a link
   ];
 
   (function renderBreadcrumb() {
@@ -1441,4 +1366,4 @@ function showTab(id) {
   })();
 </script>
 </body>
-</html>
+</html> 

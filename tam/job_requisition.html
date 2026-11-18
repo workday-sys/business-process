@@ -4,23 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TAM – Job Requisition Business Process Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- Shared stylesheet: site font, colors, header, content area, overview tiles.
+     This page is in the tam/ folder, so the path goes UP one level: "../css/styles.css". -->
+<link rel="stylesheet" href="../css/styles.css?v=8">
+
+<!-- Page-specific styles. This block comes AFTER the shared link,
+     so anything defined here overrides the shared rules. -->
 <style>
+  /* Page-only tokens (shared tokens like --navy, --blue live in css/styles.css) */
   :root {
-    --navy: #0f2040;
-    --navy-mid: #1a3460;
-    --blue: #1e5fa8;
-    --blue-light: #2e7dd1;
-    --gold: #e8a922;
     --gold-light: #f5c84a;
-    --teal: #0e8a7a;
-    --red: #c0392b;
-    --green: #1a7a4a;
-    --slate: #4a5568;
-    --light: #f4f7fb;
-    --white: #ffffff;
-    --border: #dde4ef;
-    --card-shadow: 0 4px 24px rgba(15,32,64,0.10);
     --role-hr: #2e7dd1;
     --role-budget: #e8a922;
     --role-payroll: #0e8a7a;
@@ -30,64 +23,13 @@
     --role-diversity: #0e6060;
     --role-civil: #5b2a00;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--light);
-    color: var(--navy);
-    min-height: 100vh;
-  }
 
-  /* HEADER */
-  .header {
-    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, var(--blue) 100%);
-    color: white;
-    padding: 36px 48px 28px;
-    position: relative;
-    overflow: hidden;
-  }
-  .header::before {
-    content: '';
-    position: absolute; top: -60px; right: -60px;
-    width: 300px; height: 300px;
-    background: radial-gradient(circle, rgba(232,169,34,0.18) 0%, transparent 70%);
-    border-radius: 50%;
-  }
-  .header::after {
-    content: '';
-    position: absolute; bottom: -40px; left: 30%;
-    width: 200px; height: 200px;
-    background: radial-gradient(circle, rgba(46,125,209,0.2) 0%, transparent 70%);
-    border-radius: 50%;
-  }
-  .header-inner { position: relative; z-index: 1; }
-  
   /* Breadcrumb — rendered from the BREADCRUMB_TRAIL config near the bottom of this file */
   .breadcrumb { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; font-size: 0.82rem; min-height: 1.2em; }
   .breadcrumb a { color: rgba(255,255,255,0.65); text-decoration: none; font-weight: 500; }
   .breadcrumb a:hover { color: white; text-decoration: underline; }
   .breadcrumb .sep { color: rgba(255,255,255,0.4); }
   .breadcrumb .current { color: var(--gold); font-weight: 600; }
-
-  .header h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 2.2rem;
-    letter-spacing: -0.5px;
-    margin-bottom: 6px;
-  }
-  .header p { color: rgba(255,255,255,0.72); font-size: 0.95rem; font-weight: 400; }
-  .header-badge {
-    display: inline-block;
-    background: var(--gold);
-    color: var(--navy);
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    padding: 3px 10px;
-    border-radius: 20px;
-    margin-bottom: 12px;
-  }
 
   /* NAV TABS */
   .tabs-bar {
@@ -104,7 +46,7 @@
   }
   .tab-btn {
     padding: 16px 18px;
-    font-family: 'DM Sans', sans-serif;
+    font-family: inherit;
     font-size: 0.85rem;
     font-weight: 600;
     color: var(--slate);
@@ -121,7 +63,6 @@
   .tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
 
   /* CONTENT */
-  .content { max-width: 1200px; margin: 0 auto; padding: 36px 48px 60px; }
   .section { display: none; }
   .section.active { display: block; }
 
@@ -135,8 +76,9 @@
     border: 1px solid var(--border);
   }
   .card-title {
-    font-family: 'DM Serif Display', serif;
     font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
     color: var(--navy);
     margin-bottom: 6px;
   }
@@ -149,38 +91,7 @@
     letter-spacing: 0.8px;
   }
 
-  /* OVERVIEW GRID */
-  .overview-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 18px;
-    margin-bottom: 32px;
-  }
-  .overview-tile {
-    background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
-    color: white;
-    border-radius: 14px;
-    padding: 22px 20px;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    border: 2px solid transparent;
-    position: relative;
-    overflow: hidden;
-  }
-  .overview-tile::after {
-    content: '';
-    position: absolute; bottom: -20px; right: -20px;
-    width: 80px; height: 80px;
-    background: rgba(255,255,255,0.06);
-    border-radius: 50%;
-  }
-  .overview-tile:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(15,32,64,0.18); }
-  .overview-tile:nth-child(2) { background: linear-gradient(135deg, #1a4a2e 0%, var(--teal) 100%); }
-  .overview-tile:nth-child(3) { background: linear-gradient(135deg, #5b2a00 0%, #c06a10 100%); }
-  .overview-tile:nth-child(4) { background: linear-gradient(135deg, #2d1060 0%, var(--role-manager) 100%); }
-  .tile-icon { font-size: 1.8rem; margin-bottom: 10px; }
-  .tile-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
-  .tile-desc { font-size: 0.78rem; opacity: 0.8; line-height: 1.5; }
+  /* OVERVIEW TILES: styles live in css/styles.css (section 5) */
 
   /* FLOWCHART */
   .flowchart {
@@ -382,15 +293,27 @@
   .flag-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
   .flag strong { color: var(--navy); display: block; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
 
-  /* PROCESS HEADER */
+  /* PROCESS HEADER — solid color title band at the top of each process tab.
+     The color comes from a modifier class (e.g. .process-header--teal), which
+     sets --ph-bg. Colors match the overview tiles and pass 4.5:1 contrast with white text. */
   .process-header {
+    --ph-bg: var(--blue);
     display: flex;
     align-items: center;
     gap: 16px;
     margin-bottom: 28px;
-    padding-bottom: 20px;
-    border-bottom: 2px solid var(--border);
+    padding: 20px 24px;
+    background: var(--ph-bg);
+    color: var(--white);
+    border-radius: 12px;
   }
+  .process-header--blue   { --ph-bg: #1e5fa8; }
+  .process-header--amber  { --ph-bg: #b45309; }
+  .process-header--teal   { --ph-bg: #0b7266; }
+  .process-header--purple { --ph-bg: #6d28d9; }
+  .process-header--red    { --ph-bg: #c0392b; }
+  .process-header--slate  { --ph-bg: #4a5568; }
+
   .process-icon-big {
     width: 56px; height: 56px;
     border-radius: 14px;
@@ -398,23 +321,28 @@
     font-size: 1.6rem;
     flex-shrink: 0;
   }
-  .process-icon-big.blue { background: linear-gradient(135deg, var(--navy), var(--blue)); }
-  .process-icon-big.green { background: linear-gradient(135deg, #1a4a2e, var(--teal)); }
-  .process-icon-big.gold { background: linear-gradient(135deg, #5b2a00, #c06a10); }
-  .process-icon-big.purple { background: linear-gradient(135deg, #2d1060, var(--role-manager)); }
+  .process-icon-big.white { background: var(--white); }
   .process-meta { flex: 1; }
-  .process-meta h2 { font-family: 'DM Serif Display', serif; font-size: 1.6rem; color: var(--navy); }
-  .process-meta p { color: var(--slate); font-size: 0.88rem; margin-top: 4px; }
+  .process-meta h2 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; color: var(--white); margin-bottom: 4px; }
+  .process-meta p { color: rgba(255,255,255,0.88); font-size: 0.88rem; }
+
+  /* "Completes When" box sits on the colored band: translucent white */
   .completion-badge {
-    background: var(--light);
-    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.35);
     border-radius: 8px;
     padding: 10px 16px;
     font-size: 0.78rem;
+    color: rgba(255,255,255,0.9);
     text-align: center;
     flex-shrink: 0;
   }
-  .completion-badge strong { color: var(--navy); display: block; font-size: 0.95rem; margin-top: 4px; }
+  .completion-badge strong { color: var(--white); display: block; font-size: 0.95rem; margin-top: 4px; }
+
+  @media (max-width: 700px) {
+    .process-header { flex-wrap: wrap; }
+    .completion-badge { width: 100%; }
+  }
 
   /* TWO-COL */
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 28px; }
@@ -453,14 +381,14 @@
 </head>
 <body>
 
-<div class="header">
+<header class="header">
   <div class="header-inner">
     <div class="breadcrumb" id="breadcrumb"></div>
     <div class="header-badge">Business Process </div>
     <h1>TAM - Job Requisition Dashboard</h1>
     <p>Interactive guide covering Job Requisition, Post/Un-Post Job, Update Job Posting, and Create Prospect — roles, steps, decisions, and approvals · Excluding Federal Work Study &amp; State positions</p>
   </div>
-</div>
+</header>
 
 <div class="tabs-bar">
   <button class="tab-btn active" onclick="showTab('overview')">📋 Overview</button>
@@ -478,27 +406,29 @@
   <div class="card">
     <div class="card-title">Job Requisition Processes at a Glance</div>
     <div class="card-subtitle">4 Business Processes · City Positions · Excluding Federal Work Study &amp; State Positions</div>
-    <div class="overview-grid">
-      <div class="overview-tile" onclick="showTab('bp1')">
-        <div class="tile-icon">📄</div>
-        <div class="tile-name">Create Job Requisition</div>
-        <div class="tile-desc">Full lifecycle from initiation through review, approval, and posting. Includes conditional Budget Manager approval and CDO equity review.</div>
-      </div>
-      <div class="overview-tile" onclick="showTab('bp2')">
-        <div class="tile-icon">📌</div>
-        <div class="tile-name">Post Job</div>
-        <div class="tile-desc">Sub-process of Create Job Req — or standalone. Primary Recruiter / Civil Service Administrator posts internally and/or externally.</div>
-      </div>
-      <div class="overview-tile" onclick="showTab('bp3')">
-        <div class="tile-icon">🔄</div>
-        <div class="tile-name">Update Job Posting</div>
-        <div class="tile-desc">Un-post and re-post a job. Multiple roles can update the posting end date or modify details before reposting.</div>
-      </div>
-      <div class="overview-tile" onclick="showTab('bp4')">
-        <div class="tile-icon">👤</div>
-        <div class="tile-name">Create Prospect</div>
-        <div class="tile-desc">Add potential candidates before they apply. Initiated internally by HR Admin/Manager/Recruiter, or by the prospect themselves via the external career site.</div>
-      </div>
+    <!-- Overview tiles: one <button> per process. The color class sets --accent/--tint.
+         Clicking runs showTab() (defined at the bottom of this file). -->
+    <div class="overview-grid overview-grid--2col">
+      <button type="button" class="overview-tile overview-tile--blue" onclick="showTab('bp1')">
+        <span class="tile-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg></span>
+        <span class="tile-name">Create Job Requisition</span>
+        <span class="tile-desc">Initiation through review, approval and posting.</span>
+      </button>
+      <button type="button" class="overview-tile overview-tile--teal" onclick="showTab('bp2')">
+        <span class="tile-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6-5.6-6-11a6 6 0 0 1 12 0c0 5.4-6 11-6 11z"/><circle cx="12" cy="10" r="2"/></svg></span>
+        <span class="tile-name">Post Job</span>
+        <span class="tile-desc">Post internally and/or externally, within the requisition or on its own.</span>
+      </button>
+      <button type="button" class="overview-tile overview-tile--gold" onclick="showTab('bp3')">
+        <span class="tile-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5M3 21v-5h5"/></svg></span>
+        <span class="tile-name">Update Job Posting</span>
+        <span class="tile-desc">Unpost and repost to change details or the end date.</span>
+      </button>
+      <button type="button" class="overview-tile overview-tile--purple" onclick="showTab('bp4')">
+        <span class="tile-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M19 8v6M16 11h6"/></svg></span>
+        <span class="tile-name">Create Prospect</span>
+        <span class="tile-desc">Add potential candidates before they apply.</span>
+      </button>
     </div>
   </div>
 
@@ -555,8 +485,8 @@
 <!-- ══════════════════════ BP1: CREATE JOB REQUISITION ══════════════════════ -->
 <div id="bp1" class="section">
   <div class="card">
-    <div class="process-header">
-      <div class="process-icon-big blue">📄</div>
+    <div class="process-header process-header--blue">
+      <div class="process-icon-big white">📄</div>
       <div class="process-meta">
         <h2>Create Job Requisition</h2>
         <p>Initiation → Reviews → Approvals → Post Job · City positions only · Excludes Federal Work Study &amp; State</p>
@@ -707,8 +637,8 @@
 <!-- ══════════════════════ BP2: POST JOB ══════════════════════ -->
 <div id="bp2" class="section">
   <div class="card">
-    <div class="process-header">
-      <div class="process-icon-big green">📌</div>
+    <div class="process-header process-header--teal">
+      <div class="process-icon-big white">📌</div>
       <div class="process-meta">
         <h2>Post Job</h2>
         <p>Sub-process of Create Job Requisition — or standalone action · Posts internally and/or externally</p>
@@ -815,8 +745,8 @@
 <!-- ══════════════════════ BP3: UPDATE JOB POSTING (UN-POST / RE-POST) ══════════════════════ -->
 <div id="bp3" class="section">
   <div class="card">
-    <div class="process-header">
-      <div class="process-icon-big gold">🔄</div>
+    <div class="process-header process-header--amber">
+      <div class="process-icon-big white">🔄</div>
       <div class="process-meta">
         <h2>Update Job Posting — Un-Post / Re-Post</h2>
         <p>Modify a posted job's end date, un-post, or re-post after making updates to the job requisition</p>
@@ -912,8 +842,8 @@
 <!-- ══════════════════════ BP4: CREATE PROSPECT ══════════════════════ -->
 <div id="bp4" class="section">
   <div class="card">
-    <div class="process-header">
-      <div class="process-icon-big purple">👤</div>
+    <div class="process-header process-header--purple">
+      <div class="process-icon-big white">👤</div>
       <div class="process-meta">
         <h2>Create Prospect</h2>
         <p>Add a potential candidate's basic info before they apply to any specific job · Internal or External initiation</p>
@@ -1197,9 +1127,9 @@ function showTab(id) {
      Add or remove entries to change the trail depth.
   ──────────────────────────────────────────────────────────── */
   const BREADCRUMB_TRAIL = [
-    { label: "Business Process Hub", href: "/business-process/index.html" },
-    { label: "TAM", href: "/business-process/tam.html" },
-    { label: "Job Requisition", href: null }
+    { label: "Business Process Hub", href: "../index.html" },   // ../ = up one folder (to the repo root)
+    { label: "TAM", href: "../tam.html" },
+    { label: "Job Requisition", href: null }                             // current page: not a link
   ];
 
   (function renderBreadcrumb() {
